@@ -9,6 +9,7 @@ import HowItWorks from "@/components/HowItWorks";
 import Deals from "@/components/Deals";
 import CTA from "@/components/CTA";
 import Contact from "@/components/Contact";
+import Faqs from "@/components/Faqs";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -37,6 +38,7 @@ export default function Home() {
         <Deals />
         <CTA />
         <Contact />
+        <Faqs />
         <Footer />
         {showButton && (
             <button
