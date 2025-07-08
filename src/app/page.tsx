@@ -11,6 +11,8 @@ import CTA from "@/components/CTA";
 import Contact from "@/components/Contact";
 import Faqs from "@/components/Faqs";
 import Footer from "@/components/Footer";
+import LoginPage from "./login/page";
+import RegisterPage from "./register/page";
 
 export default function Home() {
   const [showButton, setShowButton] = useState(false);

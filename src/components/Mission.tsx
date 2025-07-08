@@ -27,13 +27,13 @@ const Mission = () => {
               Mengubah Makanan Berlebih Menjadi Berkah
             </h2>
             {/* Menambahkan warna teks untuk dark mode */}
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-base sm:text-lg">
+            <p className="text-nimo-dark dark:text-gray-400 leading-relaxed text-base sm:text-lg">
               <span className="text-nimo-yellow font-bold">NIMO </span>lahir dari sebuah gagasan sederhana, bagaimana jika kita bisa
               menghubungkan makanan lezat yang berlebih dengan orang-orang yang
               ingin menikmatinya?
             </p>
             {/* Menambahkan warna teks untuk dark mode */}
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-base">
+            <p className="text-nimo-dark dark:text-gray-400 leading-relaxed text-base">
               Aplikasi kami adalah jembatan antara UMKM & Mitra lain yang bergerak di bidang F&B yang memiliki
               surplus makanan dengan Anda. Kami percaya, setiap makanan layak
               untuk dinikmati, bukan dibuang.

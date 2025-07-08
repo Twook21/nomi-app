@@ -8,7 +8,7 @@ const Contact = () => {
             <div className="text-center mb-12">
                 <h3 className="text-3xl md:text-4xl font-bold text-[var(--nimo-dark)]">Butuh Bantuan?</h3>
                 {/* Menambahkan warna teks untuk dark mode */}
-                <p className="text-gray-600 dark:text-gray-300 mt-3 text-lg">Kami siap membantu Anda. Hubungi Customer Service kami melalui salah satu kanal di bawah ini.</p>
+                <p className="text-nimo-dark dark:text-gray-400 mt-3 text-lg">Kami siap membantu Anda. Hubungi Customer Service kami melalui salah satu kanal di bawah ini.</p>
             </div>
             
             {/* Mengubah background kartu dan mengganti shadow dengan border di dark mode */}
@@ -35,7 +35,7 @@ const Contact = () => {
                      <div className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
                         <Phone className="w-6 h-6 text-nimo-yellow mr-4 flex-shrink-0"/>
                         <div>
-                            <p className="font-semibold text-[var(--nimo-dark)]">Telepon</p>
+                            <p className="font-semibold text-white">Telepon</p>
                             <p className="text-gray-600 dark:text-gray-400">(021) 555-0123</p>
                         </div>
                     </div>

@@ -3,29 +3,49 @@
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-// Data untuk FAQ
 const faqData = [
     {
         question: "Apa itu NIMO?",
-        answer: "NIMO adalah platform yang menghubungkan Anda dengan restoran, kafe, toko roti, dan UMKM lainnya untuk membeli makanan berlebih yang belum terjual dengan harga diskon. Misi kami adalah mengurangi limbah makanan sambil memberikan Anda penawaran terbaik."
+        answer: "NIMO adalah aplikasi yang membantu mengurangi limbah makanan dengan menghubungkan UMKM, restoran, dan toko roti dengan pembeli. Lewat NIMO, Anda bisa membeli makanan berkualitas yang belum terjual di akhir hari dengan harga diskon hingga 70%."
     },
     {
         question: "Bagaimana cara kerja NIMO?",
-        answer: "Sangat mudah! 1) Jelajahi aplikasi untuk menemukan 'Deals' dari mitra terdekat. 2) Pesan dan bayar langsung di aplikasi. 3) Kunjungi lokasi mitra pada jam pengambilan yang ditentukan untuk mengambil makanan lezat Anda."
+        answer: "1️⃣ Cari penawaran menarik dari mitra terdekat di aplikasi.\n2️⃣ Pesan dan bayar langsung melalui NIMO.\n3️⃣ Ambil pesanan Anda pada waktu pengambilan yang tertera di aplikasi. Mudah, cepat, dan ikut membantu bumi 🌱."
     },
     {
-        question: "Apakah makanan yang dijual aman untuk dikonsumsi?",
-        answer: "Tentu saja. Makanan yang kami tawarkan adalah makanan berkualitas yang tidak terjual pada hari itu, bukan makanan sisa atau basi. Semua mitra kami berkomitmen untuk menjaga standar kebersihan dan keamanan pangan yang tinggi."
+        question: "Apakah makanan yang dijual benar-benar aman dikonsumsi?",
+        answer: "Ya! Semua makanan yang tersedia adalah stok berlebih yang masih segar dan layak konsumsi. Mitra kami sudah memastikan standar kebersihan dan kualitasnya sebelum dijual di NIMO."
+    },
+    {
+        question: "Mengapa saya harus membeli makanan lewat NIMO?",
+        answer: "Dengan membeli lewat NIMO, Anda bukan hanya mendapatkan makanan enak dengan harga miring 🍱, tapi juga berperan aktif mengurangi food waste yang berkontribusi pada perubahan iklim."
     },
     {
         question: "Kapan saya bisa mengambil pesanan saya?",
-        answer: "Setiap 'Deals' memiliki jadwal pengambilan yang spesifik, biasanya mendekati jam tutup toko atau restoran. Pastikan untuk memeriksa detail waktu pengambilan pada setiap penawaran sebelum memesan."
+        answer: "Setiap mitra memiliki jam pengambilan yang berbeda, biasanya mendekati jam tutup toko atau restoran. Pastikan untuk memeriksa detail waktu pengambilan pada setiap 'Deal' sebelum checkout."
     },
     {
-        question: "Bagaimana saya bisa mendaftarkan bisnis saya sebagai mitra NIMO?",
-        answer: "Kami senang Anda tertarik! Silakan kunjungi halaman 'Jadi Mitra' di situs web kami dan isi formulir pendaftaran. Tim kami akan segera menghubungi Anda untuk proses selanjutnya."
+        question: "Bagaimana cara mendaftarkan bisnis saya di NIMO?",
+        answer: "Mudah! Kunjungi halaman 'Jadi Mitra' di aplikasi atau situs kami, isi formulir pendaftaran, dan tim NIMO akan menghubungi Anda untuk memulai perjalanan sebagai mitra penyelamat makanan."
+    },
+    {
+        question: "Apakah ada biaya untuk menjadi mitra NIMO?",
+        answer: "Tidak ada biaya pendaftaran. Kami hanya mengambil komisi kecil dari setiap transaksi yang berhasil untuk mendukung operasional platform."
+    },
+    {
+        question: "Siapa saja yang bisa menggunakan NIMO?",
+        answer: "Semua orang! Baik Anda konsumen yang mencari makanan hemat, atau pemilik bisnis yang ingin meminimalkan kerugian dari stok berlebih."
+    },
+    {
+        question: "Apakah saya harus mengunduh aplikasi untuk menggunakan NIMO?",
+        answer: "Ya, saat ini layanan NIMO tersedia melalui aplikasi mobile di Android & iOS untuk memudahkan pengalaman pengguna."
+    },
+    {
+        question: "Bagaimana jika saya mengalami masalah saat menggunakan aplikasi?",
+        answer: "Jangan khawatir! Anda bisa menghubungi tim support kami lewat menu 'Bantuan' di aplikasi atau kirim email ke support@nimo.id. Kami siap membantu Anda 💬."
     }
 ];
+
 
 const Faqs = () => {
     // State untuk mengontrol accordion mana yang sedang terbuka
@@ -42,7 +62,7 @@ const Faqs = () => {
                     <h3 className="text-3xl md:text-4xl font-bold text-[var(--nimo-dark)]">
                         Frequently Asked Questions
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mt-3 text-lg max-w-2xl mx-auto">
+                    <p className="text-nimo-dark dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">
                         Temukan jawaban untuk pertanyaan paling umum di sini. Jika Anda tidak menemukannya, jangan ragu untuk menghubungi kami.
                     </p>
                 </div>
@@ -53,9 +73,9 @@ const Faqs = () => {
                             {/* Tombol Pertanyaan */}
                             <button
                                 onClick={() => toggleFaq(index)}
-                                className="w-full flex justify-between items-center text-left p-5 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors"
+                                className="w-full flex justify-between items-center text-left p-5 bg-gray-800 hover:bg-gray-700/60 transition-colors"
                             >
-                                <span className="font-semibold text-[var(--nimo-dark)]">{faq.question}</span>
+                                <span className="font-semibold text-white">{faq.question}</span>
                                 <ChevronDown
                                     className={`w-5 h-5 text-nimo-yellow transform transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}
                                 />
