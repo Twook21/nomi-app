@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { CheckCircle, Clock, XCircle, Search, Eye, Trash2 } from 'lucide-react';
 
-// --- Data Mock untuk Mitra UMKM ---
 const mockPartners = [
     { id: 1, name: 'Warung Kopi Senja', owner: 'Pak Budi', type: 'Kafe', joined: '2024-07-01', status: 'Terverifikasi' },
     { id: 2, name: 'Bakery Enak Poll', owner: 'Ibu Rina', type: 'Toko Roti', joined: '2024-07-03', status: 'Menunggu Verifikasi' },
@@ -30,13 +29,11 @@ const PartnerManagementPage = () => {
 
     return (
         <div className="space-y-6">
-            {/* Header Halaman */}
             <div>
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Manajemen UMKM</h1>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Kelola, verifikasi, dan lihat detail semua mitra UMKM.</p>
             </div>
 
-            {/* Kontrol & Filter */}
             <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -48,7 +45,6 @@ const PartnerManagementPage = () => {
                 </div>
             </div>
 
-            {/* Tabel Daftar Mitra */}
             <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

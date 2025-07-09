@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
 
-// Komponen error secara otomatis menerima props 'error' dan 'reset'
 export default function Error({
   error,
   reset,
@@ -13,7 +12,6 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log error ke sistem monitoring atau ke konsol untuk debugging
     console.error(error);
   }, [error]);
 
@@ -28,11 +26,9 @@ export default function Error({
           Maaf, sepertinya ada masalah yang tidak terduga. Tim kami sudah diberitahu tentang masalah ini.
         </p>
 
-        {/* Tombol Aksi untuk Pengguna */}
         <div className="mt-8 flex justify-center items-center gap-4">
           <button
             onClick={
-              // Mencoba untuk me-render ulang segmen yang error
               () => reset()
             }
             className="bg-nimo-yellow text-white font-bold py-2 px-6 rounded-full hover:opacity-90 transition-opacity shadow-md"

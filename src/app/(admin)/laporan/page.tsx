@@ -4,7 +4,6 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { DollarSign, Trash2, Clock, TrendingUp } from 'lucide-react';
 
-// --- Data Mock untuk Laporan ---
 const financialData = [
     { title: "Pendapatan Platform (Bulan Ini)", value: "Rp 12.500.000", icon: DollarSign },
     { title: "Total Komisi Terkumpul", value: "Rp 3.125.000", icon: TrendingUp },
@@ -36,13 +35,11 @@ const peakHoursData = [
 const ReportsPage = () => {
     return (
         <div className="space-y-8">
-            {/* Header Halaman */}
             <div>
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Laporan & Analisis</h1>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Pantau performa keuangan, dampak, dan tren platform Anda.</p>
             </div>
 
-            {/* Laporan Keuangan */}
             <div>
                 <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Laporan Keuangan</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -62,7 +59,6 @@ const ReportsPage = () => {
                 </div>
             </div>
 
-            {/* Laporan Dampak & Tren */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 <div className="lg:col-span-2 bg-gradient-to-br from-green-400 to-teal-500 text-white p-6 rounded-xl shadow-lg flex flex-col justify-center text-center">
                     <Trash2 className="mx-auto h-12 w-12 opacity-80 mb-4" />

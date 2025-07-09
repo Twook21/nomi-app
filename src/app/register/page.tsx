@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { User, Mail, Lock } from 'lucide-react';
 
 const RegisterPage = () => {
-    // State untuk menyimpan data form
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -13,15 +12,12 @@ const RegisterPage = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Validasi sederhana: pastikan kata sandi cocok
         if (password !== confirmPassword) {
             setError("Kata sandi tidak cocok!");
             return;
         }
-        // Jika validasi berhasil, hapus pesan error
         setError('');
         
-        // Logika untuk mengirim data pendaftaran ke server
         console.log("Registering with:", { name, email, password });
         alert(`Mencoba mendaftar dengan Nama: ${name}, Email: ${email}`);
     };
@@ -30,7 +26,6 @@ const RegisterPage = () => {
         <main className="bg-nimo-gray min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
             <div className="max-w-md w-full bg-white dark:bg-[var(--background)] rounded-2xl shadow-2xl dark:shadow-none dark:border dark:border-gray-700 p-8 space-y-6">
                 
-                {/* Header Form */}
                 <div className="text-center">
                     <h1 className="text-3xl font-bold text-nimo-yellow">NIMO</h1>
                     <h2 className="mt-2 text-xl font-bold tracking-tight text-[var(--nimo-dark)]">
@@ -41,9 +36,7 @@ const RegisterPage = () => {
                     </p>
                 </div>
 
-                {/* Form Pendaftaran */}
                 <form className="space-y-4" onSubmit={handleSubmit}>
-                    {/* Input Nama Lengkap */}
                     <div>
                         <label htmlFor="name" className="text-sm font-medium text-[var(--nimo-dark)]">
                             Nama Lengkap
@@ -65,7 +58,6 @@ const RegisterPage = () => {
                         </div>
                     </div>
 
-                    {/* Input Email */}
                     <div>
                         <label htmlFor="email" className="text-sm font-medium text-[var(--nimo-dark)]">
                             Alamat Email
@@ -87,7 +79,6 @@ const RegisterPage = () => {
                         </div>
                     </div>
 
-                    {/* Input Kata Sandi */}
                     <div>
                         <label htmlFor="password" className="text-sm font-medium text-[var(--nimo-dark)]">
                             Kata Sandi
@@ -109,7 +100,6 @@ const RegisterPage = () => {
                         </div>
                     </div>
 
-                    {/* Input Konfirmasi Kata Sandi */}
                     <div>
                         <label htmlFor="confirm-password" className="text-sm font-medium text-[var(--nimo-dark)]">
                             Konfirmasi Kata Sandi
@@ -132,7 +122,6 @@ const RegisterPage = () => {
                         {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
                     </div>
 
-                    {/* Tombol Submit */}
                     <div>
                         <button
                             type="submit"
@@ -143,7 +132,6 @@ const RegisterPage = () => {
                     </div>
                 </form>
 
-                {/* Tautan untuk Login */}
                 <p className="text-center text-sm text-gray-600 dark:text-gray-400">
                     Sudah punya akun?{' '}
                     <a href="/login" className="font-medium text-nimo-yellow hover:underline">

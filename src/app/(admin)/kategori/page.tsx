@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Tag, Edit, Trash2, Plus, X } from 'lucide-react';
 
-// --- Data Mock untuk Kategori ---
 const mockCategories = [
     { id: 1, name: 'Makanan Berat', productCount: 15 },
     { id: 2, name: 'Toko Roti', productCount: 42 },
@@ -22,13 +21,11 @@ const CategoryManagementPage = () => {
 
     const handleFormSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Logika untuk menambah/mengedit kategori
         if (editingCategory) {
             console.log(`Editing category ${editingCategory.id} to ${newCategoryName}`);
         } else {
             console.log(`Adding new category: ${newCategoryName}`);
         }
-        // Reset form
         setNewCategoryName('');
         setEditingCategory(null);
     };
@@ -45,14 +42,12 @@ const CategoryManagementPage = () => {
 
     return (
         <div className="space-y-6">
-            {/* Header Halaman */}
             <div>
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Manajemen Kategori</h1>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Kelola semua kategori produk yang tersedia di platform.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Kolom Daftar Kategori */}
                 <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
                     <h3 className="font-bold text-lg mb-4 text-gray-800 dark:text-white">Daftar Kategori</h3>
                     <div className="space-y-3">
@@ -74,7 +69,6 @@ const CategoryManagementPage = () => {
                     </div>
                 </div>
 
-                {/* Kolom Form Tambah/Edit */}
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6 h-fit">
                      <h3 className="font-bold text-lg mb-4 text-gray-800 dark:text-white">{formTitle}</h3>
                      <form onSubmit={handleFormSubmit} className="space-y-4">

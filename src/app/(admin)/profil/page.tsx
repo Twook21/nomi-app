@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { User, Mail, Shield, Bell, Save, Edit, Clock } from 'lucide-react';
 
-// --- Data Mock untuk Log Aktivitas ---
 const activityLog = [
     { action: "Memverifikasi UMKM 'Warung Kopi Senja'", time: "2 jam yang lalu" },
     { action: "Menghapus produk 'Donat Basi'", time: "5 jam yang lalu" },
@@ -11,22 +10,18 @@ const activityLog = [
     { action: "Menambah kategori 'Makanan Beku'", time: "2 hari yang lalu" },
 ];
 
-// PASTIKAN ADA 'export default' DI SINI
 export default function ProfilePage() {
     const [isEditing, setIsEditing] = useState(false);
 
     return (
         <div className="space-y-8">
-            {/* Header Halaman */}
             <div>
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Profil Saya</h1>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Kelola informasi pribadi dan pengaturan keamanan akun Anda.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Kolom Kiri: Informasi Profil & Keamanan */}
                 <div className="lg:col-span-2 space-y-8">
-                    {/* Informasi Profil */}
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="font-bold text-lg text-gray-800 dark:text-white">Informasi Profil</h3>
@@ -58,7 +53,6 @@ export default function ProfilePage() {
                         )}
                     </div>
 
-                    {/* Ubah Kata Sandi */}
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
                         <h3 className="font-bold text-lg text-gray-800 dark:text-white mb-4">Ubah Kata Sandi</h3>
                         <form className="space-y-4">
@@ -73,7 +67,6 @@ export default function ProfilePage() {
                     </div>
                 </div>
 
-                {/* Kolom Kanan: Log Aktivitas */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 h-fit">
                     <h3 className="font-bold text-lg text-gray-800 dark:text-white mb-4">Log Aktivitas Terbaru</h3>
                     <div className="space-y-4">

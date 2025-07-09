@@ -29,7 +29,6 @@ export default function AdminLayout({
             </main>
         </div>
 
-        {/* Sidebar Mobile dengan Tampilan Baru */}
         {sidebarOpen && (
             <div className="fixed inset-0 z-50 flex md:hidden">
                 <div className="fixed inset-0 bg-black/60" onClick={() => setSidebarOpen(false)}></div>

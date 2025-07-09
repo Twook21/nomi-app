@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, Eye, Edit, Trash2, Tag, Layers, Package, BarChart2 } from 'lucide-react';
 
-// --- Data Mock untuk Produk ---
 const mockProducts = [
     { id: 1, name: 'Croissant Cokelat', umkm: 'Bakery Enak Poll', category: 'Toko Roti', stock: 15, expiry: '2024-07-10', price: 10000 },
     { id: 2, name: 'Kopi Susu Gula Aren', umkm: 'Warung Kopi Senja', category: 'Minuman', stock: 8, expiry: '2024-07-09', price: 18000 },
@@ -23,13 +22,11 @@ const ProductManagementPage = () => {
 
     return (
         <div className="space-y-6">
-            {/* Header Halaman */}
             <div>
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Manajemen Produk Global</h1>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Lihat dan kelola semua produk dari seluruh UMKM.</p>
             </div>
 
-            {/* Laporan & Filter Lanjutan */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
                     <div className="flex items-center space-x-2 mb-2">
@@ -55,7 +52,6 @@ const ProductManagementPage = () => {
                 </div>
             </div>
 
-            {/* Tabel Daftar Produk */}
             <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

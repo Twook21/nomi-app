@@ -27,11 +27,9 @@ const notifications = [
     { text: "Sistem akan melakukan maintenance pada 10 Juli.", icon: Bell, type: "info" }
 ];
 
-// --- Komponen Utama Halaman Dashboard ---
 const DashboardPage = () => {
     return (
         <div className="space-y-8">
-            {/* 1. Ringkasan Statistik */}
             <div>
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Ringkasan Statistik</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -49,7 +47,6 @@ const DashboardPage = () => {
                 </div>
             </div>
 
-            {/* 2. Grafik Tren */}
             <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
                 <h3 className="font-bold text-lg text-gray-800 dark:text-white mb-4">Grafik Tren</h3>
                 <ResponsiveContainer width="100%" height={350}>
@@ -65,7 +62,6 @@ const DashboardPage = () => {
                 </ResponsiveContainer>
             </div>
 
-            {/* 3. Notifikasi & Akses Cepat */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
                     <h3 className="font-bold text-lg text-gray-800 dark:text-white mb-4">Notifikasi Penting</h3>

@@ -9,7 +9,6 @@ const LoginPage = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Di sini Anda bisa menambahkan logika untuk mengirim data ke server
     console.log("Login attempt with:", { email, password });
     alert(`Mencoba login dengan Email: ${email}`);
   };
@@ -18,7 +17,7 @@ const LoginPage = () => {
     <main
       className="bg-[var(--nimo-gray)] min-h-screen flex items-center justify-center p-4 transition-colors duration-300"
       style={{
-        backgroundImage: "url(/image/bg-auth.png)", // TANPA public di path
+        backgroundImage: "url(/image/bg-auth.png)", 
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -35,9 +34,7 @@ const LoginPage = () => {
           </p>
         </div>
 
-        {/* Form Login */}
         <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Input Email */}
           <div>
             <label
               htmlFor="email"
@@ -63,7 +60,6 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {/* Input Password */}
           <div>
             <label
               htmlFor="password"
@@ -89,7 +85,6 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {/* Opsi Lupa Sandi */}
           <div className="flex items-center justify-end">
             <div className="text-sm">
               <a
@@ -101,7 +96,6 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {/* Tombol Submit */}
           <div>
             <button
               type="submit"
@@ -112,7 +106,6 @@ const LoginPage = () => {
           </div>
         </form>
 
-        {/* Tautan untuk Mendaftar */}
         <p className="text-center text-sm text-gray-600 dark:text-gray-400">
           Belum punya akun?{" "}
           <a

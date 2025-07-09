@@ -17,7 +17,6 @@ const UserManagementPage = () => {
 
     return (
         <div className="space-y-6">
-            {/* Header Halaman */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Manajemen Pengguna</h1>
@@ -29,7 +28,6 @@ const UserManagementPage = () => {
                 </button>
             </div>
 
-            {/* Kontrol & Filter */}
             <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -41,7 +39,6 @@ const UserManagementPage = () => {
                 </div>
             </div>
 
-            {/* Tabel Daftar Pengguna */}
             <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

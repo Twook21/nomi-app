@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 
-// Komponen ilustrasi dengan tambahan mata 'X'
 const EmptyPlateIllustration = () => (
     <svg width="120" height="120" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-70 dark:opacity-50">
         {/* Piring */}

@@ -9,16 +9,13 @@ const SettingsPage = () => {
 
     return (
         <div className="space-y-8">
-            {/* Header Halaman */}
             <div>
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Pengaturan Sistem</h1>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Atur parameter, template notifikasi, dan konten statis platform.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Kolom Kiri: Pengaturan Utama */}
                 <div className="lg:col-span-2 space-y-8">
-                    {/* Manajemen Biaya Platform */}
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
                         <h3 className="font-bold text-lg text-gray-800 dark:text-white mb-4">Manajemen Biaya Platform</h3>
                         <div className="space-y-2">
@@ -43,7 +40,6 @@ const SettingsPage = () => {
                         </div>
                     </div>
 
-                    {/* Pengaturan Notifikasi */}
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
                         <h3 className="font-bold text-lg text-gray-800 dark:text-white mb-4">Pengaturan Notifikasi</h3>
                         <div className="border-b border-gray-200 dark:border-gray-700">
@@ -67,7 +63,6 @@ const SettingsPage = () => {
                     </div>
                 </div>
 
-                {/* Kolom Kanan: Konten Statis */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 h-fit">
                     <h3 className="font-bold text-lg text-gray-800 dark:text-white mb-4">Manajemen Konten Statis</h3>
                     <div className="space-y-3">
