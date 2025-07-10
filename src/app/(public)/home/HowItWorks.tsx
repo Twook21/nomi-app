@@ -25,22 +25,18 @@ const HowItWorks = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-24">
           <h3 className="text-3xl md:text-4xl font-bold text-[var(--nimo-dark)]">Semudah Itu!</h3>
-          {/* Menambahkan warna teks untuk dark mode */}
-          <p className="text-gray-500 dark:text-gray-400 mt-3 text-lg">Hanya dalam 3 langkah mudah untuk menyelamatkan makanan.</p>
+          <p className="text-[var(--nimo-dark)] mt-3 text-lg">Hanya dalam 3 langkah mudah untuk menyelamatkan makanan.</p>
         </div>
         
         <div className="relative flex flex-col md:flex-row items-start justify-center">
           {steps.map((step, index) => (
             <React.Fragment key={index}>
-              {/* Step Item */}
               <div className="relative flex flex-col items-center text-center w-full md:w-64 lg:w-72 px-4">
-                {/* Step Number */}
                 <div className="absolute -top-16 flex items-center justify-center w-12 h-12 
                   bg-nimo-yellow border-2 border-nimo-yellow dark:border-gray-800 
-                  text-[var(--nimo-light)] rounded-full font-semibold text-xl shadow-md">
+                  text-[var(--nimo-dark)] rounded-full font-semibold text-xl shadow-md">
                   {index + 1}
                 </div>
-                {/* Icon */}
                 <div className="flex justify-center items-center 
                   bg-nimo-light
                   rounded-full h-32 w-32 mx-auto 
@@ -50,7 +46,7 @@ const HowItWorks = () => {
                 </div>
                 {/* Text Content */}
                 <h4 className="text-xl font-bold mb-3 text-[var(--nimo-dark)]">{step.title}</h4>
-                <p className="text-gray-500 dark:text-gray-400 text-base leading-relaxed h-24">{step.description}</p>
+                <p className="text-[var(--nimo-dark)] text-base leading-relaxed h-24">{step.description}</p>
               </div>
 
               {/* Connector Line for Desktop */}

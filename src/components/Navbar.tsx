@@ -1,27 +1,28 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-// 1. Impor komponen 'Link' dari Next.js
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Sun, Moon } from "lucide-react";
 
 const menuItems = [
-  { href: "#hero", label: "Home" },
-  { href: "#about", label: "Tentang" },
-  { href: "#how-it-works", label: "Cara Kerja" },
-  { href: "#deals", label: "Kategori" },
-  { href: "#contact", label: "Kontak" },
-  { href: "#faqs", label: "FAQs" },
+  { href: "/", label: "Beranda" },
+  { href: "/about", label: "Tentang" },
+  { href: "/mitra", label: "Mitra" },
+  { href: "/konsumen", label: "Konsumen" },
+  { href: "/blogs", label: "Blogs" },
+  { href: "/faqs", label: "FAQs" },
 ];
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [active, setActive] = useState("#hero");
   const [theme, setTheme] = useState(() =>
     typeof window !== "undefined"
       ? localStorage.getItem("theme") || "light"
       : "light"
   );
+  
+  const pathname = usePathname();
 
   useEffect(() => {
     if (theme === "dark") {
@@ -41,35 +42,15 @@ const Navbar = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  // --- Scroll Spy Effect ---
-  useEffect(() => {
-    const handleScroll = () => {
-      let current = "";
-      for (const item of menuItems) {
-        const section = document.querySelector(item.href);
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= 80 && rect.bottom >= 80) {
-            current = item.href;
-          }
-        }
-      }
-      if (current && active !== current) {
-        setActive(current);
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    const timer = setTimeout(() => handleScroll(), 100);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      clearTimeout(timer);
-    };
-  }, [active]);
-
-  const handleMenuClick = (href: string) => {
-    setActive(href);
+  const handleMenuClick = () => {
     setMenuOpen(false);
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(href);
   };
 
   const ThemeToggleButton = () => (
@@ -115,26 +96,24 @@ const Navbar = () => {
   return (
     <nav className="bg-[var(--nimo-light)] shadow-md sticky top-0 z-50 transition-colors duration-300">
       <div className="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-nimo-yellow">NIMO</h1>
+        <Link href="/">
+          <h1 className="text-2xl font-bold text-nimo-yellow cursor-pointer">NIMO</h1>
+        </Link>
         <div className="hidden md:flex items-center space-x-8">
           {menuItems.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMenuClick(item.href);
-              }}
               className={`text-[var(--nimo-dark)] font-medium transition-colors relative ${
-                active === item.href ? "after:w-full text-nimo-yellow" : ""
+                isActive(item.href) ? "text-nimo-yellow" : ""
               } hover:text-nimo-yellow after:content-[''] after:block after:h-0.5 after:bg-nimo-yellow after:transition-all after:duration-300 after:absolute after:left-0 after:-bottom-1 ${
-                active === item.href
+                isActive(item.href)
                   ? "after:w-full"
                   : "after:w-0 hover:after:w-full"
               } `}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </div>
         <div className="flex items-center">
@@ -168,7 +147,6 @@ const Navbar = () => {
               </svg>
             </button>
           </div>
-          {/* 2. Bungkus tombol desktop dengan Link */}
           <div className="hidden md:flex items-center space-x-4">
             <Link href="/login">
               <button className="bg-transparent text-[var(--nimo-dark)] font-semibold py-2 px-4 rounded-full hover:bg-[var(--nimo-gray)] transition-colors">
@@ -199,7 +177,9 @@ const Navbar = () => {
       >
         <div className="flex flex-col h-full px-6 py-6">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-nimo-yellow">NIMO</h1>
+            <Link href="/">
+              <h1 className="text-2xl font-bold text-nimo-yellow cursor-pointer">NIMO</h1>
+            </Link>
             <div className="flex items-center space-x-2">
               <ThemeToggleButton />
               <button
@@ -225,24 +205,20 @@ const Navbar = () => {
           </div>
           <div className="flex flex-col space-y-2 flex-1">
             {menuItems.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleMenuClick(item.href);
-                }}
+                onClick={handleMenuClick}
                 className={`text-[var(--nimo-dark)] font-medium py-2 px-2 rounded transition-colors ${
-                  active === item.href
+                  isActive(item.href)
                     ? "text-nimo-yellow bg-[var(--nimo-gray)]"
                     : "hover:text-nimo-yellow"
                 }`}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </div>
-          {/* 3. Bungkus tombol mobile dengan Link */}
           <div className="flex space-x-2 pt-4">
             <Link href="/login" className="flex-1">
               <button className="w-full bg-transparent text-[var(--nimo-dark)] font-semibold py-2 px-4 rounded-full border border-[var(--nimo-gray)] hover:bg-[var(--nimo-gray)] transition-colors">

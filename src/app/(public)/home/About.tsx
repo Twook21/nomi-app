@@ -28,7 +28,7 @@ const About = () => {
           {/* text-nimo-dark sudah dinamis, tidak perlu diubah */}
           <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--nimo-dark)]">Solusi Tiga Arah</h3>
           {/* Menambahkan warna teks untuk dark mode */}
-          <p className="text-nimo-dark dark:text-gray-400 mt-2 sm:mt-3 text-base sm:text-lg">Menang untuk bisnis, menang untuk pembeli, dan menang untuk bumi.</p>
+          <p className="text-[var(--nimo-dark)] mt-2 sm:mt-3 text-base sm:text-lg">Menang untuk bisnis, menang untuk pembeli, dan menang untuk bumi.</p>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-10">
           {aboutData.map((item, index) => (
@@ -44,12 +44,10 @@ const About = () => {
                 transform hover:-translate-y-2"
             >
               <div className="flex justify-center mb-4 sm:mb-5">
-                {/* Ikon sudah menggunakan warna aksen, tidak perlu diubah */}
                 {item.icon}
               </div>
               <h4 className="text-xl sm:text-2xl text-nimo-yellow font-bold mb-2 sm:mb-3">{item.title}</h4>
-              {/* Menambahkan warna teks untuk dark mode */}
-              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base leading-relaxed">{item.description}</p>
+              <p className="text-[var(--nimo-dark)] text-sm sm:text-base leading-relaxed">{item.description}</p>
             </div>
           ))}
         </div>

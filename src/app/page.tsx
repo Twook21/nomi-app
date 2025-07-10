@@ -1,18 +1,16 @@
 'use client';
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Mission from "@/components/Mission";
-import HowItWorks from "@/components/HowItWorks";
-import Deals from "@/components/Deals";
-import CTA from "@/components/CTA";
-import Contact from "@/components/Contact";
-import Faqs from "@/components/Faqs";
+import Hero from "@/app/(public)/home/Hero";
+import About from "@/app/(public)/home/About";
+import Mission from "@/app/(public)/home/Mission";
+import HowItWorks from "@/app/(public)/home/HowItWorks";
+import Deals from "@/app/(public)/home/Deals";
+import CTA from "@/app/(public)/home/CTA";
+import Contact from "@/app/(public)/home/Contact";
+import Faqs from "@/app/(public)/home/Faqs";
 import Footer from "@/components/Footer";
-import LoginPage from "./login/page";
-import RegisterPage from "./register/page";
 
 export default function Home() {
   const [showButton, setShowButton] = useState(false);
@@ -43,7 +41,7 @@ export default function Home() {
         <Faqs />
         <Footer />
         {showButton && (
-            <button
+          <button
             onClick={scrollToTop}
             className="fixed bottom-8 right-8 bg-nimo-yellow text-white px-4 py-2 rounded-full shadow-lg hover:bg-nimo-yellow-700 transition cursor-pointer"
             aria-label="Back to top"
