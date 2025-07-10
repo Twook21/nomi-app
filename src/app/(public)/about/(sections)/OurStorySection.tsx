@@ -10,10 +10,10 @@ export const OurStorySection = () => {
         <h2 className="text-3xl md:text-4xl font-bold mb-6">
           Mengapa Kami Memulai <span className="text-nimo-yellow">NIMO</span>?
         </h2>
-        <p className="text-lg leading-relaxed mb-10 text-gray-700">
+        <p className="text-lg leading-relaxed mb-10 text-nimo-dark">
           Setiap tahun, 1,3 miliar ton makanan terbuang sia-sia. Di Indonesia, food waste tidak hanya merusak planet, tetapi juga menyebabkan kerugian ekonomi yang besar. NIMO lahir sebagai jembatan antara penjual makanan berlebih dengan pembeli cerdas.
         </p>
-        <blockquote className="border-l-4 border-nimo-yellow bg-white/50 p-6 rounded-r-lg italic text-xl font-medium text-left max-w-2xl mx-auto shadow-sm">
+        <blockquote className="text-nimo-dark border-l-4 border-nimo-yellow bg-white/50 p-6 rounded-r-lg italic text-xl font-medium text-left max-w-2xl mx-auto shadow-sm">
           “Kami percaya setiap makanan layak mendapatkan kesempatan kedua untuk dinikmati, bukan dibuang.”
         </blockquote>
       </div>
