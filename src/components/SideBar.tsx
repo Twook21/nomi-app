@@ -9,16 +9,15 @@ import {
     Settings
 } from 'lucide-react';
 
-// --- Data Navigasi ---
 const navLinks = {
     admin: [
-        { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-        { name: 'Verifikasi Mitra', href: '/verifikasi', icon: Store },
-        { name: 'Manajemen Produk', href: '/produk', icon: Package },
+        // { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+        // { name: 'Verifikasi Mitra', href: '/verifikasi', icon: Store },
+        // { name: 'Manajemen Produk', href: '/produk', icon: Package },
         { name: 'Pengguna', href: '/pengguna', icon: Users },
-        { name: 'Kategori Produk', href: '/kategori', icon: Archive},
-        { name: 'Laporan', href: '/laporan', icon: BarChart3 },
-        { name: 'Pengaturan', href: '/pengaturan', icon: Settings },
+        // { name: 'Kategori Produk', href: '/kategori', icon: Archive},
+        // { name: 'Laporan', href: '/laporan', icon: BarChart3 },
+        // { name: 'Pengaturan', href: '/pengaturan', icon: Settings },
     ],
     mitra: [
         // ... link untuk mitra
@@ -55,7 +54,6 @@ export const SidebarNav = ({ role, onLinkClick }: SidebarNavProps) => {
                                 : 'text-gray-400 hover:bg-gray-700/50 hover:text-white'
                             }`}
                     >
-                        {/* Indikator aktif dengan garis vertikal */}
                         {isActive && (
                             <span className="absolute left-0 top-0 h-full w-1 bg-nimo-yellow rounded-r-full"></span>
                         )}
@@ -68,7 +66,6 @@ export const SidebarNav = ({ role, onLinkClick }: SidebarNavProps) => {
     );
 }
 
-// --- Komponen Sidebar Utama dengan Tampilan Baru ---
 export const Sidebar = ({ role }: { role: Role }) => {
     const roleTitle = role.charAt(0).toUpperCase() + role.slice(1);
 
@@ -82,10 +79,8 @@ export const Sidebar = ({ role }: { role: Role }) => {
             
             <SidebarNav role={role} />
 
-            {/* Area Profil & Logout di bawah */}
             <div className="mt-auto p-4 border-t border-gray-800">
-                {/* Area profil sekarang menjadi tautan ke /profil */}
-                <Link href="/profil">
+                {/* <Link href="/profil">
                     <div className="flex items-center space-x-3 mb-4 p-2 rounded-lg hover:bg-gray-800 transition-colors">
                         <img className="h-10 w-10 rounded-full object-cover" src="https://placehold.co/100x100/FBBF24/1E1E1E?text=A" alt="Admin" />
                         <div>
@@ -93,7 +88,7 @@ export const Sidebar = ({ role }: { role: Role }) => {
                             <p className="text-xs text-gray-400">admin@nimo.app</p>
                         </div>
                     </div>
-                </Link>
+                </Link> */}
                 <button className="flex w-full items-center justify-center space-x-2 py-2 rounded-lg bg-gray-800 hover:bg-red-500/20 hover:text-red-400 text-gray-400 transition-colors">
                     <LogOut className="h-5 w-5" />
                     <span>Logout</span>

@@ -22,7 +22,7 @@ export default function Error({
         <h1 className="text-3xl md:text-5xl font-extrabold text-[var(--nimo-dark)]">
           Terjadi Kesalahan
         </h1>
-        <p className="mt-4 text-md md:text-lg text-gray-600 dark:text-gray-300">
+        <p className="mt-4 text-md md:text-lg text-nimo-dark">
           Maaf, sepertinya ada masalah yang tidak terduga. Tim kami sudah diberitahu tentang masalah ini.
         </p>
 

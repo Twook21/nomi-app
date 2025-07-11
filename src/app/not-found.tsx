@@ -42,8 +42,8 @@ export default function NotFound() {
         <h1 className="mt-4 text-4xl md:text-6xl font-extrabold text-[var(--nimo-dark)] tracking-tight">
           Halaman Kosong
         </h1>
-        <p className="mt-4 max-w-md text-md text-gray-500 dark:text-gray-400">
-          Sama seperti piring ini, halaman yang Anda cari sepertinya tidak ada. Mari kita kembali ke tempat yang penuh dengan makanan lezat.
+        <p className="mt-4 max-w-md text-md text-nimo-dark">
+          Sama seperti piring ini, halaman yang Anda cari sepertinya tidak ada, atau sedang dalam pengembangan. Mari kita kembali ke tempat yang penuh dengan makanan lezat.
         </p>
 
         {/* Tombol Aksi */}
