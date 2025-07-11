@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌱 NIMO - Aplikasi Anti Food Waste
 
-## Getting Started
+**NIMO** adalah aplikasi web yang dikembangkan untuk membantu mengurangi food waste dengan menyediakan fitur pengelolaan makanan secara efektif.  
+Project ini dibuat sebagai bagian dari **Capstone Project** program **Fullstack Developer - Jabar Istimewa Digital Academy Course**.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Tech Stack
+
+- **Next.js** (React Framework)
+- **TypeScript** (Typed JavaScript)
+- **Tailwind CSS** (Utility-first CSS Framework)
+
+---
+
+## 📂 Struktur Proyek
+
+- `pages/` – Berisi halaman-halaman aplikasi.
+- `components/` – Komponen UI yang dapat digunakan kembali.
+- `lib/data.ts` – Berisi **data dummy user** untuk keperluan development.
+
+---
+
+## 📝 Fitur
+
+✅ **Dynamic Routing**  
+- Dapat mengakses halaman pengguna melalui:
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000/pengguna](http://localhost:3000/pengguna)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+````
+Halaman ini menampilkan data user dummy yang diambil dari file `lib/data.ts`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+✅ **Pengelolaan Data Dummy**  
+- Data user hanya sebagai dummy untuk tahap pengembangan.
 
-## Learn More
+✅ **Frontend Modern**  
+- Menggunakan Tailwind CSS untuk tampilan yang minimalis dan responsif.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📦 Instalasi
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Clone repository ini:
+ ```bash
+ git clone https://github.com/Twook21/nimo-app.git
+````
 
-## Deploy on Vercel
+2. Masuk ke folder project:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   cd nimo-app
+   ```
+3. Install dependencies:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   npm install
+   ```
+4. Jalankan development server:
+
+   ```bash
+   npm run dev
+   ```
+5. Buka di browser:
+
+   ```
+   http://localhost:3000
+   ```
+
+---
+
+## 🛠️ Catatan Developer
+
+📌 Untuk **Tugas Kedua** Capstone:
+
+* **Dynamic route** pada `/pengguna` menggunakan Next.js dynamic routing.
+* Data yang ditampilkan diambil dari file `lib/data.ts`.
+
+---
+
+## 👨‍💻 Kontributor
+
+* Akmal Bintang Budiawan – *Fullstack Developer*
+
+---
+
