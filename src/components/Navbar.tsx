@@ -8,7 +8,7 @@ import { Sun, Moon } from "lucide-react";
 const menuItems = [
   { href: "/", label: "Beranda" },
   { href: "/about", label: "Tentang" },
-  { href: "/mitra", label: "Mitra" },
+  { href: "/partner", label: "Mitra" },
   { href: "/konsumen", label: "Konsumen" },
   { href: "/blogs", label: "Blogs" },
   { href: "/faqs", label: "FAQs" },

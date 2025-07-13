@@ -17,7 +17,6 @@ type UserDetailPageProps = {
 };
 
 export default async function UserDetailPage({ params }: UserDetailPageProps) {
-  // Logika pengambilan data tetap sama, sudah sangat baik!
   const userId = parseInt(params.id, 10);
   const user = mockUsers.find((u) => u.id === userId);
 
