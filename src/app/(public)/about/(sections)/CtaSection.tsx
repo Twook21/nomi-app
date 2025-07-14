@@ -19,7 +19,7 @@ const CtaSection = () => {
         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-5">
           <a
             href="/register/consumer"
-            className="inline-block bg-nimo-yellow text-black font-bold py-4 px-10 rounded-full text-lg hover:bg-yellow-400 transition-all duration-300 shadow-lg hover:shadow-yellow-500/40 transform hover:scale-105 w-full sm:w-auto"
+            className="inline-block bg-nimo-yellow text-nimo-light font-bold py-4 px-10 rounded-full text-lg hover:bg-yellow-400 transition-all duration-300 shadow-lg hover:shadow-yellow-500/40 transform hover:scale-105 w-full sm:w-auto"
           >
             Cari Makanan Hemat
           </a>

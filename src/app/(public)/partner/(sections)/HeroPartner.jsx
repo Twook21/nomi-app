@@ -9,7 +9,7 @@ import { ArrowRight } from "lucide-react";
 const HeroPartner = () => {
   return (
     <section className="bg-[var(--background)]">
-      <div className="container mx-auto px-4 sm:px-6 py-20 md:py-32">
+      <div className="container mx-auto px-4 sm:px-6 py-20 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Kolom Teks */}
           <motion.div
@@ -25,7 +25,9 @@ const HeroPartner = () => {
               Ubah Surplus Jadi Profit.
             </h1>
             <p className="text-lg text-[var(--nimo-dark)]/80 leading-relaxed max-w-xl mb-8">
-              Jangan biarkan makanan berlebih menjadi kerugian. Bergabunglah dengan NIMO untuk menjangkau ribuan pelanggan baru dan meningkatkan pendapatan Anda.
+              Jangan biarkan makanan berlebih menjadi kerugian. Bergabunglah
+              dengan NIMO untuk menjangkau ribuan pelanggan baru dan
+              meningkatkan pendapatan Anda.
             </p>
             <Link href="/register-partner">
               <button className="group inline-flex items-center bg-nimo-yellow text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-500 transition-colors duration-300">
@@ -40,14 +42,15 @@ const HeroPartner = () => {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="relative w-full h-80 md:h-96"
+            className="relative w-full h-80 md:h-96 rounded-2xl shadow-lg overflow-hidden"
           >
             <Image
-              src="/image/nimo-app-mockup.png" // GANTI: Gambar mockup aplikasi NIMO di HP
+              src="/image/partner.png"
               alt="Aplikasi NIMO untuk Mitra"
               layout="fill"
-              objectFit="contain"
+              objectFit="cover"
               priority
+              className="rounded-2xl"
             />
           </motion.div>
         </div>

@@ -9,9 +9,9 @@ const menuItems = [
   { href: "/", label: "Beranda" },
   { href: "/about", label: "Tentang" },
   { href: "/partner", label: "Mitra" },
-  { href: "/konsumen", label: "Konsumen" },
+  { href: "/customer", label: "Konsumen" },
   { href: "/blogs", label: "Blogs" },
-  { href: "/faqs", label: "FAQs" },
+  // { href: "/faqs", label: "FAQs" },
 ];
 
 const Navbar = () => {

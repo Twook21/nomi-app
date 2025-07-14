@@ -27,7 +27,7 @@ const HowItWorks = () => {
                             Proses Mudah & Cepat
                         </h2>
                         {/* Garis Vertikal */}
-                        <div className="absolute left-4 top-14 h-full border-l-2 border-dashed border-nimo-yellow/50"></div>
+                        <div className="absolute left-4 top-22 pb-12 md:h-70 sm:h-75 border-l-2 border-dashed border-nimo-yellow/50"></div>
                         
                         <div className="space-y-12">
                             {steps.map((step, index) => (
@@ -45,7 +45,7 @@ const HowItWorks = () => {
                      <div className="w-full h-96 bg-[var(--nimo-gray)] rounded-2xl p-4">
                         <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg">
                              <Image
-                                src="/image/partner-dashboard.png" // GANTI: Screenshot dashboard mitra yang clean
+                                src="/image/dashboard.png" 
                                 alt="Dashboard Manajemen Mitra NIMO"
                                 layout="fill"
                                 objectFit="cover"
