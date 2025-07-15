@@ -1,10 +1,9 @@
 import React from 'react';
-// Mengimpor ikon untuk sosial media
 import { Facebook, Instagram, Twitter, Linkedin } from 'lucide-react';
+import Link from 'next/link';
 
 const Footer = () => {
   return (
-    // Menggunakan var(--nimo-dark) agar konsisten dengan tema
     <footer className="bg-black text-gray-300">
       <div className="container mx-auto px-6 py-12">
         
@@ -23,10 +22,11 @@ const Footer = () => {
           <div>
             <h5 className="font-bold uppercase tracking-wider text-white mb-4">Navigasi</h5>
             <nav className="flex flex-col space-y-2 text-sm">
-              <a href="#hero" className="hover:text-nimo-yellow transition-colors">Home</a>
-              <a href="#about" className="hover:text-nimo-yellow transition-colors">Tentang</a>
-              <a href="#how-it-works" className="hover:text-nimo-yellow transition-colors">Cara Kerja</a>
-              <a href="#faqs" className="hover:text-nimo-yellow transition-colors">FAQs</a>
+              <Link href="/" className="hover:text-nimo-yellow transition-colors">Beranda</Link>
+              <Link href="/about" className="hover:text-nimo-yellow transition-colors">Tentang</Link>
+              <Link href="/partner" className="hover:text-nimo-yellow transition-colors">Mitra</Link>
+              <Link href="/customer" className="hover:text-nimo-yellow transition-colors">Konsumen</Link>
+              <Link href="/blogs" className="hover:text-nimo-yellow transition-colors">Blogs</Link>
             </nav>
           </div>
 

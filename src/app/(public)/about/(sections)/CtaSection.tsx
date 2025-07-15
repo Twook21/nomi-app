@@ -5,7 +5,7 @@ const CtaSection = () => {
     <section id="cta" className="relative py-24 md:py-32">
       <div
         className="absolute inset-0 bg-cover bg-center bg-fixed"
-        style={{ backgroundImage: "url('/image/cta-background.png')" }}
+        style={{ backgroundImage: "url('/images/cta-background.png')" }}
       ></div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
       <div className="container mx-auto px-4 sm:px-6 text-center relative text-white">

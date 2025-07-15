@@ -26,7 +26,7 @@ const RegisterPage = () => {
     <main
       className="bg-[var(--nimo-gray)] min-h-screen flex items-center justify-center p-4 transition-colors duration-300"
       style={{
-        backgroundImage: "url(/image/bg-auth.png)",
+        backgroundImage: "url(/images/bg-auth.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

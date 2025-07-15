@@ -16,14 +16,13 @@ export const HeroSection = () => {
               </span>
             </h1>
             <p className="mt-6 text-lg md:text-xl leading-relaxed max-w-xl mx-auto md:mx-0 text-nimo-dark">
-              NIMO adalah platform makanan berlebih di Indonesia yang
-              membantu UMKM mengubah stok mendekati kadaluarsa menjadi
-              keuntungan.
+              NIMO adalah platform makanan berlebih di Indonesia yang membantu
+              UMKM mengubah stok mendekati kadaluarsa menjadi keuntungan.
             </p>
           </div>
           <div className="relative w-full h-72 md:h-[450px] rounded-2xl">
             <Image
-              src="/image/about-hero.png"
+              src="/images/about-hero.png"
               alt="Ilustrasi orang membeli makanan diskon"
               fill
               style={{ objectFit: "cover" }}

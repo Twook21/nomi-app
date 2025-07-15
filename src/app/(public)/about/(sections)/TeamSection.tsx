@@ -18,7 +18,7 @@ const TeamSection = () => {
           <div className="text-center group">
             <div className="relative h-28 w-28 rounded-full overflow-hidden border-4 border-nimo-yellow/50 group-hover:border-nimo-yellow transition-all duration-300 shadow-lg mx-auto">
               <Image
-                src="/image/team-placeholder-1.jpg"
+                src="/images/team-placeholder-1.jpg"
                 alt="Foto Tim 1"
                 layout="fill"
                 objectFit="cover"
@@ -30,7 +30,7 @@ const TeamSection = () => {
           <div className="text-center group">
             <div className="relative h-28 w-28 rounded-full overflow-hidden border-4 border-nimo-yellow/50 group-hover:border-nimo-yellow transition-all duration-300 shadow-lg mx-auto">
               <Image
-                src="/image/team-placeholder-2.jpg"
+                src="/images/team-placeholder-2.jpg"
                 alt="Foto Tim 2"
                 layout="fill"
                 objectFit="cover"
@@ -42,7 +42,7 @@ const TeamSection = () => {
           <div className="text-center group">
             <div className="relative h-28 w-28 rounded-full overflow-hidden border-4 border-nimo-yellow/50 group-hover:border-nimo-yellow transition-all duration-300 shadow-lg mx-auto">
               <Image
-                src="/image/team-placeholder-3.jpg"
+                src="/images/team-placeholder-3.jpg"
                 alt="Foto Tim 3"
                 layout="fill"
                 objectFit="cover"

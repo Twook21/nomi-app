@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Heart, DollarSign, Globe } from "lucide-react";
 import Link from "next/link";
 
-
 const Mission = () => {
   return (
     // Mengubah background utama agar dinamis
@@ -16,7 +15,7 @@ const Mission = () => {
           {/* Mengganti shadow dengan border di dark mode */}
           <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-2xl overflow-hidden shadow-2xl dark:shadow-none dark:border dark:border-gray-700">
             <Image
-              src="/image/mission.png"
+              src="/images/mission.png"
               alt="Ilustrasi menyelamatkan makanan"
               layout="fill"
               objectFit="cover"

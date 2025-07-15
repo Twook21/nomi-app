@@ -45,7 +45,7 @@ const HeroPartner = () => {
             className="relative w-full h-80 md:h-96 rounded-2xl shadow-lg overflow-hidden"
           >
             <Image
-              src="/image/partner.png"
+              src="/images/partner.png"
               alt="Aplikasi NIMO untuk Mitra"
               layout="fill"
               objectFit="cover"

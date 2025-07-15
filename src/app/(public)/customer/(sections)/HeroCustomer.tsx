@@ -6,7 +6,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
-const HeroCustomer  = () => {
+const HeroCustomer = () => {
   return (
     <section className="bg-[var(--background)]">
       <div className="container mx-auto px-4 sm:px-6 py-20 md:py-26">
@@ -22,7 +22,9 @@ const HeroCustomer  = () => {
               Makan Enak, Harga Hemat.
             </h1>
             <p className="text-lg text-[var(--nimo-dark)]/80 leading-relaxed max-w-xl mb-8">
-              Temukan penawaran spesial dari kafe, restoran, dan toko roti favoritmu. Selamatkan makanan lezat dari pemborosan sekaligus selamatkan dompetmu.
+              Temukan penawaran spesial dari kafe, restoran, dan toko roti
+              favoritmu. Selamatkan makanan lezat dari pemborosan sekaligus
+              selamatkan dompetmu.
             </p>
             <Link href="/deals">
               <button className="group inline-flex items-center bg-nimo-yellow text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-500 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
@@ -40,7 +42,7 @@ const HeroCustomer  = () => {
             className="relative w-full h-80 md:h-96"
           >
             <Image
-              src="/image/customers.png" 
+              src="/images/customers.png"
               alt="Makanan lezat dari NIMO"
               layout="fill"
               objectFit="cover"
