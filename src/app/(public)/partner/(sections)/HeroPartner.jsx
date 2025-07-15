@@ -26,7 +26,7 @@ const HeroPartner = () => {
             </h1>
             <p className="text-lg text-[var(--nimo-dark)]/80 leading-relaxed max-w-xl mb-8">
               Jangan biarkan makanan berlebih menjadi kerugian. Bergabunglah
-              dengan NIMO untuk menjangkau ribuan pelanggan baru dan
+              dengan NOMI untuk menjangkau ribuan pelanggan baru dan
               meningkatkan pendapatan Anda.
             </p>
             <Link href="/register-partner">
@@ -46,7 +46,7 @@ const HeroPartner = () => {
           >
             <Image
               src="/images/partner.png"
-              alt="Aplikasi NIMO untuk Mitra"
+              alt="Aplikasi NOMI untuk Mitra"
               layout="fill"
               objectFit="cover"
               priority

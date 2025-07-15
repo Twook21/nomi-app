@@ -32,7 +32,7 @@ const Mission = () => {
             </h2>
             {/* Menambahkan warna teks untuk dark mode */}
             <p className="text-[var(--nimo-dark)] leading-relaxed text-base sm:text-lg">
-              <span className="text-nimo-yellow font-bold">NIMO </span>lahir
+              <span className="text-nimo-yellow font-bold">NOMI </span>lahir
               dari sebuah gagasan sederhana, bagaimana jika kita bisa
               menghubungkan makanan lezat yang berlebih dengan orang-orang yang
               ingin menikmatinya?

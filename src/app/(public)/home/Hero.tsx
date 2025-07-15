@@ -21,7 +21,7 @@ const Hero = () => {
           </span>
         </h2>
         <p className="text-base text-white xs:text-lg font-bold md:text-xl opacity-90 mb-8 md:mb-10 max-w-md md:max-w-3xl mx-auto">
-          <span className="text-nimo-yellow">NIMO</span> menghubungkanmu dengan
+          <span className="text-nimo-yellow">NOMI</span> menghubungkanmu dengan
           restoran dan toko untuk menyelamatkan makanan lezat berlebih dengan
           harga diskon. Bantu bumi, satu hidangan sekali waktu.
         </p>

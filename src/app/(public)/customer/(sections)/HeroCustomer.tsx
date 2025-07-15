@@ -43,7 +43,7 @@ const HeroCustomer = () => {
           >
             <Image
               src="/images/customers.png"
-              alt="Makanan lezat dari NIMO"
+              alt="Makanan lezat dari NOMI"
               layout="fill"
               objectFit="cover"
               className="rounded-2xl"

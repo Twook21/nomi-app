@@ -1,7 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
   images: {
+    domains: ["newsapi.org"],
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+      {
+        protocol: "http",
+        hostname: "**",
+      },
       {
         protocol: "https",
         hostname: "cdn.bisnis.com",
@@ -27,7 +38,16 @@ const nextConfig = {
         hostname: "placehold.co",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "ml.globenewswire.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
+  },
+   env: {
+    NEWSAPI_KEY: process.env.NEWSAPI_KEY,
   },
 };
 

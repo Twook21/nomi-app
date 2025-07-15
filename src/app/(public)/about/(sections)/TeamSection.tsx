@@ -6,7 +6,7 @@ const TeamSection = () => {
     <section id="team" className="py-20 md:py-28 bg-[var(--nimo-gray)]">
       <div className="container mx-auto px-4 sm:px-6 text-center max-w-3xl">
         <h2 className="text-3xl md:text-4xl font-bold mb-5">
-          Tim di Balik <span className="text-nimo-yellow">NIMO</span>
+          Tim di Balik <span className="text-nimo-yellow">NOMI</span>
         </h2>
         <p className="text-lg leading-relaxed mb-12 text-gray-700">
           Kami adalah tim kecil yang terdiri dari para pegiat teknologi,

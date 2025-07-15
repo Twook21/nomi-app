@@ -53,7 +53,7 @@ const HowItWorks = () => {
             <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg">
               <Image
                 src="/images/dashboard.png"
-                alt="Dashboard Manajemen Mitra NIMO"
+                alt="Dashboard Manajemen Mitra NOMI"
                 layout="fill"
                 objectFit="cover"
               />

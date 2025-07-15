@@ -9,14 +9,14 @@ export const HeroSection = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="text-center md:text-left">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight">
-              Tentang <span className="text-nimo-yellow">NIMO -</span>
+              Tentang <span className="text-nimo-yellow">NOMI -</span>
               <br />
               <span className="bg-nimo-yellow text-transparent bg-clip-text">
                 Selamatkan Makanan, Selamatkan Bumi
               </span>
             </h1>
             <p className="mt-6 text-lg md:text-xl leading-relaxed max-w-xl mx-auto md:mx-0 text-nimo-dark">
-              NIMO adalah platform makanan berlebih di Indonesia yang membantu
+              NOMI adalah platform makanan berlebih di Indonesia yang membantu
               UMKM mengubah stok mendekati kadaluarsa menjadi keuntungan.
             </p>
           </div>

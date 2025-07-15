@@ -20,7 +20,7 @@ const Contact = () => {
 
         <div className="max-w-2xl mx-auto bg-white dark:bg-[var(--background)] rounded-2xl shadow-xl dark:shadow-none dark:border dark:border-gray-700 p-8 md:p-12 transition-colors duration-300">
           <h4 className="text-2xl font-bold text-center text-[var(--nimo-dark)] mb-8">
-            Hubungi Customer Service NIMO
+            Hubungi Customer Service NOMI
           </h4>
           <div className="space-y-6">
             <a
@@ -30,9 +30,7 @@ const Contact = () => {
               <Mail className="w-6 h-6 text-nimo-yellow mr-4 flex-shrink-0" />
               <div>
                 <p className="font-semibold text-[var(--nimo-dark)]">Email</p>
-                <p className="text-[var(--nimo-dark)]">
-                  support@nimo.app
-                </p>
+                <p className="text-[var(--nimo-dark)]">support@nimo.app</p>
               </div>
             </a>
             <a
@@ -46,9 +44,7 @@ const Contact = () => {
                 <p className="font-semibold text-[var(--nimo-dark)]">
                   WhatsApp
                 </p>
-                <p className="text-[var(--nimo-dark)]">
-                  +62 812-3456-7890
-                </p>
+                <p className="text-[var(--nimo-dark)]">+62 812-3456-7890</p>
               </div>
             </a>
             <div className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">

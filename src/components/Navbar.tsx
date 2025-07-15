@@ -21,7 +21,7 @@ const Navbar = () => {
       ? localStorage.getItem("theme") || "light"
       : "light"
   );
-  
+
   const pathname = usePathname();
 
   useEffect(() => {
@@ -97,7 +97,9 @@ const Navbar = () => {
     <nav className="bg-[var(--nimo-light)] shadow-md sticky top-0 z-50 transition-colors duration-300">
       <div className="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
         <Link href="/">
-          <h1 className="text-2xl font-bold text-nimo-yellow cursor-pointer">NIMO</h1>
+          <h1 className="text-2xl font-bold text-nimo-yellow cursor-pointer">
+            NOMI
+          </h1>
         </Link>
         <div className="hidden md:flex items-center space-x-8">
           {menuItems.map((item) => (
@@ -178,7 +180,9 @@ const Navbar = () => {
         <div className="flex flex-col h-full px-6 py-6">
           <div className="flex items-center justify-between mb-6">
             <Link href="/">
-              <h1 className="text-2xl font-bold text-nimo-yellow cursor-pointer">NIMO</h1>
+              <h1 className="text-2xl font-bold text-nimo-yellow cursor-pointer">
+                NOMI
+              </h1>
             </Link>
             <div className="flex items-center space-x-2">
               <ThemeToggleButton />

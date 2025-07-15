@@ -26,7 +26,7 @@ const TimelineSection = () => {
                   Ide & Validasi Konsep
                 </h4>
                 <p className="mt-2 text-sm text-gray-800">
-                  NIMO lahir dari riset mendalam tentang masalah food waste dan
+                  NOMI lahir dari riset mendalam tentang masalah food waste dan
                   kebutuhan pasar di Indonesia.
                 </p>
               </div>
@@ -43,7 +43,7 @@ const TimelineSection = () => {
                   Peluncuran Platform & Mitra Perdana
                 </h4>
                 <p className="mt-2 text-sm text-gray-800">
-                  Platform NIMO resmi diluncurkan di Jabodetabek, menggandeng
+                  Platform NOMI resmi diluncurkan di Jabodetabek, menggandeng
                   beberapa mitra pertama.
                 </p>
               </div>
@@ -58,7 +58,7 @@ const TimelineSection = () => {
                   Peluncuran Aplikasi Mobile
                 </h4>
                 <p className="mt-2 text-sm text-gray-800">
-                  Aplikasi NIMO hadir di iOS & Android untuk pengalaman yang
+                  Aplikasi NOMI hadir di iOS & Android untuk pengalaman yang
                   lebih mudah dan cepat.
                 </p>
               </div>
@@ -75,7 +75,7 @@ const TimelineSection = () => {
                   Ekspansi Nasional
                 </h4>
                 <p className="mt-2 text-sm text-gray-800">
-                  Membawa misi NIMO ke kota-kota besar lain di seluruh
+                  Membawa misi NOMI ke kota-kota besar lain di seluruh
                   Indonesia.
                 </p>
               </div>

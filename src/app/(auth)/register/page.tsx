@@ -33,7 +33,7 @@ const RegisterPage = () => {
     >
       <div className="max-w-md w-full bg-white dark:bg-[var(--background)] rounded-2xl shadow-2xl dark:shadow-none dark:border dark:border-gray-700 p-8 space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-nimo-yellow">NIMO</h1>
+          <h1 className="text-3xl font-bold text-nimo-yellow">NOMI</h1>
           <h2 className="mt-2 text-xl font-bold tracking-tight text-[var(--nimo-dark)]">
             Buat Akun Baru
           </h2>

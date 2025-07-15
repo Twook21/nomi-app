@@ -1,6 +1,6 @@
-# 🌱 NIMO - Aplikasi Anti Food Waste
+# 🌱 NOMI - Aplikasi Anti Food Waste
 
-**NIMO** adalah aplikasi web yang dikembangkan untuk membantu mengurangi food waste dengan menyediakan fitur pengelolaan makanan secara efektif.  
+**NOMI** adalah aplikasi web yang dikembangkan untuk membantu mengurangi food waste dengan menyediakan fitur pengelolaan makanan secara efektif.  
 Project ini dibuat sebagai bagian dari **Capstone Project** program **Fullstack Developer - Jabar Istimewa Digital Academy Course**.
 
 ---
@@ -23,19 +23,24 @@ Project ini dibuat sebagai bagian dari **Capstone Project** program **Fullstack 
 
 ## 📝 Fitur
 
-✅ **Dynamic Routing**  
+✅ **Dynamic Routing**
+
 - Dapat mengakses halaman pengguna melalui:
+
 ```
 
 [http://localhost:3000/pengguna](http://localhost:3000/pengguna)
 
-````
+```
+
 Halaman ini menampilkan data user dummy yang diambil dari file `lib/data.ts`.
 
-✅ **Pengelolaan Data Dummy**  
+✅ **Pengelolaan Data Dummy**
+
 - Data user hanya sebagai dummy untuk tahap pengembangan.
 
-✅ **Frontend Modern**  
+✅ **Frontend Modern**
+
 - Menggunakan Tailwind CSS untuk tampilan yang minimalis dan responsif.
 
 ---
@@ -43,25 +48,29 @@ Halaman ini menampilkan data user dummy yang diambil dari file `lib/data.ts`.
 ## 📦 Instalasi
 
 1. Clone repository ini:
- ```bash
- git clone https://github.com/Twook21/nimo-app.git
-````
+
+```bash
+git clone https://github.com/Twook21/nimo-app.git
+```
 
 2. Masuk ke folder project:
 
    ```bash
    cd nimo-app
    ```
+
 3. Install dependencies:
 
    ```bash
    npm install
    ```
+
 4. Jalankan development server:
 
    ```bash
    npm run dev
    ```
+
 5. Buka di browser:
 
    ```
@@ -74,14 +83,13 @@ Halaman ini menampilkan data user dummy yang diambil dari file `lib/data.ts`.
 
 📌 Untuk **Tugas Kedua** Capstone:
 
-* **Dynamic route** pada `/pengguna` menggunakan Next.js dynamic routing.
-* Data yang ditampilkan diambil dari file `lib/data.ts`.
+- **Dynamic route** pada `/pengguna` menggunakan Next.js dynamic routing.
+- Data yang ditampilkan diambil dari file `lib/data.ts`.
 
 ---
 
 ## 👨‍💻 Kontributor
 
-* Akmal Bintang Budiawan – *Fullstack Developer*
+- Akmal Bintang Budiawan – _Fullstack Developer_
 
 ---
-

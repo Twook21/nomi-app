@@ -6,9 +6,9 @@ import { ThemeScript } from "@/components/ThemeScript";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NIMO - Temukan Resep Terbaikmu",
+  title: "NOMI - Temukan Resep Terbaikmu",
   description:
-    "Aplikasi pencari resep NIMO untuk membantu kamu memasak setiap hari.",
+    "Aplikasi pencari resep NOMI untuk membantu kamu memasak setiap hari.",
 };
 
 export default function RootLayout({

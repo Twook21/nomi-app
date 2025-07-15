@@ -32,7 +32,7 @@ const UserBenefits = () => {
           <div className="w-full h-96 relative">
             <Image
               src="/images/benefits.png" // GANTI: Lifestyle photo orang senang menerima makanan
-              alt="Konsumen NIMO yang senang"
+              alt="Konsumen NOMI yang senang"
               layout="fill"
               objectFit="cover"
               className="rounded-2xl"

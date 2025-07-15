@@ -9,7 +9,7 @@ const Testimonial = () => {
         <div className="max-w-3xl mx-auto text-center relative">
           <Quote className="absolute -top-8 -left-8 text-nimo-yellow/10 h-24 w-24" />
           <p className="text-2xl md:text-3xl font-light italic text-[var(--nimo-dark)] leading-snug">
-            "NIMO mengubah cara kami mengelola surplus. Food cost menurun
+            "NOMI mengubah cara kami mengelola surplus. Food cost menurun
             signifikan dan kami mendapatkan pelanggan baru yang loyal. Ini
             adalah win-win solution yang brilian."
           </p>

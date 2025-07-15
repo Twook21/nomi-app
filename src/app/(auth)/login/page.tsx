@@ -17,7 +17,7 @@ const LoginPage = () => {
     <main
       className="bg-[var(--nimo-gray)] min-h-screen flex items-center justify-center p-4 transition-colors duration-300"
       style={{
-        backgroundImage: "url(/images/bg-auth.png)", 
+        backgroundImage: "url(/images/bg-auth.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -25,7 +25,7 @@ const LoginPage = () => {
       <div className="max-w-md w-full bg-white dark:bg-[var(--background)] rounded-2xl shadow-2xl dark:shadow-none dark:border dark:border-gray-700 p-8 space-y-6">
         {/* Header Form */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-nimo-yellow">NIMO</h1>
+          <h1 className="text-3xl font-bold text-nimo-yellow">NOMI</h1>
           <h2 className="mt-2 text-xl font-bold tracking-tight text-[var(--nimo-dark)]">
             Selamat Datang Kembali
           </h2>

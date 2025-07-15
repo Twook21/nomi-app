@@ -28,10 +28,11 @@ const KeyBenefits = () => {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-[var(--nimo-dark)]">
-            Keuntungan Menjadi Mitra NIMO
+            Keuntungan Menjadi Mitra NOMI
           </h2>
           <p className="mt-4 text-lg text-[var(--nimo-dark)]/80">
-            Platform kami dirancang untuk satu tujuan: membantu bisnis Anda tumbuh secara efisien dan berkelanjutan.
+            Platform kami dirancang untuk satu tujuan: membantu bisnis Anda
+            tumbuh secara efisien dan berkelanjutan.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
