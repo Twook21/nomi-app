@@ -27,7 +27,7 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
   return (
     <div className="space-y-6">
       <Link
-        href="/pengguna"
+        href="/admin/pengguna"
         className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />

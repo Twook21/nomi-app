@@ -15,7 +15,7 @@ export default function UserListPage() {
                     {mockUsers.map((user) => (
                         <Link 
                             key={user.id} 
-                            href={`/pengguna/${user.id}`}
+                            href={`/admin/pengguna/${user.id}`}
                             className="flex items-center justify-between py-4 px-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                         >
                             <div className="flex items-center space-x-4">
