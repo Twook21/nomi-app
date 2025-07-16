@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+}
+
+
+model User {
+  id              BigInt    @id @default(autoincrement())
+  name            String
+  email           String    @unique
+  passwordHash    String    @map("password_hash")
+  phoneNumber     String?   @map("phone_number")
+  role            Role      @default(USER)
+  emailVerifiedAt DateTime? @map("email_verified_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  partner Partner?
+  orders  Order[]
+
+  @@map("users")
+}
+
+model Partner {
+  id           BigInt        @id @default(autoincrement())
+  userId       BigInt        @unique @map("user_id")
+  storeName    String        @map("store_name")
+  storeAddress String        @map("store_address")
+  storePhone   String        @map("store_phone")
+  description  String?
+  status       PartnerStatus @default(PENDING)
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  user     User      @relation(fields: [userId], references: [id])
+  products Product[]
+
+  @@map("partners")
+}
+
+model Category {
+  id        BigInt    @id @default(autoincrement())
+  name      String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id               BigInt        @id @default(autoincrement())
+  partnerId        BigInt        @map("partner_id")
+  categoryId       BigInt        @map("category_id")
+  name             String
+  description      String
+  imageUrl         String?       @map("image_url")
+  originalPrice    Decimal       @map("original_price") @db.Decimal(10, 2)
+  discountedPrice  Decimal       @map("discounted_price") @db.Decimal(10, 2)
+  quantity         Int           @default(0)
+  expirationDate   DateTime      @map("expiration_date") @db.Date
+  status           ProductStatus @default(AVAILABLE)
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  partner    Partner     @relation(fields: [partnerId], references: [id])
+  category   Category    @relation(fields: [categoryId], references: [id])
+  orderItems OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id            BigInt      @id @default(autoincrement())
+  userId        BigInt      @map("user_id")
+  orderCode     String      @unique @map("order_code")
+  totalAmount   Decimal     @map("total_amount") @db.Decimal(12, 2)
+  status        OrderStatus @default(PENDING)
+  paymentMethod String?     @map("payment_method")
+  paymentToken  String?     @map("payment_token")
+  orderDate     DateTime    @default(now()) @map("order_date")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  user       User        @relation(fields: [userId], references: [id])
+  orderItems OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        BigInt  @id @default(autoincrement())
+  orderId   BigInt  @map("order_id")
+  productId BigInt  @map("product_id")
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+
+  // Relations
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+// Enums
+enum Role {
+  USER
+  PARTNER
+  ADMIN
+}
+
+enum PartnerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ProductStatus {
+  AVAILABLE
+  SOLD_OUT
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  COMPLETED
+  CANCELLED
+}

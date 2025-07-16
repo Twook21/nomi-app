@@ -1,16 +1,32 @@
+// app/login/page.tsx
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import Link from "next/link";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Login attempt with:", { email, password });
-    alert(`Mencoba login dengan Email: ${email}`);
+    setIsLoading(true);
+    setError("");
+
+    const result = await login(email, password);
+    
+    if (!result.success) {
+      setError(result.message);
+    }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -34,6 +50,12 @@ const LoginPage = () => {
           </p>
         </div>
 
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+            {error}
+          </div>
+        )}
+
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label
@@ -56,6 +78,7 @@ const LoginPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 p-3 bg-transparent border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-nimo-yellow focus:border-transparent transition"
                 placeholder="anda@email.com"
+                disabled={isLoading}
               />
             </div>
           </div>
@@ -74,46 +97,59 @@ const LoginPage = () => {
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 p-3 bg-transparent border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-nimo-yellow focus:border-transparent transition"
+                className="w-full pl-10 pr-10 p-3 bg-transparent border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-nimo-yellow focus:border-transparent transition"
                 placeholder="••••••••"
+                disabled={isLoading}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5 text-gray-400" />
+                ) : (
+                  <Eye className="h-5 w-5 text-gray-400" />
+                )}
+              </button>
             </div>
           </div>
 
           <div className="flex items-center justify-end">
             <div className="text-sm">
-              <a
-                href="#"
+              <Link
+                href="/forgot-password"
                 className="font-medium text-nimo-yellow hover:underline"
               >
                 Lupa kata sandi?
-              </a>
+              </Link>
             </div>
           </div>
 
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-nimo-yellow hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nimo-yellow"
+              disabled={isLoading}
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-nimo-yellow hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nimo-yellow disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Masuk
+              {isLoading ? "Sedang Masuk..." : "Masuk"}
             </button>
           </div>
         </form>
 
         <p className="text-center text-sm text-gray-600 dark:text-gray-400">
           Belum punya akun?{" "}
-          <a
+          <Link
             href="/register"
             className="font-medium text-nimo-yellow hover:underline"
           >
             Daftar sekarang
-          </a>
+          </Link>
         </p>
       </div>
     </main>

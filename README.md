@@ -81,10 +81,15 @@ git clone https://github.com/Twook21/nimo-app.git
 
 ## 🛠️ Catatan Developer
 
-📌 Untuk **Tugas Kedua** Capstone:
+📌 Untuk **Tugas Pertemuan Kedua** Capstone:
 
 - **Dynamic route** pada `/admin/pengguna` menggunakan Next.js dynamic routing.
 - Data yang ditampilkan diambil dari file `lib/data.ts`.
+
+📌 Untuk **Tugas Pertemuan Ke Empat** Capstone:
+
+- **CRUD** sementara : Operasi CRUD Untuk tabel User 
+- login sebagai admin menggunakan : username : admin@gmail.com pw: password, di bagian Managemen Pengguna
 
 ---
 
