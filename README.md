@@ -50,7 +50,7 @@ Halaman ini menampilkan data user dummy yang diambil dari file `lib/data.ts`.
 1. Clone repository ini:
 
 ```bash
-git clone https://github.com/Twook21/nimo-app.git
+git clone https://github.com/Twook21/nomi-app.git
 ```
 
 2. Masuk ke folder project:
