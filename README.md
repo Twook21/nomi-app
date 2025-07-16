@@ -56,7 +56,7 @@ git clone https://github.com/Twook21/nomi-app.git
 2. Masuk ke folder project:
 
    ```bash
-   cd nimo-app
+   cd nomi-app
    ```
 
 3. Install dependencies:
