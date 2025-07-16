@@ -83,7 +83,7 @@ git clone https://github.com/Twook21/nimo-app.git
 
 📌 Untuk **Tugas Kedua** Capstone:
 
-- **Dynamic route** pada `/pengguna` menggunakan Next.js dynamic routing.
+- **Dynamic route** pada `/admin/pengguna` menggunakan Next.js dynamic routing.
 - Data yang ditampilkan diambil dari file `lib/data.ts`.
 
 ---
