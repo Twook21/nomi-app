@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { Prisma, ProductStatus } from '@prisma/client';
 
-// Fungsi untuk serialisasi data agar aman untuk JSON
-// Mengonversi BigInt dan Decimal menjadi string
 function serializeProduct(product: any) {
   return {
     ...product,
@@ -12,7 +10,6 @@ function serializeProduct(product: any) {
     categoryId: product.categoryId.toString(),
     originalPrice: product.originalPrice.toString(),
     discountedPrice: product.discountedPrice.toString(),
-    // Relasi juga perlu di-serialize jika ada BigInt/Decimal
     ...(product.partner && { 
         partner: {
             ...product.partner,
@@ -34,10 +31,10 @@ export async function GET() {
     const products = await prisma.product.findMany({
       include: {
         partner: {
-          select: { storeName: true, id: true, userId: true } // Ambil nama toko dari partner
+          select: { storeName: true, id: true, userId: true }
         },
         category: {
-          select: { name: true, id: true } // Ambil nama dari kategori
+          select: { name: true, id: true } 
         },
       },
       orderBy: {

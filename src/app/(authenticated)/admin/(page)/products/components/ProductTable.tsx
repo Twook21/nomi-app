@@ -7,7 +7,6 @@ interface ProductTableProps {
   onDelete: (id: string) => void;
 }
 
-// ✅ PASTIKAN ADA "export default"
 export default function ProductTable({ products, onEdit, onDelete }: ProductTableProps) {
   
   const formatCurrency = (amount: string) => {
@@ -46,7 +45,6 @@ export default function ProductTable({ products, onEdit, onDelete }: ProductTabl
         </thead>
         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
           {products.map((product) => (
-            // ✅ PASTIKAN KEY MENGGUNAKAN ID YANG UNIK
             <tr key={product.id}>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{product.name}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{product.category.name}</td>

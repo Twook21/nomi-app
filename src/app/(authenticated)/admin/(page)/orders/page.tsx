@@ -3,9 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import OrderTable from "./components/OrderTable";
 import OrderDetailModal from "./components/OrderDetailModal";
-import { Order, User, OrderStatus } from "@prisma/client"; // Import OrderStatus
+import { Order, User, OrderStatus } from "@prisma/client"; 
 
-// Tipe untuk daftar ringkas di tabel (sudah benar)
 export type SafeOrder = Omit<Order, 'id' | 'userId' | 'totalAmount'> & {
   id: string;
   userId: string;
@@ -14,12 +13,11 @@ export type SafeOrder = Omit<Order, 'id' | 'userId' | 'totalAmount'> & {
   orderItems: { quantity: number; price: number }[];
 };
 
-// ✅ PERBAIKAN: Definisikan ulang tipe FullOrderDetail secara eksplisit
 export type FullOrderDetail = Omit<Order, 'id' | 'userId' | 'totalAmount' | 'orderItems'> & {
     id: string;
     userId: string;
     totalAmount: number;
-    user: User; // Menggunakan tipe User lengkap dari Prisma
+    user: User; 
     orderItems: {
         id: string;
         quantity: number;

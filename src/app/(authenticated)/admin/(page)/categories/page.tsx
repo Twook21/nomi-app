@@ -5,7 +5,6 @@ import CategoryTable from "./components/CategoryTable";
 import CategoryFormModal from "./components/CategoryFormModal";
 import { Category } from "@prisma/client";
 
-// Tipe data kategori yang aman setelah serialisasi
 export type SafeCategory = Omit<Category, 'id'> & {
   id: string;
 };
@@ -46,7 +45,7 @@ export default function AdminCategoriesPage() {
 
   const handleFormSubmit = async () => {
     handleCloseModal();
-    await fetchCategories(); // Muat ulang data
+    await fetchCategories(); 
   };
 
   const handleDelete = async (id: string) => {

@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 
-// Helper untuk serialisasi, bisa diletakkan di file terpisah
 function serialize(data: any): any {
   return JSON.parse(JSON.stringify(data, (key, value) =>
     typeof value === 'bigint' ? value.toString() :

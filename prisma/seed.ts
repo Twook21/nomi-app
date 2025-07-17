@@ -1,13 +1,12 @@
 import { PrismaClient, Role, PartnerStatus, ProductStatus } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 
-// Inisialisasi Prisma Client
+
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('Start seeding ...');
 
-  // Hapus data lama untuk menghindari duplikasi (opsional, hati-hati di produksi)
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
   await prisma.product.deleteMany();
@@ -17,7 +16,7 @@ async function main() {
   
   console.log('Old data deleted.');
 
-  // --- Buat Pengguna (Users) ---
+ 
   const passwordHash = await bcrypt.hash('password123', 10);
 
   const adminUser = await prisma.user.create({
@@ -62,7 +61,7 @@ async function main() {
 
   console.log('Users created:', { adminUser, partnerUser1, partnerUser2, regularUser });
 
-  // --- Buat Partner ---
+
   const partner1 = await prisma.partner.create({
     data: {
       userId: partnerUser1.id,
@@ -87,7 +86,7 @@ async function main() {
 
   console.log('Partners created:', { partner1, partner2 });
 
-  // --- Buat Kategori ---
+
   const categoryRoti = await prisma.category.create({
     data: { name: 'Roti & Kue', slug: 'roti-dan-kue' },
   });
@@ -100,14 +99,13 @@ async function main() {
 
   console.log('Categories created:', { categoryRoti, categoryMakananBerat, categoryMinuman });
 
-  // --- Buat Produk ---
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
 
   await prisma.product.createMany({
     data: [
-      // Produk dari Partner 1 (Toko Roti Enak)
+ 
       {
         partnerId: partner1.id,
         categoryId: categoryRoti.id,
@@ -132,7 +130,6 @@ async function main() {
         status: ProductStatus.AVAILABLE,
         imageUrl: 'https://placehold.co/600x400/E1BEE7/311B92?text=Brownies',
       },
-      // Produk dari Partner 2 (Warung Bu Susi)
       {
         partnerId: partner2.id,
         categoryId: categoryMakananBerat.id,
@@ -171,6 +168,5 @@ main()
     process.exit(1);
   })
   .finally(async () => {
-    // Tutup koneksi Prisma
     await prisma.$disconnect();
   });

@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { OrderStatus, Prisma } from '@prisma/client';
 
-// Helper untuk serialisasi
 function serialize(data: any): any {
   return JSON.parse(JSON.stringify(data, (key, value) =>
     typeof value === 'bigint' ? value.toString() :
@@ -11,7 +10,6 @@ function serialize(data: any): any {
   ));
 }
 
-// GET (Fetch single order with full details)
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     const orderId = BigInt(params.id);
@@ -44,7 +42,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 
-// PUT (Update order status)
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     const orderId = BigInt(params.id);
@@ -70,17 +67,14 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-// DELETE
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     const id = BigInt(params.id);
     
-    // Hapus OrderItems terkait terlebih dahulu untuk menghindari error foreign key
     await prisma.orderItem.deleteMany({
       where: { orderId: id },
     });
 
-    // Baru hapus Order
     await prisma.order.delete({
       where: { id },
     });

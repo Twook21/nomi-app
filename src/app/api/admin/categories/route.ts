@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import slugify from 'slugify';
 
-// Helper untuk serialisasi BigInt
 const serialize = (data: any) => JSON.parse(JSON.stringify(data, (_, value) => (typeof value === 'bigint' ? value.toString() : value)));
 
 export async function GET() {
@@ -27,10 +26,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Nama kategori harus diisi" }, { status: 400 });
     }
     
-    // Buat slug secara otomatis dari nama
     const slug = slugify(name, { lower: true, strict: true });
 
-    // Cek duplikasi nama atau slug
     const existingCategory = await prisma.category.findFirst({
         where: { OR: [{name}, {slug}] }
     });

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Category, Partner, ProductStatus } from "@prisma/client";
 import { SafeProduct } from "../page";
 
-// Tipe data sederhana untuk props
 type SafePartner = Pick<Partner, 'id' | 'storeName'> & { id: string };
 type SafeCategory = Pick<Category, 'id' | 'name'> & { id: string };
 
@@ -14,7 +13,6 @@ interface ProductFormModalProps {
   onSuccess: () => void;
 }
 
-// --- 👇 PERUBAHAN 1: Buat tipe data untuk form ---
 type ProductFormData = {
   name: string;
   description: string;
@@ -24,14 +22,13 @@ type ProductFormData = {
   discountedPrice: string;
   quantity: string;
   expirationDate: string;
-  status: ProductStatus; // Tipe eksplisit untuk status
+  status: ProductStatus; 
   imageUrl: string;
 };
 
 const inputStyle = "w-full p-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white";
 
 export default function ProductFormModal({ product, partners, categories, onClose, onSuccess }: ProductFormModalProps) {
-  // --- 👇 PERUBAHAN 2: Terapkan tipe ProductFormData ke useState ---
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     description: "",
@@ -41,7 +38,7 @@ export default function ProductFormModal({ product, partners, categories, onClos
     discountedPrice: "",
     quantity: "",
     expirationDate: "",
-    status: ProductStatus.AVAILABLE, // Inisialisasi tetap sama
+    status: ProductStatus.AVAILABLE, 
     imageUrl: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,7 +46,7 @@ export default function ProductFormModal({ product, partners, categories, onClos
   const isEditMode = product !== null;
 
   useEffect(() => {
-    if (isEditMode && product) { // Tambahkan pengecekan null untuk product
+    if (isEditMode && product) { 
       setFormData({
         name: product.name,
         description: product.description || "",
@@ -67,7 +64,6 @@ export default function ProductFormModal({ product, partners, categories, onClos
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    // Saat mengubah status, kita perlu memastikan nilainya adalah tipe ProductStatus
     if (name === "status") {
       setFormData((prev) => ({ ...prev, status: value as ProductStatus }));
     } else {
@@ -96,13 +92,11 @@ export default function ProductFormModal({ product, partners, categories, onClos
       onSuccess();
     } catch (error) {
       console.error(error);
-      // Tambahkan notifikasi error untuk user jika perlu
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // ... sisa kode JSX tetap sama ...
   return (
     <div
       className="fixed inset-0 flex justify-center items-center z-50"

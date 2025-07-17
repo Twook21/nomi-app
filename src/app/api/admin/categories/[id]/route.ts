@@ -16,7 +16,6 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     
     const slug = slugify(name, { lower: true, strict: true });
     
-    // Cek duplikasi pada kategori lain
     const existingCategory = await prisma.category.findFirst({
         where: { 
             OR: [{name}, {slug}],
