@@ -1,12 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import UserTable from './components/UserTable';
-import UserFormModal from './components/UserFormModal';
-import { User } from '@prisma/client'; 
+import { useState, useEffect, useCallback } from "react";
+import UserTable from "./components/UserTable";
+import UserFormModal from "./components/UserFormModal";
+import { User } from "@prisma/client";
 
-
-type SafeUser = Omit<User, 'passwordHash'>;
+type SafeUser = Omit<User, "passwordHash">;
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<SafeUser[]>([]);
@@ -17,8 +16,8 @@ export default function AdminUsersPage() {
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/admin/users');
-      if (!response.ok) throw new Error('Gagal memuat data');
+      const response = await fetch("/api/admin/users");
+      if (!response.ok) throw new Error("Gagal memuat data");
       const data = await response.json();
       setUsers(data);
     } catch (error) {
@@ -46,21 +45,20 @@ export default function AdminUsersPage() {
     handleCloseModal();
     await fetchUsers();
   };
-  
+
   const handleDelete = async (id: BigInt) => {
-    if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+    if (confirm("Apakah Anda yakin ingin menghapus user ini?")) {
       try {
         const response = await fetch(`/api/admin/users/${id}`, {
-          method: 'DELETE',
+          method: "DELETE",
         });
-        if (!response.ok) throw new Error('Gagal menghapus user');
-        await fetchUsers(); 
+        if (!response.ok) throw new Error("Gagal menghapus user");
+        await fetchUsers();
       } catch (error) {
         console.error(error);
       }
     }
   };
-
 
   if (loading) {
     return <div>Loading...</div>;
@@ -77,9 +75,14 @@ export default function AdminUsersPage() {
           + Tambah User
         </button>
       </div>
-      
-      <UserTable users={users} onEdit={handleOpenModal} onDelete={handleDelete} />
 
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+        <UserTable
+          users={users}
+          onEdit={handleOpenModal}
+          onDelete={handleDelete}
+        />
+      </div>
       {isModalOpen && (
         <UserFormModal
           user={selectedUser}

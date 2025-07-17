@@ -88,8 +88,8 @@ git clone https://github.com/Twook21/nomi-app.git
 
 📌 Untuk **Tugas Pertemuan Ke Empat** Capstone:
 
-- **CRUD** sementara : Operasi CRUD Untuk tabel User 
-- login sebagai admin menggunakan : username : admin@gmail.com pw: password, di bagian Managemen Pengguna
+- **CRUD** sementara : Operasi CRUD Panel Admin
+- login sebagai admin menggunakan : username : admin@gmail.com pw: password123, di bagian Managemen Pengguna
 
 ---
 
