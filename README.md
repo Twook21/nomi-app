@@ -81,14 +81,9 @@ git clone https://github.com/Twook21/nomi-app.git
 
 ## 🛠️ Catatan Developer
 
-📌 Untuk **Tugas Pertemuan Kedua** Capstone:
+📌 Untuk **Tugas** Capstone:
 
-- **Dynamic route** pada `/admin/pengguna` menggunakan Next.js dynamic routing.
-- Data yang ditampilkan diambil dari file `lib/data.ts`.
-
-📌 Untuk **Tugas Pertemuan Ke Empat** Capstone:
-
-- **CRUD** sementara : Operasi CRUD Panel Admin
+- **CRUD dengan api dan koneksi Database Postgres Neon** sementara : Operasi CRUD Panel Admin
 - login sebagai admin menggunakan : username : admin@gmail.com pw: password123, di bagian Managemen Pengguna
 
 ---
