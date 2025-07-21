@@ -1,72 +1,71 @@
-import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
-import { z } from "zod";
-
-const prisma = new PrismaClient();
-
-const registerSchema = z.object({
-  name: z.string().min(2, "Nama minimal 2 karakter"),
-  email: z.string().email("Email tidak valid"),
-  password: z.string().min(6, "Password minimal 6 karakter"),
-});
+// app/api/auth/register/route.ts
+import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
+import { successResponse, errorResponse } from '@/lib/api-response';
+import bcrypt from 'bcryptjs';
+import { generateToken } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, email, password } = registerSchema.parse(body);
+    const { username, email, password, phoneNumber, address, role } = await request.json();
 
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+    // Validasi input dasar
+    if (!username || !email || !password || !role) {
+      return errorResponse('Missing required fields', 400);
+    }
+
+    // Periksa apakah email atau username sudah terdaftar
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ email }, { username }],
+      },
     });
 
     if (existingUser) {
-      return NextResponse.json(
-        { error: "Email sudah terdaftar" },
-        { status: 400 }
-      );
+      return errorResponse('Email or username already registered', 409);
     }
 
-    const passwordHash = await bcrypt.hash(password, 12);
+    // Hash password
+    const passwordHash = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
+    // Buat pengguna baru
+    const newUser = await prisma.user.create({
       data: {
-        name,
+        username,
         email,
         passwordHash,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        createdAt: true,
+        phoneNumber,
+        address,
+        role,
       },
     });
 
-    const userResponse = {
-      ...user,
-      id: user.id.toString(),
-    };
-
-    return NextResponse.json(
-      { message: "Akun berhasil dibuat", user: userResponse },
-      { status: 201 }
-    );
-    // =================================================================
-
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.issues[0].message },
-        { status: 400 }
-      );
+    // Jika role adalah UMKM owner, buat entri UMKMOwner juga
+    if (role === 'umkm_owner') {
+      await prisma.uMKMOwner.create({
+        data: {
+          userId: newUser.id,
+          umkmName: `${username}'s UMKM`, // Nama UMKM awal, bisa diubah nanti
+        },
+      });
     }
 
-    console.error("Register error:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
+    // Generate token JWT untuk langsung login
+    const token = generateToken(newUser.id, newUser.role);
+
+    return successResponse({
+      message: 'User registered successfully',
+      user: {
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+        role: newUser.role,
+      },
+      token,
+    }, 201);
+
+  } catch (error: any) {
+    console.error('Error registering user:', error);
+    return errorResponse('Failed to register user', 500, error.message);
   }
 }

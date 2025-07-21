@@ -1,0 +1,1181 @@
+{
+	"info": {
+		"_postman_id": "YOUR_COLLECTION_ID_HERE",
+		"name": "UMKM App API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_collection_id": "YOUR_COLLECTION_ID_HERE"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"phoneNumber\": \"081234567890\",\n    \"address\": \"Jl. Contoh No. 123\",\n    \"role\": \"customer\" // or \"umkm_owner\" or \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "API untuk registrasi user baru. Bisa sebagai customer, UMKM owner, atau admin."
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifier\": \"test@example.com\", // or \"testuser\"\n    \"password\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "API untuk login user. Menggunakan email atau username sebagai identifier."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/auth/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						},
+						"description": "API untuk logout user. Menghapus token autentikasi dari cookie."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Management (Admin Only)",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/admin/users?role=customer&search=john&page=1&limit=10",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "customer",
+									"description": "Optional: filter by role (customer, umkm_owner, admin)",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "john",
+									"description": "Optional: search by username or email",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Optional: page number for pagination",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Optional: number of items per page",
+									"disabled": true
+								}
+							]
+						},
+						"description": "API untuk mendapatkan daftar semua user (hanya admin). Mendukung filtering dan pagination."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Details by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/admin/users/{{USER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"{{USER_ID}}"
+							]
+						},
+						"description": "API untuk mendapatkan detail user berdasarkan ID (hanya admin)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update User by ID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"updatedusername\",\n    \"email\": \"updated@example.com\",\n    \"phoneNumber\": \"089876543210\",\n    \"address\": \"Jl. Baru No. 456\",\n    \"role\": \"umkm_owner\", // Can be 'customer', 'umkm_owner', 'admin'\n    \"password\": \"newpassword123\" // Optional: to change password\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/admin/users/{{USER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"{{USER_ID}}"
+							]
+						},
+						"description": "API untuk update data user berdasarkan ID (hanya admin)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/admin/users/{{USER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"{{USER_ID}}"
+							]
+						},
+						"description": "API untuk menghapus user berdasarkan ID (hanya admin). Admin tidak bisa menghapus akunnya sendiri."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UMKM Owner Management (Admin Only)",
+			"item": [
+				{
+					"name": "Update UMKM Owner Verification Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isVerified\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/admin/umkm-owners/{{UMKM_OWNER_ID}}/verify",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"admin",
+								"umkm-owners",
+								"{{UMKM_OWNER_ID}}",
+								"verify"
+							]
+						},
+						"description": "API untuk mengubah status verifikasi UMKM owner (hanya admin)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Profile",
+			"item": [
+				{
+					"name": "Get My Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/profile",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"profile"
+							]
+						},
+						"description": "API untuk mendapatkan detail profil user yang sedang login."
+					},
+					"response": []
+				},
+				{
+					"name": "Update My Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phoneNumber\": \"081122334455\",\n    \"address\": \"Jl. Update Diri No. 789\",\n    \"password\": \"myNewPassword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/profile",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"profile"
+							]
+						},
+						"description": "API untuk mengupdate profil user yang sedang login."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer Reviews",
+			"item": [
+				{
+					"name": "Get My Reviews (Customer Only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/reviews",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"reviews"
+							]
+						},
+						"description": "API untuk mendapatkan semua review yang dibuat oleh user (hanya customer)."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Product Review (Customer Only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\": 5,\n    \"comment\": \"Produk sangat bagus dan sesuai deskripsi!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/products/{{PRODUCT_ID}}/reviews",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"products",
+								"{{PRODUCT_ID}}",
+								"reviews"
+							]
+						},
+						"description": "API untuk menambahkan review pada produk tertentu (hanya customer yang sudah membeli). Pastikan {{PRODUCT_ID}} diisi."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Reviews for a Specific Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/products/{{PRODUCT_ID}}/reviews",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"products",
+								"{{PRODUCT_ID}}",
+								"reviews"
+							]
+						},
+						"description": "API untuk mendapatkan semua review untuk produk tertentu. Tidak memerlukan autentikasi."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Shopping Cart (Customer Only)",
+			"item": [
+				{
+					"name": "Add Product to Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quantity\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/cart/items/{{PRODUCT_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cart",
+								"{{PRODUCT_ID}}"
+							]
+						},
+						"description": "API untuk menambahkan produk ke keranjang belanja atau menambah kuantitas jika produk sudah ada (hanya customer)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cart Item Quantity",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quantity\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/cart/items/{{PRODUCT_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cart",
+								"{{PRODUCT_ID}}"
+							]
+						},
+						"description": "API untuk mengupdate kuantitas item di keranjang belanja (hanya customer)."
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Product from Cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/cart/items/{{PRODUCT_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cart",
+								"{{PRODUCT_ID}}"
+							]
+						},
+						"description": "API untuk menghapus produk dari keranjang belanja (hanya customer)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Shopping Cart",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/cart",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cart"
+							]
+						},
+						"description": "API untuk mendapatkan isi keranjang belanja user yang sedang login (hanya customer)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order Management",
+			"item": [
+				{
+					"name": "Create Order (Customer Only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"shippingAddress\": \"Jl. Pemesanan No. 10, Kota Bandung\",\n    \"paymentMethod\": \"Cash on Pickup\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/orders",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"orders"
+							]
+						},
+						"description": "API untuk membuat pesanan dari item di keranjang belanja (hanya customer)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All My Orders (Customer Only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/orders",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"orders"
+							]
+						},
+						"description": "API untuk mendapatkan daftar semua pesanan yang dibuat oleh user (hanya customer)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order Details by ID (Customer Only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/orders/{{ORDER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"orders",
+								"{{ORDER_ID}}"
+							]
+						},
+						"description": "API untuk mendapatkan detail pesanan berdasarkan ID (hanya customer yang memiliki pesanan tersebut)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status (UMKM Owner Only)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orderStatus\": \"processing\" // Can be 'pending', 'processing', 'shipped', 'delivered', 'cancelled'\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/umkm-owners/me/orders/{{ORDER_ID}}/status",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"umkm-owners",
+								"me",
+								"orders",
+								"{{ORDER_ID}}",
+								"status"
+							]
+						},
+						"description": "API untuk mengupdate status pesanan (hanya UMKM owner dari pesanan tersebut)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get UMKM Order Details by ID (UMKM Owner Only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/umkm-owners/me/orders/{{ORDER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"umkm-owners",
+								"me",
+								"orders",
+								"{{ORDER_ID}}"
+							]
+						},
+						"description": "API untuk mendapatkan detail pesanan spesifik untuk UMKM owner (hanya UMKM owner dari pesanan tersebut)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All My UMKM Orders (UMKM Owner Only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/umkm-owners/me/orders?orderStatus=pending&paymentStatus=paid&page=1&limit=10",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"umkm-owners",
+								"me",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "orderStatus",
+									"value": "pending",
+									"description": "Optional: Filter by order status (pending, processing, shipped, delivered, cancelled)",
+									"disabled": true
+								},
+								{
+									"key": "paymentStatus",
+									"value": "paid",
+									"description": "Optional: Filter by payment status (pending, paid, failed)",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						},
+						"description": "API untuk mendapatkan daftar semua pesanan yang ditujukan ke UMKM owner yang sedang login."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product Management (Public & UMKM Owner)",
+			"item": [
+				{
+					"name": "Get Product Details by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/products/{{PRODUCT_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"products",
+								"{{PRODUCT_ID}}"
+							]
+						},
+						"description": "API untuk mendapatkan detail produk berdasarkan ID. Dapat diakses publik."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/products?category=someCategoryId&umkmId=someUmkmId&minPrice=10000&maxPrice=50000&sortBy=productName&sortOrder=asc&page=1&limit=10&search=nasi",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "someCategoryId",
+									"description": "Optional: Filter by category ID",
+									"disabled": true
+								},
+								{
+									"key": "umkmId",
+									"value": "someUmkmId",
+									"description": "Optional: Filter by UMKM Owner ID",
+									"disabled": true
+								},
+								{
+									"key": "minPrice",
+									"value": "10000",
+									"description": "Optional: Filter by minimum price",
+									"disabled": true
+								},
+								{
+									"key": "maxPrice",
+									"value": "50000",
+									"description": "Optional: Filter by maximum price",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "productName",
+									"description": "Optional: Sort key (e.g., createdAt, productName, discountedPrice)",
+									"disabled": true
+								},
+								{
+									"key": "sortOrder",
+									"value": "asc",
+									"description": "Optional: Sort order (asc, desc)",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "nasi",
+									"description": "Optional: Search by product name",
+									"disabled": true
+								}
+							]
+						},
+						"description": "API untuk mendapatkan daftar semua produk yang tersedia. Mendukung filter, sort, dan pagination."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Nearby Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/products/nearby?latitude=-6.917464&longitude=107.619122&radiusKm=5&category=someCategoryId&search=kopi",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"products",
+								"nearby"
+							],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "-6.917464",
+									"description": "Required: Current latitude of the user (e.g., Bandung)"
+								},
+								{
+									"key": "longitude",
+									"value": "107.619122",
+									"description": "Required: Current longitude of the user (e.g., Bandung)"
+								},
+								{
+									"key": "radiusKm",
+									"value": "5",
+									"description": "Optional: Radius in kilometers (default 10km)",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "someCategoryId",
+									"description": "Optional: Filter by category ID",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "kopi",
+									"description": "Optional: Search by product name",
+									"disabled": true
+								}
+							]
+						},
+						"description": "API untuk mencari produk di sekitar lokasi geografis tertentu. Membutuhkan latitude dan longitude. Untuk UMKM, koordinat dummy digunakan. Dalam produksi, UMKM harus memiliki koordinat nyata atau di-geocode dari alamatnya."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UMKM Owner Profile & Products (UMKM Owner Only)",
+			"item": [
+				{
+					"name": "Get My UMKM Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/umkm-owners/me",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"umkm-owners",
+								"me"
+							]
+						},
+						"description": "API untuk mendapatkan detail profil UMKM owner yang sedang login (hanya UMKM owner)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update My UMKM Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"umkmName\": \"UMKM Updated Name\",\n    \"umkmDescription\": \"Deskripsi UMKM yang sudah diperbarui.\",\n    \"umkmAddress\": \"Jl. UMKM Jaya No. 100\",\n    \"umkmPhoneNumber\": \"087654321098\",\n    \"umkmEmail\": \"umkm.updated@example.com\",\n    \"bankAccountNumber\": \"1234567890\",\n    \"bankName\": \"Bank Central UMKM\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/umkm-owners/me",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"umkm-owners",
+								"me"
+							]
+						},
+						"description": "API untuk mengupdate profil UMKM owner yang sedang login (hanya UMKM owner)."
+					},
+					"response": []
+				},
+				{
+					"name": "Add New Product (UMKM Owner Only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productName\": \"Nasi Goreng Spesial\",\n    \"description\": \"Nasi goreng dengan bumbu rahasia dan topping melimpah.\",\n    \"originalPrice\": 25000,\n    \"discountedPrice\": 20000,\n    \"stock\": 50,\n    \"expirationDate\": \"2025-12-31T23:59:59Z\",\n    \"imageUrl\": \"https://example.com/nasigoreng.jpg\",\n    \"categoryId\": \"your_category_id_here\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/umkm-owners/me/products",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"umkm-owners",
+								"me",
+								"products"
+							]
+						},
+						"description": "API untuk menambahkan produk baru oleh UMKM owner (hanya UMKM owner)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get My UMKM Products (UMKM Owner Only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/umkm-owners/me/products?isAvailable=true&page=1&limit=10",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"umkm-owners",
+								"me",
+								"products"
+							],
+							"query": [
+								{
+									"key": "isAvailable",
+									"value": "true",
+									"description": "Optional: Filter by product availability (true/false)",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						},
+						"description": "API untuk mendapatkan daftar produk yang dimiliki oleh UMKM owner yang sedang login."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product by ID (UMKM Owner Only)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productName\": \"Nasi Goreng Spesial Update\",\n    \"description\": \"Deskripsi baru untuk nasi goreng.\",\n    \"originalPrice\": 27000,\n    \"discountedPrice\": 22000,\n    \"stock\": 45,\n    \"expirationDate\": \"2026-01-31T23:59:59Z\",\n    \"imageUrl\": \"https://example.com/nasigoreng_updated.jpg\",\n    \"categoryId\": \"another_category_id\",\n    \"isAvailable\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/umkm-owners/me/products/{{PRODUCT_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"umkm-owners",
+								"me",
+								"products",
+								"{{PRODUCT_ID}}"
+							]
+						},
+						"description": "API untuk mengupdate detail produk oleh UMKM owner (hanya UMKM owner dari produk tersebut)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product by ID (UMKM Owner Only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/umkm-owners/me/products/{{PRODUCT_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"umkm-owners",
+								"me",
+								"products",
+								"{{PRODUCT_ID}}"
+							]
+						},
+						"description": "API untuk menghapus produk oleh UMKM owner (hanya UMKM owner dari produk tersebut)."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:3000/api",
+			"type": "string",
+			"description": "Base URL for your API, e.g., http://localhost:3000/api"
+		},
+		{
+			"key": "AUTH_TOKEN",
+			"value": "YOUR_JWT_TOKEN_HERE",
+			"type": "string",
+			"description": "JWT token obtained from login. Used for authenticated requests."
+		},
+		{
+			"key": "USER_ID",
+			"value": "user_id_from_db",
+			"type": "string",
+			"description": "ID of a user for specific admin operations."
+		},
+		{
+			"key": "UMKM_OWNER_ID",
+			"value": "umkm_owner_id_from_db",
+			"type": "string",
+			"description": "ID of an UMKM owner for verification updates."
+		},
+		{
+			"key": "PRODUCT_ID",
+			"value": "product_id_from_db",
+			"type": "string",
+			"description": "ID of a product for specific operations (e.g., add to cart, review)."
+		},
+		{
+			"key": "ORDER_ID",
+			"value": "order_id_from_db",
+			"type": "string",
+			"description": "ID of an order for specific operations (e.g., get order details, update status)."
+		}
+	]
+}

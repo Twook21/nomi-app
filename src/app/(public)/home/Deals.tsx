@@ -1,88 +1,73 @@
-import React from "react";
-import Image from "next/image";
+import { ProductCard } from "@/components/products/ProductCard";
+import { ProductCardSkeleton } from "@/components/products/ProductCardSkeleton";
+import type { Product } from "@/types/product";
+import { Suspense } from "react";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
-// Data untuk kategori makanan, bukan penawaran spesifik
-const categoriesData = [
-  {
-    name: "Makanan Kering",
-    imageUrl: "/images/makanan_kering.png",
-    description:
-      "Produk seperti keripik, kue kering, kacang-kacangan, dan makanan ringan lainnya yang dikemas untuk dijual.",
-  },
-  {
-    name: "Roti dan Kue",
-    imageUrl: "/images/bakery.png",
-    description: "Aneka pastry, roti tawar, dan kue.",
-  },
-  {
-    name: "Makanan Olahan yang Diawetkan",
-    imageUrl: "/images/prosses-food.jpg",
-    description:
-      "Frozen food, makanan kaleng, dan produk olahan lainnya yang memiliki masa simpan lebih lama.",
-  },
-  {
-    name: "Minuman",
-    imageUrl: "/images/drinks.png",
-    description: "Kopi, jus, teh, dan minuman segar lainnya yang dikemas.",
-  },
-];
+async function ProductList() {
+  try {
+    // PERBAIKAN: Mengambil hanya 5 produk dari API
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products?limit=5`, { next: { revalidate: 60 } });
+    if (!response.ok) throw new Error("Gagal mengambil data produk.");
+    const result = await response.json();
+    const products: Product[] = result.products || [];
+    if (products.length === 0) return <p className="text-center w-full text-muted-foreground">Belum ada produk yang tersedia saat ini.</p>;
+    
+    return products.map((product) => <ProductCard key={product.id} product={product} />);
+  } catch (error) {
+    return (
+      <div className="w-full text-center text-red-500 bg-red-50 p-4 rounded-md">
+        <p className="font-bold">Oops, terjadi kesalahan!</p>
+        <p>{error instanceof Error ? error.message : "Tidak dapat terhubung ke server."}</p>
+      </div>
+    );
+  }
+}
 
-const Deals = () => {
+function LoadingSkeleton() {
+  // Skeleton disesuaikan untuk menampilkan 5 item
+  return Array.from({ length: 5 }).map((_, i) => <ProductCardSkeleton key={i} />);
+}
+
+export default function Deals() {
   return (
-    <section id="deals" className="py-20 bg-nimo-light">
-      <div className="container mx-auto px-6">
+    // PERBAIKAN: Menyesuaikan background color sesuai tema
+    <section id="deals" className="py-20 bg-[var(--nimo-gray)] dark:bg-background">
+      <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h3 className="text-3xl md:text-4xl font-bold text-nimo-dark">
-            Jelajahi Kategori
-          </h3>
-          <p className="text-[var(--nimo-dark)] mt-3 text-lg">
-            Temukan jenis makanan yang ingin kamu selamatkan hari ini.
-          </p>
+          {/* PERBAIKAN: Menggunakan warna teks dari tema */}
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--nimo-dark)]">Penawaran Spesial Hari Ini!</h2>
+          <p className="text-muted-foreground mt-3 text-lg">Selamatkan makanan lezat dari UMKM lokal dengan harga terbaik.</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {categoriesData.map((category, index) => (
-            <div
-              key={index}
-              className="relative rounded-2xl shadow-lg overflow-hidden group h-80"
-            >
-              <Image
-                src={category.imageUrl}
-                alt={`Gambar kategori ${category.name}`}
-                layout="fill"
-                objectFit="cover"
-                className="group-hover:scale-110 transition-transform duration-500 ease-in-out"
-              />
-              {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-
-              {/* Content */}
-              <div className="absolute bottom-0 left-0 p-6 w-full flex justify-between items-end">
-                <div>
-                  <h4 className="text-2xl font-bold text-white">
-                    {category.name}
-                  </h4>
-                  <p className="text-gray-200 text-sm">
-                    {category.description}
-                  </p>
-                </div>
-                <div className="bg-nimo-yellow text-white p-2 rounded-full transform group-hover:translate-x-1 transition-transform duration-300">
-                  <ArrowRight size={20} />
-                </div>
-              </div>
-
-              {/* Link Overlay */}
-              <a
-                href="#"
-                className="absolute inset-0"
-                aria-label={`Jelajahi ${category.name}`}
-              ></a>
+        <div className="relative">
+          <Suspense fallback={
+            <div className="flex space-x-6 pb-4">
+              <LoadingSkeleton />
             </div>
-          ))}
+          }>
+            {/* Menggunakan flexbox untuk horizontal scroll */}
+            <div className="flex overflow-x-auto space-x-6 pb-4 -mx-4 px-4 scrollbar-hide">
+              <ProductList />
+              {/* Card "Lihat Lebih Banyak" */}
+              <div className="w-64 sm:w-72 flex-shrink-0">
+                <Link href="/products" className="group h-full block">
+                  <Card className="h-full flex flex-col items-center justify-center bg-[var(--nimo-light)] dark:bg-card hover:bg-accent transition-colors duration-300 ease-in-out">
+                    <div className="text-center p-4">
+                      <div className="bg-[var(--nimo-yellow)] text-[var(--nimo-light)] dark:text-black p-4 rounded-full inline-block group-hover:scale-110 transition-transform">
+                        <ArrowRight size={32} />
+                      </div>
+                      <p className="mt-4 font-semibold text-lg text-[var(--nimo-dark)]">Lihat Semua</p>
+                      <p className="text-sm text-muted-foreground">Penawaran Lainnya</p>
+                    </div>
+                  </Card>
+                </Link>
+              </div>
+            </div>
+          </Suspense>
         </div>
       </div>
     </section>
   );
-};
-
-export default Deals;
+}

@@ -1,138 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-
 
 model User {
-  id              BigInt    @id @default(autoincrement())
-  name            String
-  email           String    @unique
-  passwordHash    String    @map("password_hash")
-  phoneNumber     String?   @map("phone_number")
-  role            Role      @default(USER)
-  emailVerifiedAt DateTime? @map("email_verified_at")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  id              String        @id @default(uuid()) @map("user_id")
+  username        String        @unique @db.VarChar(50)
+  email           String        @unique @db.VarChar(100)
+  passwordHash    String        @map("password_hash") @db.VarChar(255)
+  phoneNumber     String?       @map("phone_number") @db.VarChar(20)
+  address         String?       @db.Text
+  role            String        @default("customer") @db.VarChar(20) // 'customer', 'umkm_owner', 'admin'
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  // Relations
-  partner Partner?
-  orders  Order[]
-
-  @@map("users")
+  umkmOwner       UMKMOwner?
+  orders          Order[]       @relation("CustomerOrders")
+  reviews         Review[]
+  shoppingCart    ShoppingCart?
 }
 
-model Partner {
-  id           BigInt        @id @default(autoincrement())
-  userId       BigInt        @unique @map("user_id")
-  storeName    String        @map("store_name")
-  storeAddress String        @map("store_address")
-  storePhone   String        @map("store_phone")
-  description  String?
-  status       PartnerStatus @default(PENDING)
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
+model UMKMOwner {
+  id              String        @id @default(uuid()) @map("umkm_id")
+  userId          String        @unique @map("user_id")
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  umkmName        String        @map("umkm_name") @db.VarChar(100)
+  umkmDescription String?       @map("umkm_description") @db.Text
+  umkmAddress     String?       @map("umkm_address") @db.Text
+  umkmPhoneNumber String?       @map("umkm_phone_number") @db.VarChar(20)
+  umkmEmail       String?       @map("umkm_email") @db.VarChar(100)
+  bankAccountNumber String?     @map("bank_account_number") @db.VarChar(50)
+  bankName        String?       @map("bank_name") @db.VarChar(50)
+  isVerified      Boolean       @default(false) @map("is_verified")
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  // Relations
-  user     User      @relation(fields: [userId], references: [id])
-  products Product[]
-
-  @@map("partners")
+  products        Product[]
+  orders          Order[]       @relation("UMKMOrders")
 }
 
-model Category {
-  id        BigInt    @id @default(autoincrement())
-  name      String    @unique
-  slug      String    @unique
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+model FoodCategory {
+  id              String        @id @default(uuid()) @map("category_id")
+  categoryName    String        @unique @map("category_name") @db.VarChar(50)
 
-  // Relations
-  products Product[]
-
-  @@map("categories")
+  products        Product[]
 }
 
 model Product {
-  id               BigInt        @id @default(autoincrement())
-  partnerId        BigInt        @map("partner_id")
-  categoryId       BigInt        @map("category_id")
-  name             String
-  description      String
-  imageUrl         String?       @map("image_url")
-  originalPrice    Decimal       @map("original_price") @db.Decimal(10, 2)
-  discountedPrice  Decimal       @map("discounted_price") @db.Decimal(10, 2)
-  quantity         Int           @default(0)
-  expirationDate   DateTime      @map("expiration_date") @db.Date
-  status           ProductStatus @default(AVAILABLE)
-  createdAt        DateTime      @default(now()) @map("created_at")
-  updatedAt        DateTime      @updatedAt @map("updated_at")
+  id              String        @id @default(uuid()) @map("product_id")
+  umkmId          String        @map("umkm_id")
+  umkmOwner       UMKMOwner     @relation(fields: [umkmId], references: [id], onDelete: Cascade)
+  categoryId      String?       @map("category_id")
+  category        FoodCategory? @relation(fields: [categoryId], references: [id])
+  productName     String        @map("product_name") @db.VarChar(100)
+  description     String?       @db.Text
+  originalPrice   Decimal       @map("original_price") @db.Decimal(10, 2)
+  discountedPrice Decimal       @map("discounted_price") @db.Decimal(10, 2)
+  stock           Int
+  expirationDate  DateTime      @map("expiration_date") @db.Date // Changed to DateTime and @db.Date for type consistency
+  imageUrl        String?       @map("image_url") @db.Text
+  isAvailable     Boolean       @default(true) @map("is_available")
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  // Relations
-  partner    Partner     @relation(fields: [partnerId], references: [id])
-  category   Category    @relation(fields: [categoryId], references: [id])
-  orderItems OrderItem[]
-
-  @@map("products")
+  orderItems      OrderItem[]
+  reviews         Review[]
+  cartItems       CartItem[]
 }
 
 model Order {
-  id            BigInt      @id @default(autoincrement())
-  userId        BigInt      @map("user_id")
-  orderCode     String      @unique @map("order_code")
-  totalAmount   Decimal     @map("total_amount") @db.Decimal(12, 2)
-  status        OrderStatus @default(PENDING)
-  paymentMethod String?     @map("payment_method")
-  paymentToken  String?     @map("payment_token")
-  orderDate     DateTime    @default(now()) @map("order_date")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
+  id              String        @id @default(uuid()) @map("order_id")
+  customerId      String        @map("customer_id")
+  customer        User          @relation("CustomerOrders", fields: [customerId], references: [id], onDelete: Cascade)
+  umkmId          String        @map("umkm_id")
+  umkmOwner       UMKMOwner     @relation("UMKMOrders", fields: [umkmId], references: [id], onDelete: Cascade)
+  orderDate       DateTime      @default(now()) @map("order_date") @db.Timestamptz(6)
+  totalAmount     Decimal       @map("total_amount") @db.Decimal(10, 2)
+  shippingAddress String        @map("shipping_address") @db.Text
+  paymentMethod   String?       @map("payment_method") @db.VarChar(50)
+  paymentStatus   String        @default("pending") @map("payment_status") @db.VarChar(20) // 'pending', 'paid', 'failed'
+  orderStatus     String        @default("pending") @map("order_status") @db.VarChar(20) // 'pending', 'processing', 'shipped', 'delivered', 'cancelled'
+  notes           String?       @db.Text
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  // Relations
-  user       User        @relation(fields: [userId], references: [id])
-  orderItems OrderItem[]
-
-  @@map("orders")
+  orderItems      OrderItem[]
 }
 
 model OrderItem {
-  id        BigInt  @id @default(autoincrement())
-  orderId   BigInt  @map("order_id")
-  productId BigInt  @map("product_id")
-  quantity  Int
-  price     Decimal @db.Decimal(10, 2)
-
-  // Relations
-  order   Order   @relation(fields: [orderId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
-
-  @@map("order_items")
+  id              String        @id @default(uuid()) @map("order_item_id")
+  orderId         String        @map("order_id")
+  order           Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId       String        @map("product_id")
+  product         Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity        Int
+  pricePerItem    Decimal       @map("price_per_item") @db.Decimal(10, 2)
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
 }
 
-// Enums
-enum Role {
-  USER
-  PARTNER
-  ADMIN
+model Review {
+  id              String        @id @default(uuid()) @map("review_id")
+  productId       String        @map("product_id")
+  product         Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customerId      String        @map("customer_id")
+  customer        User          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  rating          Int          
+  comment         String?       @db.Text
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 }
 
-enum PartnerStatus {
-  PENDING
-  APPROVED
-  REJECTED
+model ShoppingCart {
+  id              String        @id @default(uuid()) @map("cart_id")
+  customerId      String        @unique @map("customer_id")
+  customer        User          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  cartItems       CartItem[]
 }
 
-enum ProductStatus {
-  AVAILABLE
-  SOLD_OUT
-}
-
-enum OrderStatus {
-  PENDING
-  PAID
-  COMPLETED
-  CANCELLED
+model CartItem {
+  id              String        @id @default(uuid()) @map("cart_item_id")
+  cartId          String        @map("cart_id")
+  shoppingCart    ShoppingCart  @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId       String        @map("product_id")
+  product         Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity        Int
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
 }

@@ -1,83 +1,67 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { hash } from 'bcryptjs';
+// app/api/admin/users/route.ts
+import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
+import { successResponse, errorResponse } from '@/lib/api-response';
+import { authenticateAndAuthorize } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { user, response } = await authenticateAndAuthorize(request, ['admin']);
+  if (response) return response; // Pastikan hanya admin yang bisa mengakses
+
   try {
+    const searchParams = request.nextUrl.searchParams;
+    const role = searchParams.get('role');
+    const search = searchParams.get('search');
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+
+    const where: any = {};
+    if (role) {
+      where.role = role;
+    }
+    if (search) {
+      where.OR = [
+        { username: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
     const users = await prisma.user.findMany({
+      where,
       select: {
         id: true,
-        name: true,
+        username: true,
         email: true,
-        phoneNumber: true,
         role: true,
-        emailVerifiedAt: true,
+        phoneNumber: true,
+        address: true,
         createdAt: true,
+        updatedAt: true,
+        umkmOwner: {
+          select: {
+            id: true,
+            umkmName: true,
+            isVerified: true,
+          },
+        },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
     });
 
-    const serializableUsers = users.map(user => ({
-      ...user,
-      id: user.id.toString(),
-    }));
+    const totalUsers = await prisma.user.count({ where });
 
-    return NextResponse.json(serializableUsers);
-
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
-  }
-}
-
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const { name, email, password, phoneNumber, role } = body;
-
-    if (!name || !email || !password || !role) {
-      return NextResponse.json({ message: "Data tidak lengkap" }, { status: 400 });
-    }
-
-    const existingUser = await prisma.user.findUnique({
-      where: { email: email },
+    return successResponse({
+      users,
+      total: totalUsers,
+      page,
+      limit,
+      totalPages: Math.ceil(totalUsers / limit),
     });
 
-    if (existingUser) {
-      return NextResponse.json(
-        { message: "Email sudah terdaftar. Silakan gunakan email lain." },
-        { status: 409 }
-      );
-    }
-
-    const passwordHash = await hash(password, 10);
-
-    const newUser = await prisma.user.create({
-      data: {
-        name,
-        email,
-        passwordHash,
-        phoneNumber,
-        role,
-      },
-    });
-
-    const { passwordHash: _, ...result } = newUser;
-
-    const serializableResult = {
-      ...result,
-      id: result.id.toString(),
-    };
-
-    return NextResponse.json(serializableResult, { status: 201 });
-
-  } catch (error) {
-    console.error("Error creating user:", error);
-    if (error instanceof Error) {
-        return NextResponse.json({ message: "Internal Server Error", error: error.message }, { status: 500 });
-    }
-    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+  } catch (error: any) {
+    console.error('Error fetching all users:', error);
+    return errorResponse('Failed to fetch users', 500, error.message);
   }
 }

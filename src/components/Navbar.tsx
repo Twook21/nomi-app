@@ -150,12 +150,12 @@ const Navbar = () => {
             </button>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/login">
+            <Link href="/auth/login">
               <button className="bg-transparent text-[var(--nimo-dark)] font-semibold py-2 px-4 rounded-full hover:bg-[var(--nimo-gray)] transition-colors">
                 Login
               </button>
             </Link>
-            <Link href="/register">
+            <Link href="/auth/register">
               <button className="bg-nimo-yellow text-white font-semibold py-2 px-4 rounded-full hover:opacity-90 transition-opacity">
                 Daftar
               </button>
@@ -224,12 +224,12 @@ const Navbar = () => {
             ))}
           </div>
           <div className="flex space-x-2 pt-4">
-            <Link href="/login" className="flex-1">
+            <Link href="/auth/login" className="flex-1">
               <button className="w-full bg-transparent text-[var(--nimo-dark)] font-semibold py-2 px-4 rounded-full border border-[var(--nimo-gray)] hover:bg-[var(--nimo-gray)] transition-colors">
                 Login
               </button>
             </Link>
-            <Link href="/register" className="flex-1">
+            <Link href="/auth/register" className="flex-1">
               <button className="w-full bg-nimo-yellow text-white font-semibold py-2 px-4 rounded-full hover:opacity-90 transition-opacity">
                 Daftar
               </button>
