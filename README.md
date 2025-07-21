@@ -83,8 +83,8 @@ git clone https://github.com/Twook21/nomi-app.git
 
 📌 Untuk **Tugas** Capstone:
 
-- **CRUD dengan api dan koneksi Database Postgres Neon** sementara : Operasi CRUD Panel Admin
-- login sebagai admin menggunakan : username : admin@gmail.com pw: password123, di bagian Managemen Pengguna
+- **CRUD dengan api dan koneksi Database Postgres Neon** sementara : Operasi CRUD user
+- Lakukan Registrasi, fitur sementara hanya bisa membuat pesanan dari user, fitur lain masi dalam pengembangan.
 
 ---
 
