@@ -1,10 +1,3 @@
-/*
-================================================================================
-File: src/components/products/ProductImage.tsx (NEW FILE)
-Description: Client Component khusus untuk menampilkan gambar produk.
-Ini dibuat untuk menangani event handler 'onError'.
-================================================================================
-*/
 "use client";
 
 import Image from "next/image";
@@ -17,13 +10,15 @@ interface ProductImageProps {
 export function ProductImage({ src, alt }: ProductImageProps) {
   return (
     <Image
-      src={src || "https://placehold.co/600x600/green/white?text=Nomi"}
+      // PERBAIKAN: Menggunakan placeholder yang sesuai dengan tema
+      src={src || "https://placehold.co/600x600/FBBF24/1E1E1E?text=Nomi"}
       alt={alt}
       fill
       className="object-cover"
       sizes="(max-width: 768px) 100vw, 50vw"
       onError={(e) => {
-        e.currentTarget.src = "https://placehold.co/600x600/green/white?text=Nomi";
+        // PERBAIKAN: Fallback juga menggunakan placeholder yang sesuai tema
+        e.currentTarget.src = "https://placehold.co/600x600/FBBF24/1E1E1E?text=Nomi";
       }}
     />
   );
