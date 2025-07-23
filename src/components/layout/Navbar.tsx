@@ -64,7 +64,7 @@ export function Navbar() {
   };
 
   const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : '';
   }
   
   const isActive = (href: string) => {
@@ -83,7 +83,6 @@ export function Navbar() {
     <nav className="bg-[var(--nimo-light)] shadow-sm sticky top-0 z-50 transition-colors duration-300">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          {/* PERBAIKAN: Bagian Kiri (Logo) */}
           <div className="flex-1 flex justify-start">
             <Link href="/">
               <h1 className="text-2xl font-bold text-nimo-yellow cursor-pointer">
@@ -92,9 +91,9 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* PERBAIKAN: Bagian Tengah (Menu Navigasi) */}
           <div className="hidden md:flex flex-1 justify-center">
-            {isClient && token && user && (
+            {/* PERBAIKAN: Cek 'token' saja untuk menampilkan menu utama */}
+            {isClient && token && (
               <div className="flex items-center space-x-8">
                 <Link href="/products" className={navLinkClasses('/products')}>
                   Produk
@@ -109,10 +108,10 @@ export function Navbar() {
             )}
           </div>
 
-          {/* PERBAIKAN: Bagian Kanan (Aksi Pengguna) */}
           <div className="flex-1 flex justify-end">
             <div className="flex items-center gap-2 md:gap-4">
-              {isClient && token && user ? (
+              {/* PERBAIKAN: Cek 'token' saja untuk menentukan state login */}
+              {isClient && token ? (
                 // Tampilan Setelah Login
                 <>
                   <Button variant="ghost" size="icon" asChild>
@@ -128,21 +127,26 @@ export function Navbar() {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.username}`} alt={user.username} />
-                          <AvatarFallback>{getInitials(user.username)}</AvatarFallback>
+                          {/* Gunakan optional chaining untuk keamanan */}
+                          <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.username}`} alt={user?.username || 'User'} />
+                          <AvatarFallback>{getInitials(user?.username || '')}</AvatarFallback>
                         </Avatar>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56" align="end" forceMount>
-                      <DropdownMenuLabel className="font-normal">
-                        <div className="flex flex-col space-y-1">
-                          <p className="text-sm font-medium leading-none">{user.username}</p>
-                          <p className="text-xs leading-none text-muted-foreground">
-                            {user.email}
-                          </p>
-                        </div>
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator />
+                      {user && (
+                        <>
+                          <DropdownMenuLabel className="font-normal">
+                            <div className="flex flex-col space-y-1">
+                              <p className="text-sm font-medium leading-none">{user.username}</p>
+                              <p className="text-xs leading-none text-muted-foreground">
+                                {user.email}
+                              </p>
+                            </div>
+                          </DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
                       <DropdownMenuItem asChild>
                         <Link href="/profile/settings"><Settings className="mr-2 h-4 w-4" /><span>Pengaturan Akun</span></Link>
                       </DropdownMenuItem>
