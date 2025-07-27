@@ -1,21 +1,22 @@
-/*
-================================================================================
-File: src/app/profile/orders/page.tsx (FIXED)
-Description: Halaman riwayat pesanan dengan perbaikan pada cara membaca data API.
-================================================================================
-*/
+// File: src/app/profile/orders/page.tsx (atau lokasi yang sesuai)
+
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
-import type { Order } from "@/types/order";
+import type { Order, Review } from "@/types/order";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Image from "next/image";
+import { ReviewDialog } from "@/components/profile/ReviewDialog";
+import { FileText, ShoppingCart, Star } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 // Fungsi untuk format mata uang Rupiah
 function formatRupiah(amount: number) {
@@ -44,63 +45,84 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | 
     cancelled: "destructive",
 };
 
+// Interface untuk state dialog review
+interface ReviewDialogState {
+  productId: string;
+  productName: string;
+  initialData?: {
+    rating: number;
+    comment?: string | null;
+  }
+}
+
 export default function OrderHistoryPage() {
   const router = useRouter();
   const { token, logout } = useAuthStore();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [reviewDialogState, setReviewDialogState] = useState<ReviewDialogState | null>(null);
+
+  const fetchOrders = useCallback(async () => {
+    if (!token) return;
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/orders`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (response.status === 401) {
+        toast.error("Sesi Anda berakhir.");
+        logout();
+        router.push('/auth/login');
+        return;
+      }
+      if (!response.ok) throw new Error("Gagal mengambil riwayat pesanan.");
+      const result = await response.json();
+      setOrders(result || []);
+    } catch (error) {
+      toast.error("Gagal memuat pesanan", { description: error instanceof Error ? error.message : "" });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [token, router, logout]);
 
   useEffect(() => {
     if (!token) {
       router.replace('/auth/login');
-      return;
+    } else {
+      fetchOrders();
     }
+  }, [token, router, fetchOrders]);
 
-    const fetchOrders = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/orders`, {
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
-
-        if (response.status === 401) {
-          toast.error("Sesi Anda berakhir.");
-          logout();
-          router.push('/auth/login');
-          return;
-        }
-
-        if (!response.ok) throw new Error("Gagal mengambil riwayat pesanan.");
-        
-        const result = await response.json();
-        // PERBAIKAN: Langsung gunakan 'result' karena API mengirim array secara langsung
-        setOrders(result || []);
-      } catch (error) {
-        toast.error("Terjadi Kesalahan", {
-          description: error instanceof Error ? error.message : "Tidak dapat terhubung ke server.",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchOrders();
-  }, [token, router, logout]);
-
+  const activeOrders = orders.filter(o => o.orderStatus !== 'delivered' && o.orderStatus !== 'cancelled');
+  const completedOrders = orders.filter(o => o.orderStatus === 'delivered' || o.orderStatus === 'cancelled');
+  
   if (isLoading) {
     return (
       <div className="space-y-4">
+        <div className="flex justify-between items-center">
+             <Skeleton className="h-8 w-48" />
+             <Skeleton className="h-10 w-52 rounded-md" />
+        </div>
         {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i}>
             <CardHeader>
-              <Skeleton className="h-5 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
+              <div className="flex justify-between items-center">
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+                <Skeleton className="h-6 w-20 rounded-full" />
+              </div>
             </CardHeader>
             <CardContent>
-              <Skeleton className="h-5 w-1/4" />
+              <div className="flex items-center gap-4">
+                  <Skeleton className="h-16 w-16 rounded-lg" />
+                  <div className="space-y-2 flex-grow">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-2/3" />
+                  </div>
+              </div>
             </CardContent>
-            <CardFooter>
-              <Skeleton className="h-10 w-32" />
-            </CardFooter>
           </Card>
         ))}
       </div>
@@ -108,33 +130,140 @@ export default function OrderHistoryPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Riwayat Pesanan</h1>
-      {orders.length > 0 ? (
-        orders.map((order) => (
-          <Card key={order.id}>
-            <CardHeader className="flex flex-row justify-between items-start">
-              <div>
-                <CardTitle>Pesanan #{order.id.substring(0, 8)}</CardTitle>
-                <CardDescription>Dibuat pada: {formatDate(order.createdAt)}</CardDescription>
+    <>
+      <ReviewDialog
+        isOpen={!!reviewDialogState}
+        onOpenChange={() => setReviewDialogState(null)}
+        productId={reviewDialogState?.productId || ''}
+        productName={reviewDialogState?.productName || ''}
+        initialData={reviewDialogState?.initialData}
+        onSuccess={fetchOrders}
+      />
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <h1 className="text-2xl font-bold tracking-tight">Riwayat Pesanan</h1>
+            <p className="text-sm text-muted-foreground">
+                Total {orders.length} transaksi ditemukan.
+            </p>
+        </div>
+
+        <Tabs defaultValue="active" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="active">
+                <ShoppingCart className="w-4 h-4 mr-2"/> Pesanan Aktif
+            </TabsTrigger>
+            <TabsTrigger value="completed">
+                <FileText className="w-4 h-4 mr-2"/> Pesanan Selesai
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="active" className="space-y-4 mt-6">
+            {activeOrders.length > 0 ? activeOrders.map((order) => (
+              <Card key={order.id} className="transition-all hover:shadow-lg hover:border-primary/20">
+                <CardHeader>
+                  <div className="flex justify-between items-start gap-4">
+                    <div>
+                      <CardTitle className="text-base font-semibold">Pesanan #{order.id.substring(0, 8)}</CardTitle>
+                      <CardDescription>{formatDate(order.createdAt)}</CardDescription>
+                    </div>
+                    <Badge variant={statusVariant[order.orderStatus] || 'default'} className="capitalize shrink-0">
+                      {order.orderStatus}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-2">{order.orderItems.length} jenis barang</p>
+                  <p className="text-xl font-bold">Total: {formatRupiah(order.totalAmount)}</p>
+                </CardContent>
+                <CardFooter className="bg-muted/50 p-4">
+                  <Button asChild className="w-full">
+                    <Link href={`/profile/orders/${order.id}`}>Lihat Detail Pesanan</Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            )) : (
+                <div className="text-center py-16 px-6 border-2 border-dashed rounded-lg">
+                    <ShoppingCart className="mx-auto h-12 w-12 text-gray-400" />
+                    <h3 className="mt-2 text-lg font-medium">Anda belum memiliki pesanan aktif</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Mari mulai berbelanja dan pesanan Anda akan muncul di sini.
+                    </p>
+                </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="completed" className="space-y-4 mt-6">
+            {completedOrders.length > 0 ? completedOrders.map((order) => (
+              <Card key={order.id} className="overflow-hidden">
+                <CardHeader>
+                  <div className="flex justify-between items-start gap-4">
+                      <div>
+                          <CardTitle className="text-base font-semibold">Pesanan #{order.id.substring(0, 8)}</CardTitle>
+                          <CardDescription>{formatDate(order.createdAt)}</CardDescription>
+                      </div>
+                      <Badge variant={statusVariant[order.orderStatus] || 'default'} className="capitalize shrink-0">
+                          {order.orderStatus}
+                      </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <div className="bg-muted/50 p-4 space-y-4">
+                        {order.orderItems.map(item => {
+                          const userReview = item.product.reviews?.[0];
+
+                          return (
+                            <div key={item.id} className="flex justify-between items-center gap-4">
+                                <div className="flex items-center gap-3">
+                                    <Image src={item.product.imageUrl || 'https://placehold.co/64'} alt={item.product.productName} width={48} height={48} className="rounded-md border"/>
+                                    <div>
+                                        <p className="font-semibold text-sm leading-tight">{item.product.productName}</p>
+                                        <p className="text-xs text-muted-foreground">{item.quantity} barang</p>
+                                        
+                                        {userReview && (
+                                          <div className="flex items-center gap-1 mt-1">
+                                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                            <span className="text-sm font-bold">{userReview.rating}</span>
+                                            <span className="text-xs text-muted-foreground truncate"> - "{userReview.comment || 'Tanpa komentar'}"</span>
+                                          </div>
+                                        )}
+                                    </div>
+                                </div>
+                                {order.orderStatus === 'delivered' && (
+                                    <Button
+                                      variant={userReview ? "secondary" : "outline"}
+                                      size="sm"
+                                      onClick={() => setReviewDialogState({
+                                        productId: item.product.id,
+                                        productName: item.product.productName,
+                                        initialData: userReview ? { rating: userReview.rating, comment: userReview.comment } : undefined
+                                      })}
+                                    >
+                                      {userReview ? "Edit Ulasan" : "Ulas"}
+                                    </Button>
+                                )}
+                            </div>
+                          );
+                        })}
+                    </div>
+                    <Separator />
+                     <div className="p-4 flex justify-between items-center">
+                        <span className="text-sm font-medium">Total Pesanan</span>
+                        <span className="text-lg font-bold">{formatRupiah(order.totalAmount)}</span>
+                    </div>
+                </CardContent>
+              </Card>
+            )) : (
+               <div className="text-center py-16 px-6 border-2 border-dashed rounded-lg">
+                  <FileText className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-lg font-medium">Tidak ada riwayat pesanan</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                      Pesanan yang sudah selesai atau dibatalkan akan tampil di sini.
+                  </p>
               </div>
-              <Badge variant={statusVariant[order.orderStatus] || 'default'} className="capitalize">
-                {order.orderStatus}
-              </Badge>
-            </CardHeader>
-            <CardContent>
-              <p className="text-lg font-semibold">Total: {formatRupiah(order.totalAmount)}</p>
-            </CardContent>
-            <CardFooter>
-                <Button asChild>
-                    <Link href={`/profile/orders/${order.id}`}>Lihat Detail</Link>
-                </Button>
-            </CardFooter>
-          </Card>
-        ))
-      ) : (
-        <p>Anda belum memiliki riwayat pesanan.</p>
-      )}
-    </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
   );
 }

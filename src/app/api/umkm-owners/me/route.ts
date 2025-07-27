@@ -10,79 +10,30 @@ export async function GET(request: NextRequest) {
   try {
     const umkmOwner = await prisma.uMKMOwner.findUnique({
       where: { userId: user!.userId },
+      select: { id: true },
+    });
+    if (!umkmOwner) return errorResponse('UMKM profile not found', 404);
+
+    const products = await prisma.product.findMany({
+      where: { umkmId: umkmOwner.id },
       include: {
-        user: {
-          select: {
-            username: true,
-            email: true,
-            phoneNumber: true,
-            address: true,
-          },
-        },
+        category: { select: { categoryName: true } },
+        reviews: { select: { rating: true } },
+        orderItems: { select: { quantity: true } },
       },
+      orderBy: { createdAt: 'desc' },
     });
 
-    if (!umkmOwner) {
-      return errorResponse('UMKM profile not found for this user', 404);
-    }
-
-    return successResponse(umkmOwner);
-
-  } catch (error: any) {
-    console.error('Error fetching UMKM owner profile:', error);
-    return errorResponse('Failed to fetch UMKM owner profile', 500, error.message);
-  }
-}
-
-export async function PUT(request: NextRequest) {
-  const { user, response } = await authenticateAndAuthorize(request, ['umkm_owner']);
-  if (response) return response;
-
-  try {
-    const {
-      umkmName,
-      umkmDescription,
-      umkmAddress,
-      umkmPhoneNumber,
-      umkmEmail,
-      bankAccountNumber,
-      bankName,
-    } = await request.json();
-
-    const dataToUpdate: any = {};
-    if (umkmName !== undefined) dataToUpdate.umkmName = umkmName;
-    if (umkmDescription !== undefined) dataToUpdate.umkmDescription = umkmDescription;
-    if (umkmAddress !== undefined) dataToUpdate.umkmAddress = umkmAddress;
-    if (umkmPhoneNumber !== undefined) dataToUpdate.umkmPhoneNumber = umkmPhoneNumber;
-    if (umkmEmail !== undefined) dataToUpdate.umkmEmail = umkmEmail;
-    if (bankAccountNumber !== undefined) dataToUpdate.bankAccountNumber = bankAccountNumber;
-    if (bankName !== undefined) dataToUpdate.bankName = bankName;
-
-    if (Object.keys(dataToUpdate).length === 0) {
-      return errorResponse('No fields to update provided', 400);
-    }
-
-    const updatedUMKM = await prisma.uMKMOwner.update({
-      where: { userId: user!.userId },
-      data: dataToUpdate,
-      select: {
-        id: true,
-        umkmName: true,
-        umkmDescription: true,
-        umkmAddress: true,
-        umkmPhoneNumber: true,
-        umkmEmail: true,
-        bankAccountNumber: true,
-        bankName: true,
-        isVerified: true,
-        updatedAt: true,
-      },
+    const result = products.map(product => {
+        const totalSold = product.orderItems.reduce((sum, item) => sum + item.quantity, 0);
+        const averageRating = product.reviews.length > 0
+          ? product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length
+          : 0;
+        return { ...product, totalSold, averageRating };
     });
 
-    return successResponse({ message: 'UMKM profile updated successfully', umkm: updatedUMKM });
-
+    return successResponse({ products: result });
   } catch (error: any) {
-    console.error('Error updating UMKM owner profile:', error);
-    return errorResponse('Failed to update UMKM owner profile', 500, error.message);
+    return errorResponse('Failed to fetch UMKM products', 500, error.message);
   }
 }

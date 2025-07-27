@@ -1,9 +1,3 @@
-/*
-================================================================================
-File: src/components/auth/login-form.tsx (UPDATED)
-Description: Update form login untuk menyimpan token ke Zustand store.
-================================================================================
-*/
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -29,9 +23,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth"; // <-- 1. Impor store
+import { useAuthStore } from "@/store/auth";
 
-// Skema validasi disesuaikan dengan API
 const formSchema = z.object({
   identifier: z.string().min(1, "Email atau username tidak boleh kosong"),
   password: z.string().min(1, "Password tidak boleh kosong"),
@@ -39,49 +32,49 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const router = useRouter();
-  const { setToken } = useAuthStore(); // <-- 2. Ambil fungsi setToken
-
+  const { setToken, setUser } = useAuthStore();
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      identifier: "",
-      password: "",
-    },
+    /* ... */
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     toast.loading("Mencoba masuk...");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        }
+      );
 
       const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Login gagal.");
 
-      if (!response.ok) {
-        throw new Error(result.message || "Login gagal, periksa kembali email/password Anda.");
-      }
+      if (result.token && result.user) {
+        setToken(result.token);
+        setUser(result.user);
 
-      // Pastikan API mengembalikan token dalam format { token: '...' }
-      if (result.token) {
-        setToken(result.token); // <-- 3. Simpan token ke store
-        toast.success("Login Berhasil! 🎉", {
-          description: "Selamat datang kembali! Anda akan dialihkan...",
-          duration: 2000,
-        });
+        toast.success("Login Berhasil!", { duration: 1500 });
+
         setTimeout(() => {
-          router.push('/profile'); // Alihkan ke halaman profil
-          router.refresh(); // Refresh halaman untuk update UI (seperti navbar)
-        }, 2000);
+          // PERBAIKAN: Logika redirect yang lebih aman
+          if (result.user.role === "admin") {
+            router.push("/admin/verify-umkm");
+          } else {
+            // Semua peran lain (customer, umkm_owner) masuk ke dasbor customer
+            router.push("/profile");
+          }
+          router.refresh();
+        }, 1500);
       } else {
-        throw new Error("Token tidak diterima dari server.");
+        throw new Error("Respons tidak valid dari server.");
       }
-
     } catch (error) {
       toast.error("Oh, terjadi kesalahan!", {
-        description: error instanceof Error ? error.message : "Error tidak diketahui",
+        description:
+          error instanceof Error ? error.message : "Error tidak diketahui",
       });
     }
   }
@@ -104,7 +97,10 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Email atau Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="m@example.com atau johndoe" {...field} />
+                    <Input
+                      placeholder="m@example.com atau johndoe"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -123,7 +119,11 @@ export function LoginForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.formState.isSubmitting}
+            >
               {form.formState.isSubmitting ? "Memproses..." : "Login"}
             </Button>
           </form>

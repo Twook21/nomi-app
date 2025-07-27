@@ -1,61 +1,50 @@
-// File: src/app/api/products/[id]/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-
-export const dynamic = 'force-dynamic';
+import { successResponse, errorResponse } from '@/lib/api-response';
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const id = params.id; // Mengakses id dari params
-
   try {
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id: params.id },
       include: {
         umkmOwner: {
-          select: {
-            id: true,
-            umkmName: true,
-            umkmDescription: true,
-            umkmAddress: true,
-            umkmPhoneNumber: true,
-            umkmEmail: true,
-            isVerified: true,
-          },
+          select: { id: true, umkmName: true },
         },
-        category: {
-          select: {
-            categoryName: true,
-          },
-        },
+        // PERBAIKAN: Mengambil semua ulasan untuk produk ini
         reviews: {
           include: {
             customer: {
-              select: {
-                username: true,
-              },
-            },
+              select: { username: true }
+            }
           },
-          orderBy: { createdAt: 'desc' },
-        },
+          orderBy: {
+            createdAt: 'desc'
+          }
+        }
       },
     });
 
-    if (!product || !product.isAvailable || product.expirationDate < new Date()) {
-      return NextResponse.json(
-        { message: 'Product not found or is no longer available' },
-        { status: 404 }
-      );
+    if (!product) {
+      return errorResponse('Product not found', 404);
     }
 
-    // Menggunakan NextResponse.json standar
-    return NextResponse.json({ data: product }, { status: 200 });
+    const otherProductsFromUmkm = await prisma.product.findMany({
+      where: {
+        umkmId: product.umkmId,
+        id: { not: product.id },
+      },
+      take: 4,
+      include: {
+        umkmOwner: { select: { umkmName: true } },
+      }
+    });
+
+    return successResponse({
+      product,
+      otherProducts: otherProductsFromUmkm,
+    });
 
   } catch (error: any) {
-    console.error(`Error fetching product ${id}:`, error);
-    return NextResponse.json(
-      { message: 'Failed to fetch product details', error: error.message },
-      { status: 500 }
-    );
+    return errorResponse('Failed to fetch product details', 500, error.message);
   }
 }

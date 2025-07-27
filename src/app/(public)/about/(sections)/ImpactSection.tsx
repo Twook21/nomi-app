@@ -19,10 +19,10 @@ export const ImpactSection = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           {impactData.map((item, index) => (
-            <div key={index} className="bg-white p-8 rounded-2xl shadow-lg border border-black hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-              <item.icon className="h-14 w-14 mx-auto text-nimo-yellow mb-4" />
-              <p className="text-5xl font-bold text-nimo-yellow">{item.value}</p>
-              <h4 className="mt-2 text-xl font-semibold text-black">{item.label}</h4>
+            <div key={index} className="bg-nimo-yellow p-8 rounded-2xl shadow-lg border border-black hover:border-white hover:border-2 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <item.icon className="h-14 w-14 mx-auto text-nimo-light mb-4" />
+              <p className="text-5xl font-bold text-nimo-light">{item.value}</p>
+              <h4 className="mt-2 text-xl font-semibold text-nimo-light">{item.label}</h4>
             </div>
           ))}
         </div>

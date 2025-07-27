@@ -1,3 +1,13 @@
+export interface Review {
+    id: string;
+    rating: number;
+    comment: string | null;
+    createdAt: string;
+    customer: {
+        username: string;
+    };
+}
+
 export interface Product {
   id: string;
   productName: string;
@@ -5,12 +15,18 @@ export interface Product {
   originalPrice: number;
   discountedPrice: number;
   stock: number;
-  imageUrl: string;
+  imageUrl: string | null;
   expirationDate: string;
-  // PERBAIKAN: Menggunakan 'umkmOwner' agar cocok dengan data dari API
+  isAvailable: boolean;
   umkmOwner: {
-    id: string;
     umkmName: string;
   };
-  // Anda bisa menambahkan properti lain jika ada
+  category: {
+    categoryName: string;
+  } | null;
+  categoryId: string;
+  // PERBAIKAN: Menambahkan properti analitik yang hilang
+  totalSold: number;
+  averageRating: number;
+  reviews: Review[];
 }

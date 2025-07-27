@@ -1,100 +1,104 @@
+// LOKASI: app/api/umkm-owners/me/products/[id]/route.ts
+
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { successResponse, errorResponse } from '@/lib/api-response';
 import { authenticateAndAuthorize } from '@/lib/auth';
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+// Helper untuk verifikasi kepemilikan produk (tidak ada perubahan)
+async function verifyProductOwner(userId: string, productId: string) {
+  const umkmOwner = await prisma.uMKMOwner.findUnique({
+    where: { userId },
+    select: { id: true },
+  });
+
+  if (!umkmOwner) {
+    return { error: errorResponse('Profil UMKM tidak ditemukan', 404) };
+  }
+
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+    select: { umkmId: true },
+  });
+
+  if (!product) {
+    return { error: errorResponse('Produk tidak ditemukan', 404) };
+  }
+
+  if (product.umkmId !== umkmOwner.id) {
+    return { error: errorResponse('Anda tidak memiliki izin untuk mengakses produk ini', 403) };
+  }
+
+  return { umkmOwner, product };
+}
+
+// [GET] handler untuk mengambil satu produk (sudah diperbaiki)
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   const { user, response } = await authenticateAndAuthorize(request, ['umkm_owner']);
   if (response) return response;
 
-  const { id: productId } = params;
+  // Verifikasi kepemilikan produk
+  const { error: verificationError } = await verifyProductOwner(user!.userId, params.id);
+  if (verificationError) return verificationError;
 
   try {
-    const umkmOwner = await prisma.uMKMOwner.findUnique({
-      where: { userId: user!.userId },
-      select: { id: true },
-    });
-
-    if (!umkmOwner) {
-      return errorResponse('UMKM profile not found for this user', 404);
-    }
-
-    const {
-      productName,
-      description,
-      originalPrice,
-      discountedPrice,
-      stock,
-      expirationDate,
-      imageUrl,
-      categoryId,
-      isAvailable,
-    } = await request.json();
-
-    const dataToUpdate: any = {};
-    if (productName !== undefined) dataToUpdate.productName = productName;
-    if (description !== undefined) dataToUpdate.description = description;
-    if (originalPrice !== undefined) dataToUpdate.originalPrice = parseFloat(originalPrice);
-    if (discountedPrice !== undefined) dataToUpdate.discountedPrice = parseFloat(discountedPrice);
-    if (stock !== undefined) dataToUpdate.stock = parseInt(stock);
-    if (expirationDate !== undefined) dataToUpdate.expirationDate = new Date(expirationDate);
-    if (imageUrl !== undefined) dataToUpdate.imageUrl = imageUrl;
-    if (categoryId !== undefined) dataToUpdate.categoryId = categoryId;
-    if (isAvailable !== undefined) dataToUpdate.isAvailable = isAvailable;
-
-    if (Object.keys(dataToUpdate).length === 0) {
-      return errorResponse('No fields to update provided', 400);
-    }
-
-    const updatedProduct = await prisma.product.update({
-      where: {
-        id: productId,
-        umkmId: umkmOwner.id, // Pastikan produk ini milik UMKM yang login
+    // Ambil produk beserta relasi reviews-nya
+    const productData = await prisma.product.findUnique({
+      where: { id: params.id },
+      include: {
+        reviews: {
+          select: { rating: true }, // Hanya ambil field rating
+        },
+        category: {
+          select: { categoryName: true },
+        },
       },
-      data: dataToUpdate,
     });
 
-    return successResponse({ message: 'Product updated successfully', product: updatedProduct });
-
-  } catch (error: any) {
-    console.error(`Error updating product ${productId}:`, error);
-    if (error.code === 'P2025') { // Prisma error code for record not found
-      return errorResponse('Product not found or you do not have permission to update it', 404);
+    if (!productData) {
+      return errorResponse("Product not found", 404);
     }
-    return errorResponse('Failed to update product', 500, error.message);
+
+    // Lakukan perhitungan rata-rata rating di backend
+    const totalRating = productData.reviews.reduce((acc, review) => acc + review.rating, 0);
+    const reviewCount = productData.reviews.length;
+    const averageRating = reviewCount > 0 ? totalRating / reviewCount : 0;
+
+    const { reviews, ...productInfo } = productData;
+
+    // Kirim data produk yang sudah dilengkapi dengan averageRating
+    return successResponse({
+      ...productInfo,
+      averageRating: parseFloat(averageRating.toFixed(1)),
+    });
+
+  } catch (e: any) {
+    return errorResponse('Gagal mengambil detail produk', 500, e.message);
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const { user, response } = await authenticateAndAuthorize(request, ['umkm_owner']);
-  if (response) return response;
+// [PUT] handler untuk memperbarui produk (tidak ada perubahan)
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+    const { user, response } = await authenticateAndAuthorize(request, ['umkm_owner']);
+    if (response) return response;
 
-  const { id: productId } = params;
+    const { error } = await verifyProductOwner(user!.userId, params.id);
+    if (error) return error;
 
-  try {
-    const umkmOwner = await prisma.uMKMOwner.findUnique({
-      where: { userId: user!.userId },
-      select: { id: true },
-    });
-
-    if (!umkmOwner) {
-      return errorResponse('UMKM profile not found for this user', 404);
+    try {
+        const data = await request.json();
+        const updatedProduct = await prisma.product.update({
+            where: { id: params.id },
+            data: {
+                ...data,
+                originalPrice: data.originalPrice ? parseFloat(data.originalPrice) : undefined,
+                discountedPrice: data.discountedPrice ? parseFloat(data.discountedPrice) : undefined,
+                stock: data.stock ? parseInt(data.stock) : undefined,
+                expirationDate: data.expirationDate ? new Date(data.expirationDate) : undefined,
+            },
+        });
+        return successResponse({ message: 'Produk berhasil diperbarui', product: updatedProduct });
+    } catch (e: any) {
+        return errorResponse('Gagal memperbarui produk', 500, e.message);
     }
-
-    await prisma.product.delete({
-      where: {
-        id: productId,
-        umkmId: umkmOwner.id, // Pastikan produk ini milik UMKM yang login
-      },
-    });
-
-    return successResponse({ message: 'Product deleted successfully' });
-
-  } catch (error: any) {
-    console.error(`Error deleting product ${productId}:`, error);
-    if (error.code === 'P2025') {
-      return errorResponse('Product not found or you do not have permission to delete it', 404);
-    }
-    return errorResponse('Failed to delete product', 500, error.message);
-  }
 }

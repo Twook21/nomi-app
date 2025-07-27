@@ -1,40 +1,38 @@
+// File: app/products/[id]/page.tsx
+
 import type { Product } from "@/types/product";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Clock, PackageCheck, Store } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from 'next';
-import { AddToCartButton } from "@/components/products/AddToCardButton";
-import { ProductImage } from "@/components/products/ProductImage"; // <-- 1. Impor komponen baru
+import { AddToCartWidget } from "@/components/products/AddToCardWidget";
+import { ProductImage } from "@/components/products/ProductImage";
+import { ProductCard } from "@/components/products/ProductCard";
+import { ProductReviews } from "@/components/products/ProductReviews"; // [MODIFIKASI] Impor komponen ulasan
 
-// Memberitahu Next.js bahwa halaman ini dinamis
 export const dynamic = 'force-dynamic';
 
-// Tipe props untuk halaman dinamis
 type Props = {
   params: { id: string }
 }
 
-// Fungsi untuk mengambil data produk tunggal
-async function getProduct(id: string): Promise<Product | null> {
+// Fungsi untuk mengambil data produk tunggal dan produk lainnya
+async function getProductData(id: string): Promise<{ product: Product | null; otherProducts: Product[] }> {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products/${id}`, {
-      next: { revalidate: 60 } // Cache data selama 60 detik
+      next: { revalidate: 60 }
     });
 
-    if (response.status === 404) {
-      return null; // Produk tidak ditemukan
-    }
-
     if (!response.ok) {
-      throw new Error("Gagal mengambil data produk.");
+      return { product: null, otherProducts: [] };
     }
     
     const result = await response.json();
-    return result.data;
+    return { product: result.product, otherProducts: result.otherProducts };
 
   } catch (error) {
     console.error(error);
-    throw new Error("Terjadi kesalahan saat menghubungi server.");
+    return { product: null, otherProducts: [] };
   }
 }
 
@@ -43,22 +41,21 @@ export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const id = params.id;
-  const product = await getProduct(id);
+  const { product } = await getProductData(params.id);
 
   if (!product) {
     return {
       title: 'Produk Tidak Ditemukan'
     }
   }
- 
+  
   return {
     title: `${product.productName} oleh ${product.umkmOwner.umkmName}`,
     description: product.description,
   }
 }
 
-// Fungsi untuk format mata uang Rupiah
+// Fungsi helper
 function formatRupiah(amount: number) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -67,7 +64,6 @@ function formatRupiah(amount: number) {
   }).format(amount);
 }
 
-// Fungsi untuk format tanggal
 function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString("id-ID", {
         weekday: 'long',
@@ -79,7 +75,7 @@ function formatDate(dateString: string) {
 
 // Komponen Halaman Detail Produk
 export default async function ProductDetailPage({ params }: Props) {
-  const product = await getProduct(params.id);
+  const { product, otherProducts } = await getProductData(params.id);
 
   if (!product) {
     notFound();
@@ -90,14 +86,13 @@ export default async function ProductDetailPage({ params }: Props) {
   );
 
   return (
-    <div className="container mx-auto max-w-4xl py-10 px-4">
+    <div className="container mx-auto max-w-5xl py-10 px-4">
       <div className="grid md:grid-cols-2 gap-8">
         {/* Kolom Gambar */}
         <div className="w-full">
           <div className="relative aspect-square rounded-lg overflow-hidden border">
-            {/* 2. Ganti <Image> dengan komponen <ProductImage> */}
             <ProductImage src={product.imageUrl} alt={product.productName} />
-             {discountPercentage > 0 && (
+            {discountPercentage > 0 && (
               <Badge 
                 variant="destructive" 
                 className="absolute top-3 right-3 text-base"
@@ -113,8 +108,8 @@ export default async function ProductDetailPage({ params }: Props) {
           <h1 className="text-3xl lg:text-4xl font-bold leading-tight">{product.productName}</h1>
           
           <div className="flex items-center gap-2">
-             <Store className="w-5 h-5 text-muted-foreground" />
-             <span className="text-lg text-muted-foreground">oleh <span className="font-semibold text-primary">{product.umkmOwner.umkmName}</span></span>
+              <Store className="w-5 h-5 text-muted-foreground" />
+              <span className="text-lg text-muted-foreground">oleh <span className="font-semibold text-primary">{product.umkmOwner.umkmName}</span></span>
           </div>
           
           <p className="text-muted-foreground text-base leading-relaxed">
@@ -143,10 +138,27 @@ export default async function ProductDetailPage({ params }: Props) {
                 </p>
               )}
             </div>
-            <AddToCartButton productId={product.id} />
+            <AddToCartWidget productId={product.id} stock={product.stock} />
           </div>
         </div>
       </div>
+
+      {/* [MODIFIKASI] Bagian untuk menampilkan ulasan produk */}
+      <div className="mt-16">
+        <ProductReviews reviews={product.reviews || []} />
+      </div>
+
+      {/* Bagian Produk Lain dari Toko Ini */}
+      {otherProducts.length > 0 && (
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold mb-6">Produk Lain dari {product.umkmOwner.umkmName}</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {otherProducts.map(p => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

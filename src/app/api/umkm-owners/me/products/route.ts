@@ -1,9 +1,11 @@
 // app/api/umkm-owners/me/products/route.ts
+
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { successResponse, errorResponse } from '@/lib/api-response';
 import { authenticateAndAuthorize } from '@/lib/auth';
 
+// [GET] - Mengambil daftar produk milik UMKM yang sedang login
 export async function GET(request: NextRequest) {
   const { user, response } = await authenticateAndAuthorize(request, ['umkm_owner']);
   if (response) return response;
@@ -32,11 +34,18 @@ export async function GET(request: NextRequest) {
       where.isAvailable = isAvailable === 'true';
     }
 
-    const products = await prisma.product.findMany({
+    // Ambil data produk beserta ulasannya untuk perhitungan rating
+    const productsData = await prisma.product.findMany({
       where,
       include: {
         category: {
           select: { categoryName: true },
+        },
+        // Ambil data rating dari relasi 'reviews' untuk dihitung
+        reviews: {
+          select: {
+            rating: true,
+          },
         },
       },
       orderBy: { createdAt: 'desc' },
@@ -44,7 +53,24 @@ export async function GET(request: NextRequest) {
       take: limit,
     });
 
+    // Hitung total produk untuk paginasi
     const totalProducts = await prisma.product.count({ where });
+
+    // Olah data untuk menambahkan properti `averageRating`
+    const products = productsData.map(p => {
+      const totalRating = p.reviews.reduce((acc, review) => acc + review.rating, 0);
+      const reviewCount = p.reviews.length;
+      const averageRating = reviewCount > 0 ? totalRating / reviewCount : 0;
+
+      // Hapus properti `reviews` agar tidak dikirim ke frontend
+      const { reviews, ...productData } = p;
+
+      return {
+        ...productData,
+        averageRating: parseFloat(averageRating.toFixed(1)),
+        reviewCount, // Opsional: jika Anda ingin menampilkan jumlah ulasan
+      };
+    });
 
     return successResponse({
       products,
@@ -60,6 +86,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// [POST] - Menambahkan produk baru
 export async function POST(request: NextRequest) {
   const { user, response } = await authenticateAndAuthorize(request, ['umkm_owner']);
   if (response) return response;
