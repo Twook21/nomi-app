@@ -23,22 +23,6 @@ Project ini dibuat sebagai bagian dari **Capstone Project** program **Fullstack 
 
 ## 📝 Fitur
 
-✅ **Dynamic Routing**
-
-- Dapat mengakses halaman pengguna melalui:
-
-```
-
-[http://localhost:3000/pengguna](http://localhost:3000/pengguna)
-
-```
-
-Halaman ini menampilkan data user dummy yang diambil dari file `lib/data.ts`.
-
-✅ **Pengelolaan Data Dummy**
-
-- Data user hanya sebagai dummy untuk tahap pengembangan.
-
 ✅ **Frontend Modern**
 
 - Menggunakan Tailwind CSS untuk tampilan yang minimalis dan responsif.
@@ -62,13 +46,13 @@ git clone https://github.com/Twook21/nomi-app.git
 3. Install dependencies:
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 4. Jalankan development server:
 
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 5. Buka di browser:
@@ -83,8 +67,7 @@ git clone https://github.com/Twook21/nomi-app.git
 
 📌 Untuk **Tugas** Capstone:
 
-- **CRUD dengan api dan koneksi Database Postgres Neon** sementara : Operasi CRUD user
-- Lakukan Registrasi, fitur sementara hanya bisa membuat pesanan dari user, fitur lain masi dalam pengembangan.
+- **CRUD dengan api dan koneksi Database Postgres Neon** sementara : Hampir memenuhi kebutuhan web app ecommerce.
 
 ---
 
