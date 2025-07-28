@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth"; // Pastikan path ini sesuai
+import { useAuth } from "@/hooks/use-auth"; // Import hook baru
+import { useAuthStore } from "@/store/auth";
 import { toast } from "sonner";
 import {
   Sun,
@@ -16,8 +17,8 @@ import {
   Clock,
   ShieldX,
 } from "lucide-react";
-import { Button } from "@/components/ui/button"; // Pastikan path ini sesuai
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Pastikan path ini sesuai
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +26,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; // Pastikan path ini sesuai
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
 // --- Komponen Tombol Ganti Tema ---
 const ThemeToggleButton = () => {
@@ -78,16 +80,20 @@ const umkmNavLinks = [
 // --- Komponen Utama Navbar ---
 export function Navbar() {
   const [isClient, setIsClient] = useState(false);
-  // PERUBAHAN 1: Menambahkan cartCount dan fetchCartCount dari store
+  
+  // Menggunakan hook useAuth yang unified
+  const { user, isAuthenticated, authMethod } = useAuth();
+  
+  // Mengambil fungsi dari auth store
   const { 
-    user, 
-    token, 
     logout, 
     activeView, 
     switchView, 
     cartCount, 
-    fetchCartCount 
+    fetchCartCount,
+    token 
   } = useAuthStore();
+  
   const router = useRouter();
   const pathname = usePathname();
 
@@ -95,15 +101,15 @@ export function Navbar() {
     setIsClient(true);
   }, []);
 
-  // PERUBAHAN 2: useEffect untuk mengambil data jumlah item di keranjang
+  // Fetch cart count untuk JWT method atau jika ada token
   useEffect(() => {
-    if (token) {
+    if (token && authMethod === 'jwt') {
       fetchCartCount(token);
     }
-  }, [token, fetchCartCount]);
+  }, [token, authMethod, fetchCartCount]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout(); // Logout akan handle baik JWT maupun NextAuth
     toast.success("Anda berhasil logout.");
     router.push("/");
     router.refresh();
@@ -122,13 +128,30 @@ export function Navbar() {
     router.refresh();
   };
 
-  const getInitials = (name: string): string => {
-    if (!name) return "";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
+  // Fungsi untuk mendapatkan inisial nama
+  const getInitials = (name?: string, username?: string, email?: string): string => {
+    if (name) {
+      return name.split(" ").map((n) => n[0]).join("").toUpperCase();
+    }
+    if (username) {
+      return username.split(" ").map((n) => n[0]).join("").toUpperCase();
+    }
+    if (email) {
+      return email.charAt(0).toUpperCase();
+    }
+    return "U";
+  };
+
+  // Fungsi untuk mendapatkan display name
+  const getDisplayName = (): string => {
+    return user?.name || user?.username || user?.email?.split("@")[0] || "User";
+  };
+
+  // Fungsi untuk mendapatkan avatar URL
+  const getAvatarUrl = (): string => {
+    // Prioritas: Google image -> Dicebear based on display name
+    if (user?.image) return user.image;
+    return `https://api.dicebear.com/7.x/initials/svg?seed=${getDisplayName()}`;
   };
 
   const isActive = (href: string) => {
@@ -159,7 +182,7 @@ export function Navbar() {
           </div>
 
           <div className="hidden md:flex flex-1 justify-center">
-            {isClient && token && (
+            {isClient && isAuthenticated && (
               <div className="flex items-center space-x-8">
                 {navLinks.map((link) => (
                   <Link
@@ -176,11 +199,10 @@ export function Navbar() {
 
           <div className="flex-1 flex justify-end">
             <div className="flex items-center gap-2 md:gap-4">
-              {isClient && token && user ? (
+              {isClient && isAuthenticated && user ? (
                 // --- Tampilan Setelah Login ---
                 <>
                   {activeView === "customer" && (
-                    // PERUBAHAN 3: Mengimplementasikan badge notifikasi pada ikon keranjang
                     <Button variant="ghost" size="icon" asChild className="relative">
                       <Link href="/cart">
                         <ShoppingCart className="h-5 w-5" />
@@ -202,11 +224,11 @@ export function Navbar() {
                       >
                         <Avatar className="h-10 w-10">
                           <AvatarImage
-                            src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.username}`}
-                            alt={user?.username || "User"}
+                            src={getAvatarUrl()}
+                            alt={getDisplayName()}
                           />
                           <AvatarFallback>
-                            {getInitials(user?.username || "")}
+                            {getInitials(user?.name, user?.username, user?.email)}
                           </AvatarFallback>
                         </Avatar>
                       </Button>
@@ -217,13 +239,24 @@ export function Navbar() {
                       forceMount
                     >
                       <DropdownMenuLabel className="font-normal">
-                        <div className="flex flex-col space-y-1">
+                        <div className="flex flex-col space-y-2">
                           <p className="text-sm font-medium leading-none">
-                            {user.username}
+                            {getDisplayName()}
                           </p>
                           <p className="text-xs leading-none text-muted-foreground">
                             {user.email}
                           </p>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary" className="text-xs">
+                              {user?.role === 'customer' ? 'Customer' : 
+                               user?.role === 'umkm_owner' ? 'UMKM Owner' : 'Admin'}
+                            </Badge>
+                            {authMethod === 'nextauth' && (
+                              <Badge variant="outline" className="text-xs">
+                                Google
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />

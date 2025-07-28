@@ -17,7 +17,7 @@ Project ini dibuat sebagai bagian dari **Capstone Project** program **Fullstack 
 
 - `pages/` – Berisi halaman-halaman aplikasi.
 - `components/` – Komponen UI yang dapat digunakan kembali.
-- `lib/data.ts` – Berisi **data dummy user** untuk keperluan development.
+
 
 ---
 
@@ -26,6 +26,7 @@ Project ini dibuat sebagai bagian dari **Capstone Project** program **Fullstack 
 ✅ **Frontend Modern**
 
 - Menggunakan Tailwind CSS untuk tampilan yang minimalis dan responsif.
+- Oauth dengan Google
 
 ---
 
@@ -67,7 +68,9 @@ git clone https://github.com/Twook21/nomi-app.git
 
 📌 Untuk **Tugas** Capstone:
 
-- **CRUD dengan api dan koneksi Database Postgres Neon** sementara : Hampir memenuhi kebutuhan web app ecommerce.
+- **CRUD dengan api dan koneksi Database Postgres Neon** 
+- **Implementasi NextAuth** 
+
 
 ---
 

@@ -24,6 +24,8 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
+import { signIn, getSession } from "next-auth/react";
+import { FcGoogle } from "react-icons/fc";
 
 const formSchema = z.object({
   identifier: z.string().min(1, "Email atau username tidak boleh kosong"),
@@ -32,11 +34,16 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const router = useRouter();
-  const { setToken, setUser } = useAuthStore();
+  const { setToken, setUser, setAuthMethod } = useAuthStore();
   const form = useForm<z.infer<typeof formSchema>>({
-    /* ... */
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      identifier: "",
+      password: "",
+    },
   });
 
+  // Existing credential login function
   async function onSubmit(values: z.infer<typeof formSchema>) {
     toast.loading("Mencoba masuk...");
     try {
@@ -55,6 +62,7 @@ export function LoginForm() {
       if (result.token && result.user) {
         setToken(result.token);
         setUser(result.user);
+        setAuthMethod('jwt');
 
         toast.success("Login Berhasil!", { duration: 1500 });
 
@@ -79,6 +87,45 @@ export function LoginForm() {
     }
   }
 
+  // Google OAuth login
+  async function handleGoogleSignIn() {
+    try {
+      toast.loading("Masuk dengan Google...");
+      
+      const result = await signIn('google', { 
+        redirect: false,
+        callbackUrl: '/profile'
+      });
+
+      if (result?.ok) {
+        // Get session after successful sign in
+        const session = await getSession();
+        
+        if (session?.user) {
+          setUser({
+            id: session.user.id,
+            email: session.user.email!,
+            name: session.user.name,
+            image: session.user.image,
+            username: session.user.username,
+            role: session.user.role as any,
+            umkmProfileStatus: session.user.umkmProfileStatus as any,
+          });
+          setAuthMethod('nextauth');
+          
+          toast.success("Login dengan Google berhasil!");
+          router.push('/profile');
+        }
+      } else {
+        throw new Error("Login dengan Google gagal");
+      }
+    } catch (error) {
+      toast.error("Login dengan Google gagal", {
+        description: error instanceof Error ? error.message : "Error tidak diketahui",
+      });
+    }
+  }
+
   return (
     <Card className="mx-auto max-w-sm w-full">
       <CardHeader>
@@ -88,6 +135,29 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {/* Google Sign In Button */}
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full mb-4"
+          onClick={handleGoogleSignIn}
+        >
+          <FcGoogle className="mr-2 h-4 w-4" />
+          Masuk dengan Google
+        </Button>
+        
+        <div className="relative mb-4">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Atau lanjutkan dengan
+            </span>
+          </div>
+        </div>
+
+        {/* Existing form */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -128,6 +198,7 @@ export function LoginForm() {
             </Button>
           </form>
         </Form>
+        
         <div className="mt-4 text-center text-sm">
           Belum punya akun?{" "}
           <Link href="/auth/register" className="underline">

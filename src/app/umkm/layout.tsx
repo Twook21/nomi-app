@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/use-auth"; // Import hook baru
 import { useAuthStore } from "@/store/auth";
 import { cn } from "@/lib/utils";
 import { Package, ShoppingCart, Settings, Repeat, LogOut, LayoutDashboard } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 const sidebarNavItems = [
@@ -23,19 +25,47 @@ export default function UmkmDashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, switchView, logout } = useAuthStore();
+  
+  // Menggunakan hook useAuth yang unified
+  const { user, authMethod } = useAuth();
+  
+  // Mengambil fungsi dari auth store
+  const { switchView, logout } = useAuthStore();
 
-  const getInitials = (name: string) => {
-    return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
-  }
+  // Fungsi untuk mendapatkan inisial nama
+  const getInitials = (name?: string, username?: string, email?: string): string => {
+    if (name) {
+      return name.split(" ").map((n) => n[0]).join("").toUpperCase();
+    }
+    if (username) {
+      return username.split(" ").map((n) => n[0]).join("").toUpperCase();
+    }
+    if (email) {
+      return email.charAt(0).toUpperCase();
+    }
+    return "U";
+  };
+
+  // Fungsi untuk mendapatkan display name
+  const getDisplayName = (): string => {
+    return user?.name || user?.username || user?.email?.split("@")[0] || "User";
+  };
+
+  // Fungsi untuk mendapatkan avatar URL
+  const getAvatarUrl = (): string => {
+    // Prioritas: Google image -> Dicebear based on display name
+    if (user?.image) return user.image;
+    return `https://api.dicebear.com/7.x/initials/svg?seed=${getDisplayName()}`;
+  };
 
   const handleSwitchView = () => {
     switchView('customer');
+    toast.info("Beralih ke tampilan Pembeli.");
     router.push('/profile');
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout(); // Logout akan handle baik JWT maupun NextAuth
     toast.success("Anda berhasil logout.");
     router.push('/');
   };
@@ -65,29 +95,52 @@ export default function UmkmDashboardLayout({
             </Link>
           ))}
         </nav>
+        
         <div className="mt-auto p-4 border-t">
-            <div className="flex items-center gap-3 mb-4">
-                 <Avatar className="h-9 w-9">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.username}`} alt={user?.username || 'U'} />
-                    <AvatarFallback>{getInitials(user?.username || '')}</AvatarFallback>
-                </Avatar>
-                <div>
-                    <p className="text-sm font-semibold">{user?.username}</p>
-                    <p className="text-xs text-muted-foreground">Tampilan Penjual</p>
-                </div>
+          <div className="flex items-center gap-3 mb-4">
+            <Avatar className="h-9 w-9">
+              <AvatarImage 
+                src={getAvatarUrl()} 
+                alt={getDisplayName()} 
+              />
+              <AvatarFallback>
+                {getInitials(user?.name, user?.username, user?.email)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <p className="text-sm font-semibold">{getDisplayName()}</p>
+              <div className="flex items-center gap-1">
+                <p className="text-xs text-muted-foreground">Tampilan Penjual</p>
+                {authMethod === 'nextauth' && (
+                  <Badge variant="outline" className="text-xs px-1 py-0">
+                    Google
+                  </Badge>
+                )}
+              </div>
             </div>
-            <div className="space-y-2">
-                <Button variant="outline" className="w-full justify-start gap-2" onClick={handleSwitchView}>
-                    <Repeat className="h-4 w-4" />
-                    <span>Beralih ke Pembeli</span>
-                </Button>
-                <Button variant="ghost" className="w-full justify-start gap-2 text-muted-foreground" onClick={handleLogout}>
-                    <LogOut className="h-4 w-4" />
-                    <span>Logout</span>
-                </Button>
-            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <Button 
+              variant="outline" 
+              className="w-full justify-start gap-2" 
+              onClick={handleSwitchView}
+            >
+              <Repeat className="h-4 w-4" />
+              <span>Beralih ke Pembeli</span>
+            </Button>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start gap-2 text-muted-foreground" 
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </Button>
+          </div>
         </div>
       </aside>
+      
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-64">
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           {children}
