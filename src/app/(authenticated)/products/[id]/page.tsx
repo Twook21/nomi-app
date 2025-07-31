@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Clock, PackageCheck, Store } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from 'next';
-import { AddToCartWidget } from "@/components/products/AddToCardWidget";
+import { AddToCartWidget } from "@/components/products/AddToCartWidget";
 import { ProductImage } from "@/components/products/ProductImage";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ProductReviews } from "@/components/products/ProductReviews"; // [MODIFIKASI] Impor komponen ulasan

@@ -2,25 +2,44 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useAuthStore } from "@/store/auth";
+import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { DataTable } from "@/components/umkm/ProductDataTable"; // Re-use the data table component
+import { DataTable } from "@/components/umkm/ProductDataTable";
 import { getVerificationColumns } from "@/components/admin/VerificationTableColumns";
 import type { AdminUmkmProfile } from "@/types/admin_umkm";
 
 export default function VerifyUmkmPage() {
   const { token } = useAuthStore();
+  const { authMethod } = useAuth();
   const [umkmList, setUmkmList] = useState<AdminUmkmProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUnverifiedUmkm = useCallback(async () => {
-    if (!token) return;
     setIsLoading(true);
     try {
+      // PERBAIKAN: Support dual auth
+      let headers: HeadersInit = { 'Content-Type': 'application/json' };
+      let credentials: RequestCredentials = 'omit';
+
+      if (authMethod === 'jwt' && token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      } else if (authMethod === 'nextauth') {
+        credentials = 'include';
+      }
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/umkm-owners?isVerified=false`, {
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers,
+        credentials,
       });
-      if (!response.ok) throw new Error("Gagal mengambil data UMKM.");
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          toast.error("Session expired. Please login again.");
+          return;
+        }
+        throw new Error("Gagal mengambil data UMKM.");
+      }
       
       const result = await response.json();
       setUmkmList(result || []);
@@ -31,7 +50,7 @@ export default function VerifyUmkmPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [token]);
+  }, [token, authMethod]);
 
   useEffect(() => {
     fetchUnverifiedUmkm();
@@ -53,6 +72,8 @@ export default function VerifyUmkmPage() {
         <CardContent className="p-4">
           {isLoading ? (
             <div className="text-center p-8 text-muted-foreground">Memuat data pendaftar...</div>
+          ) : umkmList.length === 0 ? (
+            <div className="text-center p-8 text-muted-foreground">Tidak ada UMKM yang menunggu verifikasi.</div>
           ) : (
             <DataTable columns={columns} data={umkmList} />
           )}

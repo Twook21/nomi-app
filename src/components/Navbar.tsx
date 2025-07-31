@@ -10,7 +10,7 @@ const menuItems = [
   { href: "/about", label: "Tentang" },
   { href: "/partner", label: "Mitra" },
   { href: "/customer", label: "Konsumen" },
-  { href: "/blogs", label: "Blogs" },
+  // { href: "/blogs", label: "Blogs" },
   // { href: "/faqs", label: "FAQs" },
 ];
 
@@ -101,7 +101,7 @@ const Navbar = () => {
             NOMI
           </h1>
         </Link>
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden md:flex ml-20 items-center space-x-8">
           {menuItems.map((item) => (
             <Link
               key={item.href}

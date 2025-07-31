@@ -15,6 +15,19 @@ export function CartSummaryDialog() {
   const { isCartSummaryOpen, cartSummaryData, closeCartSummary } = useAuthStore();
   const lastAddedItem = cartSummaryData?.cartItems[0];
 
+  // Fungsi untuk menghitung subtotal keranjang
+  const calculateSubtotal = () => {
+    if (!cartSummaryData?.cartItems) return 0;
+    
+    return cartSummaryData.cartItems.reduce((total, item) => {
+      const price = Number(item.product.discountedPrice);
+      const quantity = item.quantity;
+      return total + (price * quantity);
+    }, 0);
+  };
+
+  const subtotal = calculateSubtotal();
+
   return (
     <Dialog open={isCartSummaryOpen} onOpenChange={closeCartSummary}>
       <DialogContent>
@@ -35,7 +48,7 @@ export function CartSummaryDialog() {
             <Separator />
             <div className="flex justify-between font-semibold">
               <span>Subtotal Keranjang ({cartSummaryData?.cartItems.length} item)</span>
-              <span>{formatRupiah(cartSummaryData?.totalPrice || 0)}</span>
+              <span>{formatRupiah(subtotal)}</span>
             </div>
           </div>
         )}

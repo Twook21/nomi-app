@@ -9,18 +9,17 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuthStore } from "@/store/auth";
+import { useAuth } from "@/hooks/use-auth"; // Import useAuth hook
 import { toast } from "sonner";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 const reviewSchema = z.object({
   rating: z.number().min(1, "Rating tidak boleh kosong."),
   comment: z.string().optional(),
 });
 
-// =================================================================
-// PERUBAHAN: Menambahkan 'initialData' untuk mode edit.
-// =================================================================
 interface ReviewDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -34,7 +33,12 @@ interface ReviewDialogProps {
 }
 
 export function ReviewDialog({ isOpen, onOpenChange, productId, productName, onSuccess, initialData }: ReviewDialogProps) {
-  const { token } = useAuthStore();
+  // Gunakan useAuth hook untuk status otentikasi terpadu
+  const { isAuthenticated, authMethod } = useAuth();
+  // Ambil token dan logout dari useAuthStore
+  const { token, logout } = useAuthStore();
+  const router = useRouter(); // Initialize router
+  
   const [hoverRating, setHoverRating] = useState(0);
   const isEditMode = !!initialData;
 
@@ -46,32 +50,63 @@ export function ReviewDialog({ isOpen, onOpenChange, productId, productName, onS
     },
   });
 
-  // PERUBAHAN: Reset form saat dialog dibuka/data berubah
   useEffect(() => {
     if (isOpen) {
       form.reset({
         rating: initialData?.rating || 0,
         comment: initialData?.comment || "",
       });
+      // Pastikan hoverRating juga diset saat edit mode
+      setHoverRating(initialData?.rating || 0);
     }
   }, [isOpen, initialData, form]);
 
   const onSubmit = async (values: z.infer<typeof reviewSchema>) => {
+    // Cek autentikasi sebelum mengirim
+    if (!isAuthenticated) {
+        toast.error("Anda harus login untuk mengirim ulasan.", {
+            action: {
+                label: "Login",
+                onClick: () => {
+                    onOpenChange(false); // Tutup dialog
+                    router.push('/auth/login');
+                },
+            },
+        });
+        return;
+    }
+
     const toastId = toast.loading(isEditMode ? "Memperbarui ulasan..." : "Mengirim ulasan...");
     try {
-      // PERUBAHAN: Gunakan metode PUT untuk mode edit, POST untuk mode buat
+      let headers: HeadersInit = { 'Content-Type': 'application/json' };
+      // Tambahkan header Authorization hanya jika metode otentikasi adalah JWT
+      if (authMethod === 'jwt' && token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      // Untuk NextAuth, `credentials: 'include'` akan menangani cookie secara otomatis
+
       const response = await fetch(`/api/products/${productId}/reviews`, {
         method: isEditMode ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers,
+        credentials: authMethod === 'nextauth' ? 'include' : 'omit', // Penting untuk NextAuth
         body: JSON.stringify(values),
       });
       
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || (isEditMode ? "Gagal memperbarui ulasan." : "Gagal mengirim ulasan."));
+      if (!response.ok) {
+        // Handle 401 Unauthorized secara spesifik
+        if (response.status === 401) {
+            toast.error("Sesi Anda berakhir. Silakan login kembali.", { id: toastId });
+            logout();
+            router.push('/auth/login');
+            return;
+        }
+        throw new Error(result.message || (isEditMode ? "Gagal memperbarui ulasan." : "Gagal mengirim ulasan."));
+      }
 
       toast.success(result.message || (isEditMode ? "Ulasan berhasil diperbarui!" : "Ulasan berhasil dikirim!"), { id: toastId });
-      onSuccess();
-      onOpenChange(false);
+      onSuccess(); // Panggil callback untuk refresh data di parent
+      onOpenChange(false); // Tutup dialog setelah sukses
     } catch (error) {
       toast.error(isEditMode ? "Gagal memperbarui ulasan." : "Gagal mengirim ulasan.", {
         id: toastId,
@@ -103,7 +138,7 @@ export function ReviewDialog({ isOpen, onOpenChange, productId, productName, onS
                             ? "text-yellow-400 fill-yellow-400"
                             : "text-muted-foreground"
                         )}
-                        onClick={() => field.onChange(star)}
+                        onClick={() => { field.onChange(star); setHoverRating(star); }} // Set hoverRating juga
                         onMouseEnter={() => setHoverRating(star)}
                         onMouseLeave={() => setHoverRating(0)}
                       />

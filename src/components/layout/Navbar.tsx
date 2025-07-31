@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/use-auth"; // Import hook baru
+import { useAuth } from "@/hooks/use-auth";
 import { useAuthStore } from "@/store/auth";
 import { toast } from "sonner";
 import {
@@ -67,12 +67,12 @@ const ThemeToggleButton = () => {
 // --- Definisi Data Navigasi ---
 const customerNavLinks = [
   { href: "/products", label: "Produk" },
-  { href: "/profile", label: "Dasbor" },
+  { href: "/profile", label: "Dasbor", exact: true },
   { href: "/profile/orders", label: "Pesanan Saya" },
 ];
 
 const umkmNavLinks = [
-  { href: "/umkm/dashboard", label: "Dasbor UMKM" },
+  { href: "/umkm/dashboard", label: "Dasbor UMKM", exact: true },
   { href: "/umkm/products", label: "Produk Saya" },
   { href: "/umkm/orders", label: "Pesanan Masuk" },
 ];
@@ -80,20 +80,14 @@ const umkmNavLinks = [
 // --- Komponen Utama Navbar ---
 export function Navbar() {
   const [isClient, setIsClient] = useState(false);
-  
+
   // Menggunakan hook useAuth yang unified
   const { user, isAuthenticated, authMethod } = useAuth();
-  
+
   // Mengambil fungsi dari auth store
-  const { 
-    logout, 
-    activeView, 
-    switchView, 
-    cartCount, 
-    fetchCartCount,
-    token 
-  } = useAuthStore();
-  
+  const { logout, activeView, switchView, cartCount, fetchCartCount, token } =
+    useAuthStore();
+
   const router = useRouter();
   const pathname = usePathname();
 
@@ -103,13 +97,13 @@ export function Navbar() {
 
   // Fetch cart count untuk JWT method atau jika ada token
   useEffect(() => {
-    if (token && authMethod === 'jwt') {
+    if (token && authMethod === "jwt") {
       fetchCartCount(token);
     }
   }, [token, authMethod, fetchCartCount]);
 
   const handleLogout = async () => {
-    await logout(); // Logout akan handle baik JWT maupun NextAuth
+    await logout();
     toast.success("Anda berhasil logout.");
     router.push("/");
     router.refresh();
@@ -119,7 +113,7 @@ export function Navbar() {
     if (activeView === "customer") {
       switchView("umkm");
       toast.info("Beralih ke tampilan Penjual.");
-      router.push("/umkm/products");
+      router.push("/umkm/");
     } else {
       switchView("customer");
       toast.info("Beralih ke tampilan Pembeli.");
@@ -129,12 +123,24 @@ export function Navbar() {
   };
 
   // Fungsi untuk mendapatkan inisial nama
-  const getInitials = (name?: string, username?: string, email?: string): string => {
+  const getInitials = (
+    name?: string,
+    username?: string,
+    email?: string
+  ): string => {
     if (name) {
-      return name.split(" ").map((n) => n[0]).join("").toUpperCase();
+      return name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase();
     }
     if (username) {
-      return username.split(" ").map((n) => n[0]).join("").toUpperCase();
+      return username
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase();
     }
     if (email) {
       return email.charAt(0).toUpperCase();
@@ -149,25 +155,65 @@ export function Navbar() {
 
   // Fungsi untuk mendapatkan avatar URL
   const getAvatarUrl = (): string => {
-    // Prioritas: Google image -> Dicebear based on display name
     if (user?.image) return user.image;
     return `https://api.dicebear.com/7.x/initials/svg?seed=${getDisplayName()}`;
   };
 
-  const isActive = (href: string) => {
+  // Fungsi untuk menentukan menu aktif yang lebih akurat
+  const isActive = (href: string, exact?: boolean) => {
     if (href === "/") return pathname === href;
-    return pathname.startsWith(href);
+    
+    if (exact) {
+      return pathname === href;
+    }
+    
+    if (pathname.startsWith(href)) {
+      const remainingPath = pathname.slice(href.length);
+      return remainingPath === '' || remainingPath.startsWith('/');
+    }
+    
+    return false;
   };
 
-  const navLinkClasses = (href: string) =>
+  const navLinkClasses = (href: string, exact?: boolean) =>
     `text-[var(--nimo-dark)] font-medium transition-colors relative ${
-      isActive(href) ? "text-nimo-yellow" : ""
+      isActive(href, exact) ? "text-nimo-yellow" : ""
     } hover:text-nimo-yellow after:content-[''] after:block after:h-0.5 after:bg-nimo-yellow after:transition-all after:duration-300 after:absolute after:left-0 after:-bottom-1 ${
-      isActive(href) ? "after:w-full" : "after:w-0 hover:after:w-full"
+      isActive(href, exact) ? "after:w-full" : "after:w-0 hover:after:w-full"
     }`;
 
   const navLinks =
     isClient && activeView === "umkm" ? umkmNavLinks : customerNavLinks;
+
+  // PERBAIKAN: Fungsi helper untuk mengecek status UMKM
+  const getUmkmStatus = () => {
+    // Pastikan kita handle berbagai kemungkinan nilai
+    const status = user?.umkmProfileStatus;
+    
+    // Debug log untuk melihat nilai sebenarnya
+    console.log("UMKM Profile Status:", status, "Type:", typeof status);
+    
+    return status;
+  };
+
+  // PERBAIKAN: Fungsi untuk mengecek apakah user bisa jadi mitra
+  const canBecomeMitra = () => {
+    const status = getUmkmStatus();
+    // Cek jika status adalah null, undefined, atau string kosong
+    return status === null || status === undefined || status === "";
+  };
+
+  // PERBAIKAN: Fungsi untuk mengecek apakah user sudah verified
+  const isVerified = () => {
+    const status = getUmkmStatus();
+    return status === "verified";
+  };
+
+  // PERBAIKAN: Fungsi untuk mengecek apakah user dalam status pending
+  const isPending = () => {
+    const status = getUmkmStatus();
+    return status === "pending";
+  };
 
   return (
     <nav className="bg-[var(--nimo-light)] shadow-sm sticky top-0 z-50 transition-colors duration-300">
@@ -188,7 +234,7 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={navLinkClasses(link.href)}
+                    className={navLinkClasses(link.href, link.exact)}
                   >
                     {link.label}
                   </Link>
@@ -200,10 +246,14 @@ export function Navbar() {
           <div className="flex-1 flex justify-end">
             <div className="flex items-center gap-2 md:gap-4">
               {isClient && isAuthenticated && user ? (
-                // --- Tampilan Setelah Login ---
                 <>
                   {activeView === "customer" && (
-                    <Button variant="ghost" size="icon" asChild className="relative">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      asChild
+                      className="relative"
+                    >
                       <Link href="/cart">
                         <ShoppingCart className="h-5 w-5" />
                         {cartCount > 0 && (
@@ -228,7 +278,11 @@ export function Navbar() {
                             alt={getDisplayName()}
                           />
                           <AvatarFallback>
-                            {getInitials(user?.name, user?.username, user?.email)}
+                            {getInitials(
+                              user?.name ?? undefined,
+                              user?.username ?? undefined,
+                              user?.email ?? undefined
+                            )}
                           </AvatarFallback>
                         </Avatar>
                       </Button>
@@ -248,10 +302,13 @@ export function Navbar() {
                           </p>
                           <div className="flex items-center gap-2">
                             <Badge variant="secondary" className="text-xs">
-                              {user?.role === 'customer' ? 'Customer' : 
-                               user?.role === 'umkm_owner' ? 'UMKM Owner' : 'Admin'}
+                              {user?.role === "customer"
+                                ? "Customer"
+                                : user?.role === "umkm_owner"
+                                ? "UMKM Owner"
+                                : "Admin"}
                             </Badge>
-                            {authMethod === 'nextauth' && (
+                            {authMethod === "nextauth" && (
                               <Badge variant="outline" className="text-xs">
                                 Google
                               </Badge>
@@ -261,7 +318,8 @@ export function Navbar() {
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
 
-                      {user.umkmProfileStatus === "verified" && (
+                      {/* PERBAIKAN: Gunakan fungsi helper yang lebih robust */}
+                      {isVerified() && (
                         <DropdownMenuItem onClick={handleSwitchView}>
                           <Repeat className="mr-2 h-4 w-4" />
                           <span>
@@ -272,7 +330,7 @@ export function Navbar() {
                         </DropdownMenuItem>
                       )}
 
-                      {user.umkmProfileStatus === "pending" &&
+                      {isPending() &&
                         (user.role === "customer" ? (
                           <DropdownMenuItem asChild>
                             <Link href="/profile/pending-verification">
@@ -287,7 +345,8 @@ export function Navbar() {
                           </DropdownMenuItem>
                         ))}
 
-                      {user.umkmProfileStatus === null && (
+                      {/* PERBAIKAN: Kondisi yang lebih fleksible untuk "Jadi Mitra" */}
+                      {canBecomeMitra() && (
                         <DropdownMenuItem asChild>
                           <Link href="/profile/become-partner">
                             <Handshake className="mr-2 h-4 w-4" />
@@ -317,7 +376,6 @@ export function Navbar() {
                   </DropdownMenu>
                 </>
               ) : isClient ? (
-                // --- Tampilan Publik (Sebelum Login) ---
                 <>
                   <Button variant="ghost" asChild>
                     <Link href="/auth/login">Login</Link>
@@ -331,7 +389,6 @@ export function Navbar() {
                   <ThemeToggleButton />
                 </>
               ) : (
-                // --- Placeholder saat loading ---
                 <div className="h-10 w-44 bg-gray-200 animate-pulse rounded-md dark:bg-gray-700"></div>
               )}
             </div>

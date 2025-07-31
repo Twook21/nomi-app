@@ -69,7 +69,7 @@ export function LoginForm() {
         setTimeout(() => {
           // PERBAIKAN: Logika redirect yang lebih aman
           if (result.user.role === "admin") {
-            router.push("/admin/verify-umkm");
+            router.push("/admin");
           } else {
             // Semua peran lain (customer, umkm_owner) masuk ke dasbor customer
             router.push("/profile");

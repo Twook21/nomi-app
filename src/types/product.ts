@@ -5,6 +5,8 @@ export interface Review {
     createdAt: string;
     customer: {
         username: string;
+        name?: string;
+        image?: string;
     };
 }
 

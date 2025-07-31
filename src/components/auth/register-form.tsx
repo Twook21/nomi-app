@@ -20,9 +20,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner"; // <--- GANTI DENGAN INI
+import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/auth"; // Import auth store
 
 // Skema validasi menggunakan Zod, disesuaikan dengan API
 const formSchema = z.object({
@@ -35,6 +36,8 @@ const formSchema = z.object({
 
 export function RegisterForm() {
   const router = useRouter();
+  const { setUser, setToken } = useAuthStore(); // Destructure setUser dan setToken
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,8 +50,7 @@ export function RegisterForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Ganti cara memanggil notifikasi seperti ini
-    toast.loading("Mencoba mendaftar...");
+    toast.loading("Mencoba mendaftar...", { id: "register" });
 
     try {
       const payload = { ...values, role: "customer" };
@@ -65,23 +67,48 @@ export function RegisterForm() {
         throw new Error(result.message || "Registrasi gagal, silakan coba lagi.");
       }
       
-      // Panggil notifikasi sukses dari sonner
+      // PENTING: Simpan token dan user data ke store setelah register berhasil
+      console.log('Register successful, result:', result);
+      
+      if (result.token) {
+        console.log('Setting token after register');
+        setToken(result.token);
+      }
+      
+      if (result.user) {
+        console.log('Setting user after register');
+        // Pastikan user object sesuai dengan interface User
+        const userData = {
+          id: result.user.id,
+          username: result.user.username,
+          email: result.user.email,
+          name: result.user.name || null,
+          image: result.user.image || null,
+          role: result.user.role,
+          umkmProfileStatus: null, // Default untuk user baru
+          address: values.address || null, // Dari form
+          phoneNumber: values.phoneNumber || null, // Dari form
+        };
+        setUser(userData);
+      }
+      
       toast.success("Registrasi Berhasil! 🎉", {
-        description: "Anda akan dialihkan ke halaman login.",
+        id: "register",
+        description: "Anda akan dialihkan ke halaman profile.",
         duration: 2000,
       });
       
-      setTimeout(() => router.push('/auth/login'), 2000);
+      // Redirect ke profile settings alih-alih login
+      setTimeout(() => router.push('/profile/settings'), 2000);
 
     } catch (error) {
-      // Panggil notifikasi error dari sonner
       toast.error("Oh, terjadi kesalahan!", {
+        id: "register",
         description: error instanceof Error ? error.message : "Error tidak diketahui",
       });
     }
   }
 
-  // ... sisa return statement (tidak ada yang berubah di sini)
   return (
     <Card className="mx-auto max-w-sm w-full">
       <CardHeader>

@@ -1,3 +1,5 @@
+// Di BecomePartnerForm component
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -8,9 +10,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuthStore } from "@/store/auth";
+import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import { Skeleton } from "../ui/skeleton";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react"; // TAMBAHKAN INI
 
 const partnerSchema = z.object({
   umkmName: z.string().min(3, "Nama UMKM minimal 3 karakter."),
@@ -18,52 +25,139 @@ const partnerSchema = z.object({
   umkmAddress: z.string().min(10, "Alamat UMKM minimal 10 karakter."),
   umkmPhoneNumber: z.string().min(10, "Nomor telepon minimal 10 digit."),
   umkmEmail: z.string().email("Format email tidak valid."),
-  bankName: z.string().optional(),
-  bankAccountNumber: z.string().optional(),
+  bankName: z.string().optional().nullable(),
+  bankAccountNumber: z.string().optional().nullable(),
 });
 
 export function BecomePartnerForm() {
-  const { token, setUser, user } = useAuthStore();
+  const { isAuthenticated, isLoading: authLoading, authMethod, user } = useAuth();
+  const { token, setUser, logout } = useAuthStore();
+  const { update: updateSession } = useSession(); // TAMBAHKAN INI
   const router = useRouter();
 
   const form = useForm<z.infer<typeof partnerSchema>>({
     resolver: zodResolver(partnerSchema),
-    defaultValues: { /* ... */ },
+    defaultValues: {
+      umkmName: "",
+      umkmDescription: "",
+      umkmAddress: "",
+      umkmPhoneNumber: user?.phoneNumber || "",
+      umkmEmail: user?.email || "",
+      bankName: "",
+      bankAccountNumber: "",
+    },
   });
 
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        ...form.getValues(),
+        umkmPhoneNumber: user.phoneNumber || form.getValues().umkmPhoneNumber || "",
+        umkmEmail: user.email || form.getValues().umkmEmail || "",
+      });
+    }
+  }, [user, form]);
+
   async function onSubmit(values: z.infer<typeof partnerSchema>) {
+    if (!isAuthenticated) {
+        toast.error("Anda harus login untuk mendaftar sebagai mitra UMKM.", {
+            action: {
+                label: "Login",
+                onClick: () => router.push('/auth/login'),
+            },
+        });
+        return;
+    }
+
     toast.loading("Mengirim pendaftaran...");
     try {
+      let headers: HeadersInit = { 'Content-Type': 'application/json' };
+      if (authMethod === 'jwt' && token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/umkm-owners/register`, {
         method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
+        headers,
+        credentials: authMethod === 'nextauth' ? 'include' : 'omit',
         body: JSON.stringify(values),
       });
 
       const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "Gagal mendaftar.");
+      if (!response.ok) {
+        if (response.status === 401) {
+            toast.error("Sesi Anda berakhir. Silakan login kembali.");
+            logout();
+            router.push('/auth/login');
+            return;
+        }
+        throw new Error(result.message || "Gagal mendaftar.");
+      }
 
-      // Update state user untuk menandakan ada pendaftaran pending
-      if (user) {
-        setUser({ ...user, hasPendingUmkmProfile: true });
+      // PERBAIKAN: Handle update untuk kedua metode auth
+      if (authMethod === 'nextauth') {
+        // Untuk NextAuth: Trigger session refresh
+        await updateSession(); // Ini akan trigger JWT callback dengan trigger: "update"
+        
+        // Optional: Tambahkan delay kecil untuk memastikan session terupdate
+        setTimeout(() => {
+          router.refresh(); // Refresh server components
+        }, 100);
+      } else {
+        // Untuk JWT: Update state lokal (tetap seperti sekarang)
+        if (user) {
+          setUser({
+              ...user,
+              role: user.role as 'customer' | 'umkm_owner' | 'admin',
+              umkmProfileStatus: 'pending'
+          });
+        }
       }
 
       toast.success("Pendaftaran berhasil!", {
         description: "Pendaftaran Anda sedang ditinjau oleh admin.",
       });
       
-      // PERBAIKAN: Arahkan ke halaman pending
       router.push("/profile/pending-verification");
-      router.refresh();
 
     } catch (error) {
       toast.error("Gagal mendaftar.", {
         description: error instanceof Error ? error.message : "Terjadi kesalahan server.",
       });
     }
+  }
+
+  // ... rest of component remains the same
+  if (authLoading) {
+    return (
+        <div className="space-y-8">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <div className="grid md:grid-cols-2 gap-8">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+            </div>
+            <Skeleton className="h-6 w-1/3" />
+            <Skeleton className="h-4 w-2/3" />
+            <div className="grid md:grid-cols-2 gap-8">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+            </div>
+            <Skeleton className="h-12 w-48" />
+        </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+        <div className="text-center py-10">
+            <h2 className="text-xl font-bold mb-4">Anda harus login untuk menjadi mitra.</h2>
+            <Button asChild className="bg-nimo-yellow text-white hover:bg-nimo-yellow/90">
+                <Link href="/auth/login">Login Sekarang</Link>
+            </Button>
+        </div>
+    );
   }
 
   return (
@@ -93,10 +187,10 @@ export function BecomePartnerForm() {
         </div>
         <div className="grid md:grid-cols-2 gap-8">
            <FormField control={form.control} name="bankName" render={({ field }) => (
-            <FormItem><FormLabel>Nama Bank</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Nama Bank</FormLabel><FormControl><Input {...field} value={field.value || ''} /></FormControl><FormMessage /></FormItem> 
           )} />
            <FormField control={form.control} name="bankAccountNumber" render={({ field }) => (
-            <FormItem><FormLabel>Nomor Rekening</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Nomor Rekening</FormLabel><FormControl><Input {...field} value={field.value || ''} /></FormControl><FormMessage /></FormItem> 
           )} />
         </div>
         <Button type="submit" className="bg-nimo-yellow text-white hover:bg-nimo-yellow/90" disabled={form.formState.isSubmitting}>

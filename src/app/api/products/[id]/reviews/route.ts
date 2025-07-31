@@ -1,20 +1,75 @@
-import { NextRequest } from 'next/server';
+// src/app/api/products/[id]/reviews/route.ts
+
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { successResponse, errorResponse } from '@/lib/api-response';
-import { authenticateAndAuthorize } from '@/lib/auth';
+// Helper functions (assuming they are imported or defined elsewhere)
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth-config";
+
+// getUserAndAuthMethodFromRequest (assuming it's reusable)
+async function getUserAndAuthMethodFromRequest(request: NextRequest) {
+    try {
+        const authHeader = request.headers.get("authorization");
+        if (authHeader?.startsWith("Bearer ")) {
+            const { user } = await (await import("@/lib/auth")).authenticateAndAuthorize(request, ['customer', 'umkm_owner']);
+            if (user) {
+                return {
+                    userId: user.userId,
+                    method: 'jwt' as const,
+                    userRole: user.role as 'customer' | 'umkm_owner' | 'admin'
+                };
+            }
+        }
+
+        const session = await getServerSession(authOptions);
+        if (session?.user?.email) {
+            const dbUser = await prisma.user.findUnique({
+                where: { email: session.user.email },
+                select: {
+                    id: true,
+                    role: true,
+                },
+            });
+
+            if (dbUser && (dbUser.role === 'customer' || dbUser.role === 'umkm_owner')) {
+                return {
+                    userId: dbUser.id,
+                    method: 'nextauth' as const,
+                    userRole: dbUser.role as 'customer' | 'umkm_owner' | 'admin',
+                };
+            }
+        }
+
+        return null;
+    } catch (error) {
+        console.error("Authentication error in reviews API:", error);
+        return null;
+    }
+}
 
 export async function POST(
   request: NextRequest,
-  // PERBAIKAN: Parameter dari URL adalah 'id' sesuai nama folder '[id]'.
-  { params }: { params: { id: string } } 
+  { params: rawParams }: { params: { id: string } } // Gunakan nama berbeda untuk params awal
 ) {
-  const { user, response } = await authenticateAndAuthorize(request, ['customer', 'umkm_owner']);
-  if (response) return response;
+  // Solusi: Await params
+  const params = await rawParams;
+  const { id: productId } = params;
+
+  const authResult = await getUserAndAuthMethodFromRequest(request);
+
+  if (!authResult) {
+    return errorResponse("Unauthorized", 401, "Authentication required.");
+  }
+
+  const { userId, userRole } = authResult;
+
+  if (userRole !== "customer" && userRole !== "umkm_owner") {
+    return errorResponse("Forbidden", 403, "Only customers or UMKM owners can add reviews.");
+  }
 
   try {
     const { rating, comment } = await request.json();
-    // PERBAIKAN: Ambil 'id' dari params dan ganti namanya menjadi 'productId'.
-    const { id: productId } = params; 
 
     if (!productId) {
       return errorResponse('Product ID is missing from the URL.', 400);
@@ -24,12 +79,10 @@ export async function POST(
       return errorResponse('Rating must be a number between 1 and 5', 400);
     }
 
-    // Verifikasi apakah customer pernah membeli produk ini
     const hasPurchased = await prisma.order.count({
       where: {
-        customerId: user!.userId,
-        // Optional: Anda bisa memastikan pesanan sudah selesai (misal: 'delivered')
-        // orderStatus: 'delivered', 
+        customerId: userId,
+        orderStatus: 'delivered',
         orderItems: {
           some: {
             productId: productId,
@@ -39,27 +92,24 @@ export async function POST(
     });
 
     if (hasPurchased === 0) {
-      return errorResponse('You can only review products you have purchased.', 403);
+      return errorResponse('You can only review products you have purchased and received.', 403);
     }
 
-    // Cek apakah customer sudah pernah memberikan review untuk produk ini
     const existingReview = await prisma.review.findFirst({
       where: {
         productId: productId,
-        customerId: user!.userId,
+        customerId: userId,
       },
     });
 
     if (existingReview) {
-      return errorResponse('You have already reviewed this product.', 409);
+      return errorResponse('You have already reviewed this product. Please edit your existing review.', 409);
     }
 
-    // Buat review baru
     const newReview = await prisma.review.create({
       data: {
-        // Sekarang productId sudah memiliki nilai yang benar
-        productId: productId, 
-        customerId: user!.userId,
+        productId: productId,
+        customerId: userId,
         rating,
         comment,
       },
@@ -67,22 +117,33 @@ export async function POST(
 
     return successResponse({ message: 'Review added successfully', review: newReview }, 201);
   } catch (error: any) {
-    // Gunakan params.id untuk logging jika terjadi error sebelum aliasing
-    console.error(`Error adding review for product ${params.id}:`, error);
+    console.error(`Error adding review for product ${productId}:`, error); // Gunakan productId yang sudah di-await
     return errorResponse('Failed to add review', 500, error.message);
   }
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params: rawParams }: { params: { id: string } } // Gunakan nama berbeda untuk params awal
 ) {
-  const { user, response } = await authenticateAndAuthorize(request, ['customer', 'umkm_owner']);
-  if (response) return response;
+  // Solusi: Await params
+  const params = await rawParams;
+  const { id: productId } = params;
+
+  const authResult = await getUserAndAuthMethodFromRequest(request);
+
+  if (!authResult) {
+    return errorResponse("Unauthorized", 401, "Authentication required.");
+  }
+
+  const { userId, userRole } = authResult;
+
+  if (userRole !== "customer" && userRole !== "umkm_owner") {
+    return errorResponse("Forbidden", 403, "Only customers or UMKM owners can edit reviews.");
+  }
 
   try {
     const { rating, comment } = await request.json();
-    const { id: productId } = params;
 
     if (!productId) {
       return errorResponse('Product ID is missing.', 400);
@@ -91,11 +152,10 @@ export async function PUT(
       return errorResponse('Rating must be a number between 1 and 5.', 400);
     }
 
-    // Update ulasan yang cocok dengan productId dan customerId
     const updatedReview = await prisma.review.updateMany({
       where: {
         productId: productId,
-        customerId: user!.userId,
+        customerId: userId,
       },
       data: {
         rating,
@@ -109,15 +169,17 @@ export async function PUT(
 
     return successResponse({ message: 'Review updated successfully' });
   } catch (error: any) {
-    console.error(`Error updating review for product ${params.id}:`, error);
+    console.error(`Error updating review for product ${productId}:`, error); // Gunakan productId yang sudah di-await
     return errorResponse('Failed to update review', 500, error.message);
   }
 }
-// GET reviews for a specific product
+
 export async function GET(
-  request: NextRequest, 
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params: rawParams }: { params: { id: string } } // Gunakan nama berbeda untuk params awal
 ) {
+  // Solusi: Await params
+  const params = await rawParams;
   const { id: productId } = params;
 
   try {
@@ -125,7 +187,7 @@ export async function GET(
       where: { productId },
       include: {
         customer: {
-          select: { username: true }, 
+          select: { username: true, name: true, image: true },
         },
       },
       orderBy: { createdAt: 'desc' },
@@ -134,7 +196,7 @@ export async function GET(
     return successResponse(reviews);
 
   } catch (error: any) {
-    console.error(`Error fetching reviews for product ${productId}:`, error);
+    console.error(`Error fetching reviews for product ${productId}:`, error); // Gunakan productId yang sudah di-await
     return errorResponse('Failed to fetch reviews', 500, error.message);
   }
 }

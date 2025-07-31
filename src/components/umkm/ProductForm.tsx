@@ -1,13 +1,15 @@
+// File: src/components/umkm/ProductForm.tsx
+
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormControl,
+  FormControl, // Pastikan FormControl diimpor
   FormDescription,
   FormField,
   FormItem,
@@ -24,25 +26,38 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuthStore } from "@/store/auth";
+import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import type { Product } from "@/types/product";
 import type { FoodCategory } from "@/types/category";
+import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// == FIX 1: Skema validasi untuk categoryId diperbaiki ==
 const productFormSchema = z.object({
   productName: z.string().min(3, "Nama produk minimal 3 karakter."),
-  description: z.string().min(10, "Deskripsi minimal 10 karakter."),
-  originalPrice: z.string().min(1, "Harga asli harus diisi."),
-  discountedPrice: z.string().min(1, "Harga diskon harus diisi."),
-  stock: z.string().min(1, "Stok harus diisi."),
+  description: z.string().min(10, "Deskripsi minimal 10 karakter.").nullable(),
+  originalPrice: z.string().min(1, "Harga asli harus diisi.")
+    .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
+      message: "Harga asli harus angka positif."
+    }),
+  discountedPrice: z.string().min(1, "Harga diskon harus diisi.")
+    .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) >= 0, {
+      message: "Harga diskon harus angka positif atau nol."
+    }),
+  stock: z.string().min(1, "Stok harus diisi.")
+    .refine((val) => !isNaN(parseInt(val)) && parseInt(val) >= 0, {
+      message: "Stok harus angka non-negatif."
+    }),
   expirationDate: z
     .string()
-    .refine((val) => !isNaN(Date.parse(val)), {
-      message: "Format tanggal tidak valid.",
+    .refine((val) => {
+        const date = new Date(val);
+        return !isNaN(date.getTime()) && date >= new Date(new Date().setHours(0,0,0,0)); 
+    }, {
+      message: "Tanggal kedaluwarsa tidak valid atau sudah lewat."
     }),
-  imageUrl: z.string().url("URL gambar tidak valid.").optional().or(z.literal("")),
-  // Menggunakan .min(1, ...) untuk pesan error wajib diisi
+  imageUrl: z.string().url("URL gambar tidak valid.").optional().or(z.literal("")).nullable(),
   categoryId: z.string().min(1, "Anda harus memilih kategori."),
 });
 
@@ -51,73 +66,105 @@ interface ProductFormProps {
 }
 
 export function ProductForm({ initialData }: ProductFormProps) {
-  const { token } = useAuthStore();
+  const { token, logout } = useAuthStore();
+  const { isAuthenticated, isLoading: authLoading, authMethod, user } = useAuth();
   const router = useRouter();
   const isEditMode = !!initialData;
   const [categories, setCategories] = useState<FoodCategory[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+
+  const fetchCategories = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`);
+      if (!response.ok) throw new Error("Gagal mengambil data kategori.");
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      toast.error("Gagal memuat kategori.", {
+          description: error instanceof Error ? error.message : "Terjadi kesalahan server.",
+      });
+    } finally {
+        setIsLoadingCategories(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`
-        );
-        if (!response.ok) throw new Error("Gagal mengambil data kategori.");
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        toast.error("Gagal memuat kategori.", {
-            description: error instanceof Error ? error.message : "Terjadi kesalahan server.",
-        });
-      }
-    };
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
 
   const form = useForm<z.infer<typeof productFormSchema>>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
       productName: initialData?.productName || "",
-      description: initialData?.description || "",
+      description: initialData?.description || null,
       originalPrice: String(initialData?.originalPrice || ""),
       discountedPrice: String(initialData?.discountedPrice || ""),
       stock: String(initialData?.stock || ""),
       expirationDate: initialData?.expirationDate
         ? new Date(initialData.expirationDate).toISOString().split("T")[0]
         : "",
-      imageUrl: initialData?.imageUrl || "",
+      imageUrl: initialData?.imageUrl || null,
       categoryId: initialData?.categoryId || "",
     },
   });
 
+  useEffect(() => {
+    if (initialData) {
+        form.reset({
+            productName: initialData.productName || "",
+            description: initialData.description || null,
+            originalPrice: String(initialData.originalPrice || ""),
+            discountedPrice: String(initialData.discountedPrice || ""),
+            stock: String(initialData.stock || ""),
+            expirationDate: initialData.expirationDate
+                ? new Date(initialData.expirationDate).toISOString().split("T")[0]
+                : "",
+            imageUrl: initialData.imageUrl || null,
+            categoryId: initialData.categoryId || "",
+        });
+    }
+  }, [initialData, form]);
+
   async function onSubmit(values: z.infer<typeof productFormSchema>) {
+    if (!isAuthenticated || !user || user.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified') {
+        toast.error("Anda tidak memiliki izin untuk melakukan tindakan ini atau sesi Anda berakhir.");
+        logout();
+        router.push('/auth/login');
+        return;
+    }
+
     const endpoint = isEditMode
-      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/umkm-owners/me/products/${
-          initialData!.id
-        }`
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/umkm-owners/me/products/${initialData!.id}`
       : `${process.env.NEXT_PUBLIC_API_BASE_URL}/umkm-owners/me/products`;
 
     const method = isEditMode ? "PUT" : "POST";
-    const loadingMessage = isEditMode
-      ? "Memperbarui produk..."
-      : "Menambahkan produk...";
-    const successMessage = isEditMode
-      ? "Produk berhasil diperbarui!"
-      : "Produk berhasil ditambahkan!";
+    const loadingMessage = isEditMode ? "Memperbarui produk..." : "Menambahkan produk...";
+    const successMessage = isEditMode ? "Produk berhasil diperbarui!" : "Produk berhasil ditambahkan!";
 
     toast.loading(loadingMessage);
     try {
+      let headers: HeadersInit = { "Content-Type": "application/json" };
+      if (authMethod === 'jwt' && token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(endpoint, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers,
+        credentials: authMethod === 'nextauth' ? 'include' : 'omit',
         body: JSON.stringify(values),
       });
 
       const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "Gagal menyimpan produk.");
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+            toast.error("Akses ditolak.", { description: "Sesi Anda berakhir atau Anda tidak memiliki izin." });
+            logout();
+            router.push('/auth/login');
+            return;
+        }
+        throw new Error(result.message || "Gagal menyimpan produk.");
+      }
 
       toast.success(successMessage);
       router.push("/umkm/products");
@@ -128,6 +175,36 @@ export function ProductForm({ initialData }: ProductFormProps) {
           error instanceof Error ? error.message : "Terjadi kesalahan server.",
       });
     }
+  }
+
+  if (authLoading || isLoadingCategories) {
+    return (
+        <div className="space-y-8 animate-pulse">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-24 w-full" />
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+            </div>
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-12 w-48" />
+        </div>
+    );
+  }
+
+  if (!isAuthenticated || user?.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified') {
+    return (
+        <div className="text-center py-10">
+            <h2 className="text-xl font-bold mb-4">Akses Ditolak</h2>
+            <p className="text-muted-foreground mb-4">Anda tidak memiliki izin untuk mengakses halaman ini atau profil UMKM Anda belum diverifikasi.</p>
+            <Button asChild className="bg-nimo-yellow text-white hover:bg-nimo-yellow/90">
+                <Link href="/auth/login">Login / Lihat Dasbor</Link>
+            </Button>
+        </div>
+    );
   }
 
   return (
@@ -157,6 +234,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
+                  {/* Hapus asChild di sini */}
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Pilih kategori..." />
@@ -183,7 +261,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
             <FormItem>
               <FormLabel>Deskripsi Produk</FormLabel>
               <FormControl>
-                <Textarea placeholder="Jelaskan tentang produk Anda..." {...field} />
+                <Textarea placeholder="Jelaskan tentang produk Anda..." {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -208,7 +286,6 @@ export function ProductForm({ initialData }: ProductFormProps) {
             control={form.control}
             name="discountedPrice"
             render={({ field }) => (
-              // == FIX 2: Tag penutup diperbaiki dari </Item> menjadi </FormItem> ==
               <FormItem>
                 <FormLabel>Harga Diskon (Rp)</FormLabel>
                 <FormControl>
@@ -256,6 +333,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
                 <Input
                   placeholder="https://example.com/gambar.jpg"
                   {...field}
+                  value={field.value || ''}
                 />
               </FormControl>
               <FormMessage />

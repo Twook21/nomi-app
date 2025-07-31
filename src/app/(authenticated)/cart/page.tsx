@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react"; // Tambahkan useCallback
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
+import { useAuth } from "@/hooks/use-auth"; // Import useAuth hook
 import type { Cart } from "@/types/cart";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -24,32 +25,47 @@ function formatRupiah(amount: number) {
 // Komponen utama halaman keranjang
 export default function CartPage() {
   const router = useRouter();
-  const { token, logout } = useAuthStore();
+  // Gunakan useAuth hook untuk status otentikasi terpadu
+  const { isAuthenticated, isLoading: authLoading, authMethod } = useAuth();
+  // Ambil token dan fungsi logout dari useAuthStore
+  const { token, logout } = useAuthStore(); 
+  
   const [cart, setCart] = useState<Cart | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fungsi untuk memuat ulang data keranjang
-  const fetchCart = async () => {
-    if (!token) {
+  const fetchCart = useCallback(async () => {
+    // Hanya fetch jika sudah terautentikasi dan tidak sedang dalam proses auth loading
+    if (!isAuthenticated) {
       setIsLoading(false);
       return;
     }
+
     try {
+      let headers: HeadersInit = {};
+      // Set header Authorization untuk JWT
+      if (authMethod === 'jwt' && token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      // Untuk NextAuth, `credentials: 'include'` akan otomatis mengirim cookie
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cart`, {
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers,
+        credentials: authMethod === 'nextauth' ? 'include' : 'omit', // Penting untuk NextAuth
       });
 
-      if (response.status === 401) {
-        toast.error("Sesi Anda berakhir.", { description: "Silakan login kembali." });
-        logout();
-        router.push('/auth/login');
-        return;
+      if (!response.ok) {
+        // Handle 401 Unauthorized secara spesifik jika terjadi pada fetch ini
+        if (response.status === 401) {
+          toast.error("Sesi Anda berakhir.", { description: "Silakan login kembali." });
+          logout();
+          router.push('/auth/login');
+          return;
+        }
+        throw new Error((await response.json()).message || "Gagal mengambil data keranjang.");
       }
 
-      if (!response.ok) throw new Error("Gagal mengambil data keranjang.");
-
       const result = await response.json();
-      // PERBAIKAN: Langsung set result dari API
       setCart(result);
     } catch (error) {
       toast.error("Terjadi Kesalahan", {
@@ -58,32 +74,43 @@ export default function CartPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isAuthenticated, authMethod, token, logout, router]); // Tambahkan semua dependencies
 
   useEffect(() => {
-    if (!token) {
-      router.replace('/auth/login');
-    } else {
-      fetchCart();
+    // Panggil fetchCart hanya jika isAuthenticated sudah diketahui dan tidak sedang authLoading
+    if (!authLoading) {
+        if (!isAuthenticated) {
+            router.replace('/auth/login');
+        } else {
+            fetchCart();
+        }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, router]);
+  }, [authLoading, isAuthenticated, router, fetchCart]);
 
   // Fungsi untuk update kuantitas
   const handleUpdateQuantity = async (productId: string, quantity: number) => {
-    if (quantity < 1) return;
-    
+    if (quantity < 1) return; // Mencegah kuantitas di bawah 1
+    // Ambil stok produk dari cart yang sudah dimuat
+    const productInCart = cart?.cartItems.find(item => item.product.id === productId)?.product;
+    if (productInCart && quantity > productInCart.stock) {
+        toast.error("Stok tidak mencukupi.", { description: `Hanya ${productInCart.stock} tersedia.` });
+        return;
+    }
+
     toast.loading("Memperbarui kuantitas...");
     try {
+      let headers: HeadersInit = { "Content-Type": "application/json" };
+      if (authMethod === 'jwt' && token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/items/${productId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
+        headers,
+        credentials: authMethod === 'nextauth' ? 'include' : 'omit',
         body: JSON.stringify({ quantity }),
       });
-      if (!response.ok) throw new Error("Gagal memperbarui kuantitas.");
+      if (!response.ok) throw new Error((await response.json()).message || "Gagal memperbarui kuantitas.");
       
       toast.success("Kuantitas berhasil diperbarui.");
       fetchCart(); // Muat ulang data keranjang
@@ -98,11 +125,17 @@ export default function CartPage() {
   const handleRemoveItem = async (productId: string) => {
     toast.loading("Menghapus item...");
     try {
+      let headers: HeadersInit = {};
+      if (authMethod === 'jwt' && token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/items/${productId}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers,
+        credentials: authMethod === 'nextauth' ? 'include' : 'omit',
       });
-      if (!response.ok) throw new Error("Gagal menghapus item.");
+      if (!response.ok) throw new Error((await response.json()).message || "Gagal menghapus item.");
 
       toast.success("Item berhasil dihapus dari keranjang.");
       fetchCart();
@@ -117,13 +150,32 @@ export default function CartPage() {
   const totalPrice = useMemo(() => {
     if (!cart || !cart.cartItems) return 0;
     return cart.cartItems.reduce((total, item) => {
-      return total + item.product.discountedPrice * item.quantity;
+      // Pastikan item.product.discountedPrice adalah number sebelum perkalian
+      const price = typeof item.product.discountedPrice === 'number' 
+                    ? item.product.discountedPrice 
+                    : parseFloat(String(item.product.discountedPrice)); // Konversi Decimal dari Prisma
+      return total + price * item.quantity;
     }, 0);
   }, [cart]);
 
 
-  if (isLoading) {
+  // Tampilkan loading skeleton jika sedang loading auth atau data
+  if (authLoading || isLoading) {
     return <CartLoadingSkeleton />;
+  }
+
+  // Tampilkan pesan jika tidak terautentikasi (setelah loading selesai)
+  if (!isAuthenticated) {
+    return (
+        <div className="container mx-auto py-8 px-4">
+            <div className="text-center">
+                <p className="text-muted-foreground">Silakan login untuk melihat keranjang Anda.</p>
+                <Button asChild className="mt-4 bg-nimo-yellow text-white hover:bg-nimo-yellow/90">
+                    <Link href="/auth/login">Login</Link>
+                </Button>
+            </div>
+        </div>
+    );
   }
 
   // PERBAIKAN: Menggunakan cart.cartItems
@@ -145,7 +197,6 @@ export default function CartPage() {
       <h1 className="text-3xl font-bold mb-6">Keranjang Belanja</h1>
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
-          {/* PERBAIKAN: Menggunakan cart.cartItems */}
           {cart.cartItems.map((item) => (
             <Card key={item.id} className="flex items-center p-4">
               <Image
@@ -160,13 +211,30 @@ export default function CartPage() {
                   {item.product.productName}
                 </Link>
                 <p className="text-sm text-muted-foreground">{formatRupiah(item.product.discountedPrice)}</p>
+                {/* Tampilkan sisa stok jika mendekati batas */}
+                {item.quantity >= item.product.stock && item.product.stock > 0 && (
+                    <p className="text-xs text-red-500 mt-1">Stok produk ini hampir habis!</p>
+                )}
+                {item.product.stock === 0 && (
+                    <p className="text-xs text-red-500 mt-1">Produk ini sudah tidak tersedia!</p>
+                )}
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="icon" onClick={() => handleUpdateQuantity(item.product.id, item.quantity - 1)}>
+                <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={() => handleUpdateQuantity(item.product.id, item.quantity - 1)}
+                    disabled={item.quantity <= 1} // Disable jika kuantitas 1
+                >
                   <Minus className="h-4 w-4" />
                 </Button>
                 <span className="w-10 text-center">{item.quantity}</span>
-                <Button variant="outline" size="icon" onClick={() => handleUpdateQuantity(item.product.id, item.quantity + 1)}>
+                <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={() => handleUpdateQuantity(item.product.id, item.quantity + 1)}
+                    disabled={item.quantity >= item.product.stock} // Disable jika sudah mencapai stok
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -197,7 +265,9 @@ export default function CartPage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button size="lg" className="w-full bg-nimo-yellow text-white hover:bg-nimo-yellow/90" asChild>
+              <Button size="lg" className="w-full bg-nimo-yellow text-white hover:bg-nimo-yellow/90" asChild
+                disabled={cart.cartItems.length === 0 || cart.cartItems.some(item => item.quantity > item.product.stock || item.product.stock === 0)} // Disable checkout jika ada masalah stok
+              >
                 <Link href="/checkout">Lanjut ke Checkout</Link>
               </Button>
             </CardFooter>

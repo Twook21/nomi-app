@@ -269,3 +269,537 @@
 //   .finally(async () => {
 //     await prisma.$disconnect();
 //   });
+
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+async function seedDatabase() {
+  try {
+    console.log('🌱 Mulai seeding database...');
+
+    // 1. Buat Food Categories
+    console.log('📂 Membuat kategori makanan...');
+    const categories = await Promise.all([
+      prisma.foodCategory.create({
+        data: {
+          categoryName: 'Makanan Tradisional'
+        }
+      }),
+      prisma.foodCategory.create({
+        data: {
+          categoryName: 'Kue & Pastry'
+        }
+      }),
+      prisma.foodCategory.create({
+        data: {
+          categoryName: 'Minuman'
+        }
+      }),
+      prisma.foodCategory.create({
+        data: {
+          categoryName: 'Camilan'
+        }
+      }),
+      prisma.foodCategory.create({
+        data: {
+          categoryName: 'Makanan Cepat Saji'
+        }
+      })
+    ]);
+
+    // 2. Buat Users (Customers)
+    console.log('👥 Membuat user customers...');
+    const customers = await Promise.all([
+      prisma.user.create({
+        data: {
+          username: 'budi_customer',
+          email: 'budi@email.com',
+          passwordHash: '$2b$10$hashedpassword1',
+          phoneNumber: '081234567890',
+          address: 'Jl. Merdeka No. 123, Bandung',
+          role: 'customer',
+          name: 'Budi Santoso',
+          emailVerified: new Date()
+        }
+      }),
+      prisma.user.create({
+        data: {
+          username: 'siti_customer',
+          email: 'siti@email.com',
+          passwordHash: '$2b$10$hashedpassword2',
+          phoneNumber: '081234567891',
+          address: 'Jl. Sudirman No. 456, Bandung',
+          role: 'customer',
+          name: 'Siti Nurhaliza',
+          emailVerified: new Date()
+        }
+      }),
+      prisma.user.create({
+        data: {
+          username: 'andi_customer',
+          email: 'andi@email.com',
+          passwordHash: '$2b$10$hashedpassword3',
+          phoneNumber: '081234567892',
+          address: 'Jl. Asia Afrika No. 789, Bandung',
+          role: 'customer',
+          name: 'Andi Wijaya',
+          emailVerified: new Date()
+        }
+      })
+    ]);
+
+    // 3. Buat Users (UMKM Owners)
+    console.log('🏪 Membuat user UMKM owners...');
+    const umkmUsers = await Promise.all([
+      prisma.user.create({
+        data: {
+          username: 'warung_ibu_sri',
+          email: 'ibu.sri@email.com',
+          passwordHash: '$2b$10$hashedpassword4',
+          phoneNumber: '081234567893',
+          address: 'Jl. Braga No. 101, Bandung',
+          role: 'umkm_owner',
+          name: 'Ibu Sri Wahyuni',
+          emailVerified: new Date()
+        }
+      }),
+      prisma.user.create({
+        data: {
+          username: 'toko_kue_mama',
+          email: 'mama.kue@email.com',
+          passwordHash: '$2b$10$hashedpassword5',
+          phoneNumber: '081234567894',
+          address: 'Jl. Dago No. 202, Bandung',
+          role: 'umkm_owner',
+          name: 'Mama Rosa',
+          emailVerified: new Date()
+        }
+      }),
+      prisma.user.create({
+        data: {
+          username: 'kedai_pak_joko',
+          email: 'pak.joko@email.com',
+          passwordHash: '$2b$10$hashedpassword6',
+          phoneNumber: '081234567895',
+          address: 'Jl. Cihampelas No. 303, Bandung',
+          role: 'umkm_owner',
+          name: 'Pak Joko Susilo',
+          emailVerified: new Date()
+        }
+      })
+    ]);
+
+    // 4. Buat UMKM Owners
+    console.log('🏢 Membuat UMKM owners...');
+    const umkmOwners = await Promise.all([
+      prisma.uMKMOwner.create({
+        data: {
+          userId: umkmUsers[0].id,
+          umkmName: 'Warung Ibu Sri',
+          umkmDescription: 'Warung tradisional dengan masakan khas Jawa yang autentik',
+          umkmAddress: 'Jl. Braga No. 101, Bandung',
+          umkmPhoneNumber: '081234567893',
+          umkmEmail: 'warung.ibu.sri@email.com',
+          bankAccountNumber: '1234567890',
+          bankName: 'Bank BCA',
+          isVerified: true
+        }
+      }),
+      prisma.uMKMOwner.create({
+        data: {
+          userId: umkmUsers[1].id,
+          umkmName: 'Toko Kue Mama Rosa',
+          umkmDescription: 'Toko kue dan pastry dengan resep turun temurun',
+          umkmAddress: 'Jl. Dago No. 202, Bandung',
+          umkmPhoneNumber: '081234567894',
+          umkmEmail: 'toko.kue.mama@email.com',
+          bankAccountNumber: '0987654321',
+          bankName: 'Bank Mandiri',
+          isVerified: true
+        }
+      }),
+      prisma.uMKMOwner.create({
+        data: {
+          userId: umkmUsers[2].id,
+          umkmName: 'Kedai Pak Joko',
+          umkmDescription: 'Kedai minuman dan camilan untuk segala usia',
+          umkmAddress: 'Jl. Cihampelas No. 303, Bandung',
+          umkmPhoneNumber: '081234567895',
+          umkmEmail: 'kedai.pak.joko@email.com',
+          bankAccountNumber: '1122334455',
+          bankName: 'Bank BNI',
+          isVerified: false
+        }
+      })
+    ]);
+
+    // 5. Buat Products
+    console.log('🍽️ Membuat produk...');
+    const products = await Promise.all([
+      // Produk dari Warung Ibu Sri
+      prisma.product.create({
+        data: {
+          umkmId: umkmOwners[0].id,
+          categoryId: categories[0].id, // Makanan Tradisional
+          productName: 'Gudeg Jogja',
+          description: 'Gudeg khas Jogja dengan rasa manis dan gurih, disajikan dengan ayam dan telur',
+          originalPrice: 25000,
+          discountedPrice: 20000,
+          stock: 50,
+          expirationDate: new Date('2025-08-01'),
+          imageUrl: 'https://example.com/images/gudeg.jpg',
+          isAvailable: true
+        }
+      }),
+      prisma.product.create({
+        data: {
+          umkmId: umkmOwners[0].id,
+          categoryId: categories[0].id,
+          productName: 'Nasi Pecel',
+          description: 'Nasi dengan sayuran segar dan bumbu pecel yang pedas',
+          originalPrice: 15000,
+          discountedPrice: 12000,
+          stock: 30,
+          expirationDate: new Date('2025-07-31'),
+          imageUrl: 'https://example.com/images/pecel.jpg',
+          isAvailable: true
+        }
+      }),
+      
+      // Produk dari Toko Kue Mama Rosa
+      prisma.product.create({
+        data: {
+          umkmId: umkmOwners[1].id,
+          categoryId: categories[1].id, // Kue & Pastry
+          productName: 'Brownies Coklat',
+          description: 'Brownies coklat lembut dengan topping keju yang lezat',
+          originalPrice: 35000,
+          discountedPrice: 30000,
+          stock: 20,
+          expirationDate: new Date('2025-08-05'),
+          imageUrl: 'https://example.com/images/brownies.jpg',
+          isAvailable: true
+        }
+      }),
+      prisma.product.create({
+        data: {
+          umkmId: umkmOwners[1].id,
+          categoryId: categories[1].id,
+          productName: 'Kue Lapis Legit',
+          description: 'Kue lapis dengan rasa mentega yang kaya dan tekstur yang lembut',
+          originalPrice: 80000,
+          discountedPrice: 70000,
+          stock: 10,
+          expirationDate: new Date('2025-08-10'),
+          imageUrl: 'https://example.com/images/lapis-legit.jpg',
+          isAvailable: true
+        }
+      }),
+      
+      // Produk dari Kedai Pak Joko
+      prisma.product.create({
+        data: {
+          umkmId: umkmOwners[2].id,
+          categoryId: categories[2].id, // Minuman
+          productName: 'Es Teh Manis',
+          description: 'Es teh manis segar dengan gula aren asli',
+          originalPrice: 8000,
+          discountedPrice: 6000,
+          stock: 100,
+          expirationDate: new Date('2025-07-31'),
+          imageUrl: 'https://example.com/images/es-teh.jpg',
+          isAvailable: true
+        }
+      }),
+      prisma.product.create({
+        data: {
+          umkmId: umkmOwners[2].id,
+          categoryId: categories[3].id, // Camilan
+          productName: 'Keripik Singkong',
+          description: 'Keripik singkong renyah dengan berbagai varian rasa',
+          originalPrice: 12000,
+          discountedPrice: 10000,
+          stock: 75,
+          expirationDate: new Date('2025-08-15'),
+          imageUrl: 'https://example.com/images/keripik.jpg',
+          isAvailable: true
+        }
+      })
+    ]);
+
+    // 6. Buat Shopping Carts
+    console.log('🛒 Membuat shopping carts...');
+    const shoppingCarts = await Promise.all([
+      prisma.shoppingCart.create({
+        data: {
+          customerId: customers[0].id
+        }
+      }),
+      prisma.shoppingCart.create({
+        data: {
+          customerId: customers[1].id
+        }
+      }),
+      prisma.shoppingCart.create({
+        data: {
+          customerId: customers[2].id
+        }
+      })
+    ]);
+
+    // 7. Buat Cart Items
+    console.log('🛍️ Membuat cart items...');
+    await Promise.all([
+      prisma.cartItem.create({
+        data: {
+          cartId: shoppingCarts[0].id,
+          productId: products[0].id, // Gudeg
+          quantity: 2
+        }
+      }),
+      prisma.cartItem.create({
+        data: {
+          cartId: shoppingCarts[0].id,
+          productId: products[2].id, // Brownies
+          quantity: 1
+        }
+      }),
+      prisma.cartItem.create({
+        data: {
+          cartId: shoppingCarts[1].id,
+          productId: products[1].id, // Nasi Pecel
+          quantity: 3
+        }
+      }),
+      prisma.cartItem.create({
+        data: {
+          cartId: shoppingCarts[2].id,
+          productId: products[4].id, // Es Teh
+          quantity: 2
+        }
+      })
+    ]);
+
+    // 8. Buat Orders
+    console.log('📦 Membuat orders...');
+    const orders = await Promise.all([
+      prisma.order.create({
+        data: {
+          customerId: customers[0].id,
+          umkmId: umkmOwners[0].id,
+          totalAmount: 40000,
+          shippingAddress: 'Jl. Merdeka No. 123, Bandung',
+          paymentMethod: 'Transfer Bank',
+          paymentStatus: 'paid',
+          orderStatus: 'delivered',
+          notes: 'Tolong jangan terlalu pedas'
+        }
+      }),
+      prisma.order.create({
+        data: {
+          customerId: customers[1].id,
+          umkmId: umkmOwners[1].id,
+          totalAmount: 30000,
+          shippingAddress: 'Jl. Sudirman No. 456, Bandung',
+          paymentMethod: 'E-Wallet',
+          paymentStatus: 'paid',
+          orderStatus: 'processing',
+          notes: 'Kemasan rapi ya'
+        }
+      }),
+      prisma.order.create({
+        data: {
+          customerId: customers[2].id,
+          umkmId: umkmOwners[2].id,
+          totalAmount: 16000,
+          shippingAddress: 'Jl. Asia Afrika No. 789, Bandung',
+          paymentMethod: 'COD',
+          paymentStatus: 'pending',
+          orderStatus: 'pending',
+          notes: null
+        }
+      })
+    ]);
+
+    // 9. Buat Order Items
+    console.log('📋 Membuat order items...');
+    await Promise.all([
+      // Order 1 items
+      prisma.orderItem.create({
+        data: {
+          orderId: orders[0].id,
+          productId: products[0].id, // Gudeg
+          quantity: 2,
+          pricePerItem: 20000
+        }
+      }),
+      
+      // Order 2 items
+      prisma.orderItem.create({
+        data: {
+          orderId: orders[1].id,
+          productId: products[2].id, // Brownies
+          quantity: 1,
+          pricePerItem: 30000
+        }
+      }),
+      
+      // Order 3 items
+      prisma.orderItem.create({
+        data: {
+          orderId: orders[2].id,
+          productId: products[4].id, // Es Teh
+          quantity: 2,
+          pricePerItem: 6000
+        }
+      }),
+      prisma.orderItem.create({
+        data: {
+          orderId: orders[2].id,
+          productId: products[5].id, // Keripik
+          quantity: 1,
+          pricePerItem: 10000
+        }
+      })
+    ]);
+
+    // 10. Buat Reviews
+    console.log('⭐ Membuat reviews...');
+    await Promise.all([
+      prisma.review.create({
+        data: {
+          productId: products[0].id, // Gudeg
+          customerId: customers[0].id,
+          rating: 5,
+          comment: 'Gudegnya enak banget! Rasanya autentik seperti di Jogja. Pasti pesan lagi!'
+        }
+      }),
+      prisma.review.create({
+        data: {
+          productId: products[2].id, // Brownies
+          customerId: customers[1].id,
+          rating: 4,
+          comment: 'Browniesnya lembut dan coklat banget. Toppingnya juga enak. Recommended!'
+        }
+      }),
+      prisma.review.create({
+        data: {
+          productId: products[4].id, // Es Teh
+          customerId: customers[2].id,
+          rating: 3,
+          comment: 'Es tehnya segar, tapi kurang manis menurut saya. Overall oke lah.'
+        }
+      }),
+      prisma.review.create({
+        data: {
+          productId: products[1].id, // Nasi Pecel
+          customerId: customers[1].id,
+          rating: 5,
+          comment: 'Nasi pecelnya mantap! Bumbu pecelnya pas banget, tidak terlalu pedas.'
+        }
+      })
+    ]);
+
+    // 11. Buat Accounts (untuk NextAuth)
+    console.log('🔐 Membuat accounts untuk OAuth...');
+    await Promise.all([
+      prisma.account.create({
+        data: {
+          userId: customers[0].id,
+          type: 'oauth',
+          provider: 'google',
+          providerAccountId: 'google_123456789',
+          access_token: 'ya29.example_access_token_1',
+          refresh_token: 'refresh_token_example_1',
+          expires_at: Math.floor(Date.now() / 1000) + 3600,
+          token_type: 'Bearer',
+          scope: 'openid email profile'
+        }
+      }),
+      prisma.account.create({
+        data: {
+          userId: customers[1].id,
+          type: 'oauth',
+          provider: 'facebook',
+          providerAccountId: 'facebook_987654321',
+          access_token: 'fb_access_token_example',
+          expires_at: Math.floor(Date.now() / 1000) + 3600,
+          token_type: 'Bearer',
+          scope: 'email public_profile'
+        }
+      })
+    ]);
+
+    // 12. Buat Sessions
+    console.log('🔑 Membuat sessions...');
+    await Promise.all([
+      prisma.session.create({
+        data: {
+          userId: customers[0].id,
+          sessionToken: 'session_token_budi_12345',
+          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+        }
+      }),
+      prisma.session.create({
+        data: {
+          userId: customers[1].id,  
+          sessionToken: 'session_token_siti_67890',
+          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+        }
+      })
+    ]);
+
+    // 13. Buat Verification Tokens
+    console.log('✅ Membuat verification tokens...');
+    await Promise.all([
+      prisma.verificationToken.create({
+        data: {
+          identifier: 'verify_email_token_1',
+          token: 'verification_token_abc123',
+          expires: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+        }
+      }),
+      prisma.verificationToken.create({
+        data: {
+          identifier: 'verify_email_token_2',
+          token: 'verification_token_def456',
+          expires: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+        }
+      })
+    ]);
+
+    console.log('✅ Seeding database selesai!');
+    console.log(`
+📊 DATA YANG DIBUAT:
+- ${categories.length} Kategori makanan
+- ${customers.length} Customer users
+- ${umkmUsers.length} UMKM owner users  
+- ${umkmOwners.length} UMKM owners
+- ${products.length} Produk
+- ${shoppingCarts.length} Shopping carts
+- 4 Cart items
+- ${orders.length} Orders
+- 4 Order items
+- 4 Reviews
+- 2 OAuth accounts
+- 2 Sessions
+- 2 Verification tokens
+    `);
+
+  } catch (error) {
+    console.error('❌ Error saat seeding:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+// Jalankan seeding
+seedDatabase()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+
+// Export untuk penggunaan sebagai module
+module.exports = { seedDatabase };

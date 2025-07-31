@@ -46,12 +46,12 @@ const Footer = () => {
               >
                 Konsumen
               </Link>
-              <Link
+              {/* <Link
                 href="/blogs"
                 className="hover:text-nimo-yellow transition-colors"
               >
                 Blogs
-              </Link>
+              </Link> */}
             </nav>
           </div>
 

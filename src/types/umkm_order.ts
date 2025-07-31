@@ -5,6 +5,7 @@ export interface UmkmOrder {
   createdAt: string;
   shippingAddress: string; // Ditambahkan untuk halaman detail
   customer: {
+    name: string;
     username: string;
     email: string;
     phoneNumber: string; // Ditambahkan untuk halaman detail

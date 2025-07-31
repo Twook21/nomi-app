@@ -1,24 +1,83 @@
-// app/api/umkm-owners/me/products/route.ts
-
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { successResponse, errorResponse } from '@/lib/api-response';
-import { authenticateAndAuthorize } from '@/lib/auth';
+// import { authenticateAndAuthorize } from '@/lib/auth'; // JWT authenticator
+import { getServerSession } from "next-auth/next"; // Import NextAuth
+import { authOptions } from "@/lib/auth-config"; // Import NextAuth config
+
+// =========================================================================
+// Helper function untuk mendapatkan user ID dan metode autentikasi
+// Pindahkan fungsi ini ke lib/auth atau lib/utils untuk reusability
+// =========================================================================
+async function getUserAndAuthMethodFromRequest(request: NextRequest) {
+    try {
+        const authHeader = request.headers.get("authorization");
+        if (authHeader?.startsWith("Bearer ")) {
+            const { user } = await (await import("@/lib/auth")).authenticateAndAuthorize(request, ['umkm_owner', 'admin']); // Hanya UMKM owner atau admin
+            if (user) {
+                return {
+                    userId: user.userId,
+                    method: 'jwt' as const,
+                    userRole: user.role as 'customer' | 'umkm_owner' | 'admin'
+                };
+            }
+        }
+
+        const session = await getServerSession(authOptions);
+        if (session?.user?.email) {
+            const dbUser = await prisma.user.findUnique({
+                where: { email: session.user.email },
+                select: {
+                    id: true,
+                    role: true,
+                },
+            });
+
+            if (dbUser && (dbUser.role === 'umkm_owner' || dbUser.role === 'admin')) { // Hanya UMKM owner atau admin
+                return {
+                    userId: dbUser.id,
+                    method: 'nextauth' as const,
+                    userRole: dbUser.role as 'customer' | 'umkm_owner' | 'admin',
+                };
+            }
+        }
+
+        return null;
+    } catch (error) {
+        console.error("Authentication error in UMKM products API:", error);
+        return null;
+    }
+}
+// =========================================================================
 
 // [GET] - Mengambil daftar produk milik UMKM yang sedang login
 export async function GET(request: NextRequest) {
-  const { user, response } = await authenticateAndAuthorize(request, ['umkm_owner']);
-  if (response) return response;
+  const authResult = await getUserAndAuthMethodFromRequest(request);
+
+  if (!authResult) {
+    return errorResponse("Unauthorized", 401, "Authentication required.");
+  }
+
+  const { userId, userRole } = authResult;
+
+  // Otorisasi: Hanya UMKM owner atau admin yang bisa melihat produk ini
+  if (userRole !== "umkm_owner" && userRole !== "admin") {
+    return errorResponse("Forbidden", 403, "Anda tidak memiliki izin untuk melihat produk UMKM.");
+  }
 
   try {
-    // Ambil ID UMKM dari user yang login
     const umkmOwner = await prisma.uMKMOwner.findUnique({
-      where: { userId: user!.userId },
-      select: { id: true },
+      where: { userId: userId },
+      select: { id: true, isVerified: true }, // Tambahkan isVerified
     });
 
     if (!umkmOwner) {
       return errorResponse('UMKM profile not found for this user', 404);
+    }
+
+    // Jika UMKM belum terverifikasi, larang akses
+    if (!umkmOwner.isVerified) {
+        return errorResponse("UMKM profile not verified.", 403, "Profil UMKM Anda belum diverifikasi. Mohon tunggu persetujuan admin.");
     }
 
     const searchParams = request.nextUrl.searchParams;
@@ -34,14 +93,12 @@ export async function GET(request: NextRequest) {
       where.isAvailable = isAvailable === 'true';
     }
 
-    // Ambil data produk beserta ulasannya untuk perhitungan rating
     const productsData = await prisma.product.findMany({
       where,
       include: {
         category: {
           select: { categoryName: true },
         },
-        // Ambil data rating dari relasi 'reviews' untuk dihitung
         reviews: {
           select: {
             rating: true,
@@ -53,22 +110,21 @@ export async function GET(request: NextRequest) {
       take: limit,
     });
 
-    // Hitung total produk untuk paginasi
     const totalProducts = await prisma.product.count({ where });
 
-    // Olah data untuk menambahkan properti `averageRating`
     const products = productsData.map(p => {
       const totalRating = p.reviews.reduce((acc, review) => acc + review.rating, 0);
       const reviewCount = p.reviews.length;
       const averageRating = reviewCount > 0 ? totalRating / reviewCount : 0;
 
-      // Hapus properti `reviews` agar tidak dikirim ke frontend
       const { reviews, ...productData } = p;
 
       return {
         ...productData,
+        description: productData.description || '', // Tambahkan fallback
+        imageUrl: productData.imageUrl || 'https://placehold.co/100x100', // Tambahkan fallback
         averageRating: parseFloat(averageRating.toFixed(1)),
-        reviewCount, // Opsional: jika Anda ingin menampilkan jumlah ulasan
+        reviewCount,
       };
     });
 
@@ -88,8 +144,18 @@ export async function GET(request: NextRequest) {
 
 // [POST] - Menambahkan produk baru
 export async function POST(request: NextRequest) {
-  const { user, response } = await authenticateAndAuthorize(request, ['umkm_owner']);
-  if (response) return response;
+  const authResult = await getUserAndAuthMethodFromRequest(request);
+
+  if (!authResult) {
+    return errorResponse("Unauthorized", 401, "Authentication required.");
+  }
+
+  const { userId, userRole } = authResult;
+
+  // Otorisasi: Hanya UMKM owner atau admin yang bisa menambah produk
+  if (userRole !== "umkm_owner" && userRole !== "admin") {
+    return errorResponse("Forbidden", 403, "Anda tidak memiliki izin untuk menambah produk.");
+  }
 
   try {
     const {
@@ -108,24 +174,29 @@ export async function POST(request: NextRequest) {
     }
 
     const umkmOwner = await prisma.uMKMOwner.findUnique({
-      where: { userId: user!.userId },
-      select: { id: true },
+      where: { userId: userId }, // Gunakan userId dari authResult
+      select: { id: true, isVerified: true }, // Tambahkan isVerified
     });
 
     if (!umkmOwner) {
       return errorResponse('UMKM profile not found for this user', 404);
     }
 
+    // Jika UMKM belum terverifikasi, larang akses
+    if (!umkmOwner.isVerified) {
+        return errorResponse("UMKM profile not verified.", 403, "Profil UMKM Anda belum diverifikasi. Mohon tunggu persetujuan admin.");
+    }
+
     const newProduct = await prisma.product.create({
       data: {
         umkmId: umkmOwner.id,
         productName,
-        description,
+        description: description || null, // Pastikan deskripsi bisa null
         originalPrice: parseFloat(originalPrice),
         discountedPrice: parseFloat(discountedPrice),
         stock: parseInt(stock),
         expirationDate: new Date(expirationDate),
-        imageUrl,
+        imageUrl: imageUrl || null, // Pastikan imageUrl bisa null
         categoryId,
       },
     });
