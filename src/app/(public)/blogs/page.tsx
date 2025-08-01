@@ -11,25 +11,27 @@ import PostList, {
 } from "@/app/(public)/blogs/(sections)/PostListItem";
 import { getNews, getCategories } from "@/lib/newsService"; 
 
-
 import type { TransformedPost } from "@/app/(public)/blogs/(sections)/PostListItem";
 
+// ✅ PERBAIKAN: Update interface untuk Next.js 15
 interface BlogsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     category?: string; 
     search?: string;
     page?: string;
-  };
+  }>;
 }
 
+// ✅ PERBAIKAN: Update komponen untuk await searchParams
 export default async function BlogsPage({ searchParams }: BlogsPageProps) {
-  const currentPage = parseInt(searchParams.page || "1", 10);
+  // Await searchParams karena sekarang Promise
+  const resolvedSearchParams = await searchParams;
+  
+  const currentPage = parseInt(resolvedSearchParams.page || "1", 10);
   const itemsPerPage = 10;
 
- 
-  const query = searchParams.category || searchParams.search;
+  const query = resolvedSearchParams.category || resolvedSearchParams.search;
 
- 
   const { posts: allPosts, pagination } = await getNews(
     currentPage,
     itemsPerPage,
@@ -42,21 +44,29 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
 
   const categories = getCategories(); 
 
+  // ✅ PERBAIKAN: Update buildUrl untuk menggunakan resolvedSearchParams
   const buildUrl = (newParams: Record<string, string | undefined>) => {
+    // Buat URLSearchParams dari resolvedSearchParams
+    const params = new URLSearchParams();
     
-    const params = new URLSearchParams(searchParams.toString());
+    // Tambahkan existing params
+    Object.entries(resolvedSearchParams).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      }
+    });
 
-    
+    // Hapus params yang akan diganti
     Object.keys(newParams).forEach((key) => params.delete(key));
 
-    
+    // Tambahkan params baru
     Object.entries(newParams).forEach(([key, value]) => {
       if (value) {
         params.set(key, value);
       }
     });
 
-    
+    // Logika mutual exclusive untuk search dan category
     if ("search" in newParams) {
       params.delete("category");
     }
@@ -113,7 +123,6 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
                       totalPages={pagination.totalPages}
                       hasNext={pagination.hasNextPage}
                       hasPrev={pagination.hasPreviousPage}
-                      
                       onPageChange={() => {}} 
                     />
                   </section>
@@ -137,7 +146,7 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
                       type="text"
                       name="search"
                       placeholder="Ketik di sini..."
-                      defaultValue={searchParams.search || ""}
+                      defaultValue={resolvedSearchParams.search || ""}
                       className="w-full pl-10 pr-4 py-2.5 bg-[var(--nimo-gray)] border border-gray-200 rounded-lg"
                     />
                     <input type="hidden" name="page" value="1" />
@@ -159,7 +168,7 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
                         search: undefined,
                       })}
                       className={`w-full text-left p-3 rounded-lg flex items-center ${
-                        !searchParams.category
+                        !resolvedSearchParams.category
                           ? "bg-nimo-yellow text-white"
                           : "hover:bg-nimo-yellow/10"
                       }`}
@@ -176,7 +185,7 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
                           search: undefined,
                         })}
                         className={`w-full text-left p-3 rounded-lg flex items-center ${
-                          searchParams.category === category
+                          resolvedSearchParams.category === category
                             ? "bg-nimo-yellow text-white"
                             : "hover:bg-nimo-yellow/10"
                         }`}
