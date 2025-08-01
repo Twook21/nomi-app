@@ -7,14 +7,18 @@ import { ProductSearch } from "@/components/products/ProductSearch";
 
 export const dynamic = "force-dynamic";
 
+// ✅ PERBAIKAN: Update interface untuk Next.js 15
 interface ProductsPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+// ✅ PERBAIKAN: Update generateMetadata untuk await searchParams
 export async function generateMetadata({
   searchParams,
 }: ProductsPageProps): Promise<Metadata> {
-  const category = searchParams.category as string | undefined;
+  // Await searchParams karena sekarang Promise
+  const resolvedSearchParams = await searchParams;
+  const category = resolvedSearchParams.category as string | undefined;
   const title = category
     ? `Kategori: ${category
         .replace("-", " ")
@@ -93,9 +97,13 @@ function LoadingSkeleton() {
   );
 }
 
-export default function ProductsPage({ searchParams }: ProductsPageProps) {
-  const category = searchParams.category as string | undefined;
-  const search = searchParams.search as string | undefined;
+// ✅ PERBAIKAN: Update komponen untuk await searchParams
+export default async function ProductsPage({ searchParams }: ProductsPageProps) {
+  // Await searchParams karena sekarang Promise
+  const resolvedSearchParams = await searchParams;
+  const category = resolvedSearchParams.category as string | undefined;
+  const search = resolvedSearchParams.search as string | undefined;
+  
   const pageTitle = category
     ? `Kategori: ${category
         .replace("-", " ")
