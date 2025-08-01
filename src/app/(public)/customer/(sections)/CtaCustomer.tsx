@@ -13,7 +13,7 @@ const CtaCustomer = () => {
                         Ribuan porsi makanan lezat menantimu dengan harga miring. Mulai petualangan kulinermu sekarang!
                     </p>
                     {/* Jika web-app, gunakan Link. Jika mobile app, ganti dengan tombol App Store/Play Store */}
-                    <Link href="/deals">
+                    <Link href="/products">
                          <button className="bg-nimo-yellow text-white font-bold py-3 px-10 rounded-full text-lg hover:bg-yellow-500 transition-colors duration-300">
                             Mulai Berhemat Sekarang
                         </button>

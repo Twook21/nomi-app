@@ -8,21 +8,9 @@ import UserBenefits from "./(sections)/UserBenefits";
 import HowItWorks from "./(sections)/HowItWorksCustomer";
 import CtaCustomer from "./(sections)/CtaCustomer";
 import AppPreview from "./(sections)/AppPreview";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
-const PartnerPage = () => {
-  const [showButton, setShowButton] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowButton(window.scrollY > 300);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+const CustomerPage = () => {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
@@ -36,18 +24,10 @@ const PartnerPage = () => {
           <CtaCustomer />
         </div>
         <Footer />
-        {showButton && (
-          <button
-            onClick={scrollToTop}
-            className="fixed bottom-8 right-8 bg-nimo-yellow text-white px-4 py-2 rounded-full shadow-lg hover:bg-nimo-yellow-700 transition cursor-pointer"
-            aria-label="Back to top"
-          >
-            ↑ Top
-          </button>
-        )}
+       <ScrollToTopButton/>
       </div>
     </main>
   );
 };
 
-export default PartnerPage;
+export default CustomerPage;

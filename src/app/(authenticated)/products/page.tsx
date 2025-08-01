@@ -52,35 +52,32 @@ async function FilteredProductList({
     if (products.length === 0) {
       return (
         <div className="col-span-full text-center py-16">
-          {" "}
           <p className="text-xl font-semibold text-[var(--nimo-dark)]">
             Oops! Tidak ada produk ditemukan.
-          </p>{" "}
+          </p>
           <p className="text-muted-foreground mt-2">
-            Coba gunakan kata kunci lain atau periksa kategori lainnya.{" "}
-          </p>{" "}
+            Coba gunakan kata kunci lain atau periksa kategori lainnya.
+          </p>
         </div>
       );
     }
 
     return (
       <>
-        {" "}
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
-        ))}{" "}
+        ))}
       </>
     );
   } catch (error) {
     return (
       <div className="col-span-full text-center text-destructive bg-destructive/10 p-4 rounded-md">
-        {" "}
-        <p className="font-bold">Terjadi kesalahan saat memuat produk!</p>{" "}
+        <p className="font-bold">Terjadi kesalahan saat memuat produk!</p>
         <p>
           {error instanceof Error
             ? error.message
             : "Tidak dapat terhubung ke server."}
-        </p>{" "}
+        </p>
       </div>
     );
   }
@@ -89,10 +86,9 @@ async function FilteredProductList({
 function LoadingSkeleton() {
   return (
     <>
-      {" "}
       {Array.from({ length: 8 }).map((_, i) => (
         <ProductCardSkeleton key={i} />
-      ))}{" "}
+      ))}
     </>
   );
 }
@@ -108,44 +104,45 @@ export default function ProductsPage({ searchParams }: ProductsPageProps) {
 
   return (
     <div className="bg-[var(--nimo-gray)] dark:bg-background min-h-screen">
-      {" "}
       <div className="container mx-auto py-8 px-4">
-        {" "}
         <section>
-          {/* Header Section */}{" "}
-          <div className="text-center bg-[var(--nimo-light)] dark:bg-card p-8 rounded-lg shadow-sm mb-8">
-            {" "}
-            <h1 className="text-4xl font-bold text-[var(--nimo-dark)]">
+          {/* Header Section */}
+          <div
+            className="text-center bg-[var(--nimo-light)] dark:bg-card p-8 rounded-lg shadow-sm mb-8 lazy-bg"
+            style={{
+              backgroundImage: `url(images/bg-header.jpg)`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <h1 className="text-4xl font-bold text-white">
               {pageTitle}
-            </h1>{" "}
-            <p className="text-muted-foreground mt-2 mb-6 max-w-2xl mx-auto">
-              {" "}
+            </h1>
+            <p className="text-white mt-2 mb-6 max-w-2xl mx-auto">
               {search
                 ? `Menampilkan hasil untuk pencarian "${search}"`
                 : category
                 ? `Menampilkan semua produk dalam kategori pilihan Anda.`
-                : `Jelajahi semua penawaran terbaik yang tersedia saat ini.`}{" "}
-            </p>{" "}
+                : `Jelajahi semua penawaran terbaik yang tersedia saat ini.`}
+            </p>
             <div className="flex justify-center">
-              <ProductSearch />{" "}
-            </div>{" "}
+              <ProductSearch />
+            </div>
           </div>
-          {/* Product Grid Section */}{" "}
+          {/* Product Grid Section */}
           <Suspense
             fallback={
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <LoadingSkeleton />{" "}
+                <LoadingSkeleton />
               </div>
             }
           >
-            {" "}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {" "}
-              <FilteredProductList category={category} search={search} />{" "}
-            </div>{" "}
-          </Suspense>{" "}
-        </section>{" "}
-      </div>{" "}
+              <FilteredProductList category={category} search={search} />
+            </div>
+          </Suspense>
+        </section>
+      </div>
     </div>
   );
 }

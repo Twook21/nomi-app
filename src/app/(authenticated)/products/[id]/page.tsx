@@ -8,7 +8,7 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { AddToCartWidget } from "@/components/products/AddToCartWidget";
 import { ProductImage } from "@/components/products/ProductImage";
 import { ProductCard } from "@/components/products/ProductCard";
-import { ProductReviews } from "@/components/products/ProductReviews"; // [MODIFIKASI] Impor komponen ulasan
+import { ProductReviews } from "@/components/products/ProductReviews";
 
 export const dynamic = 'force-dynamic';
 
@@ -66,10 +66,10 @@ function formatRupiah(amount: number) {
 
 function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString("id-ID", {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
 }
 
@@ -87,53 +87,53 @@ export default async function ProductDetailPage({ params }: Props) {
 
   return (
     <div className="container mx-auto max-w-5xl py-10 px-4">
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-10">
         {/* Kolom Gambar */}
         <div className="w-full">
-          <div className="relative aspect-square rounded-lg overflow-hidden border">
+          <div className="relative aspect-square rounded-xl overflow-hidden border bg-gray-50 dark:bg-gray-800">
             <ProductImage src={product.imageUrl} alt={product.productName} />
             {discountPercentage > 0 && (
-              <Badge 
-                variant="destructive" 
-                className="absolute top-3 right-3 text-base"
+              <Badge
+                variant="default"
+                className="absolute top-4 right-4 bg-nimo-yellow text-white font-medium"
               >
-                {discountPercentage}% OFF
+                Diskon {discountPercentage}%
               </Badge>
             )}
           </div>
         </div>
 
         {/* Kolom Informasi Produk */}
-        <div className="flex flex-col space-y-4">
-          <h1 className="text-3xl lg:text-4xl font-bold leading-tight">{product.productName}</h1>
+        <div className="flex flex-col space-y-6">
+          <h1 className="text-4xl font-bold leading-tight">{product.productName}</h1>
           
-          <div className="flex items-center gap-2">
-              <Store className="w-5 h-5 text-muted-foreground" />
-              <span className="text-lg text-muted-foreground">oleh <span className="font-semibold text-primary">{product.umkmOwner.umkmName}</span></span>
+          <div className="flex items-center gap-2 text-lg text-muted-foreground">
+            <Store className="w-5 h-5" />
+            <span className="font-medium">oleh <span className="text-foreground">{product.umkmOwner.umkmName}</span></span>
           </div>
           
           <p className="text-muted-foreground text-base leading-relaxed">
             {product.description}
           </p>
 
-          <div className="!mt-6 space-y-2">
-            <div className="flex items-center gap-2">
-                <PackageCheck className="w-5 h-5 text-green-600"/>
-                <span className="font-medium">Stok Tersedia: {product.stock}</span>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <PackageCheck className="w-5 h-5"/>
+              <span className="font-medium">Stok: {product.stock}</span>
             </div>
-            <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-amber-600"/>
-                <span className="font-medium">Kedaluwarsa: {formatDate(product.expirationDate)}</span>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Clock className="w-5 h-5"/>
+              <span className="font-medium">Kedaluwarsa: {formatDate(product.expirationDate)}</span>
             </div>
           </div>
           
-          <div className="!mt-8 pt-6 border-t">
+          <div className="pt-6">
             <div className="flex items-baseline gap-4 mb-4">
-              <p className="text-4xl font-bold text-green-700">
+              <p className="text-4xl font-bold text-nimo-yellow">
                 {formatRupiah(product.discountedPrice)}
               </p>
               {discountPercentage > 0 && (
-                <p className="text-xl text-muted-foreground line-through">
+                <p className="text-lg text-muted-foreground line-through">
                   {formatRupiah(product.originalPrice)}
                 </p>
               )}
@@ -143,15 +143,15 @@ export default async function ProductDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* [MODIFIKASI] Bagian untuk menampilkan ulasan produk */}
-      <div className="mt-16">
+      {/* Bagian Ulasan Produk */}
+      <div className="mt-20">
         <ProductReviews reviews={product.reviews || []} />
       </div>
 
       {/* Bagian Produk Lain dari Toko Ini */}
       {otherProducts.length > 0 && (
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold mb-6">Produk Lain dari {product.umkmOwner.umkmName}</h2>
+        <div className="mt-20">
+          <h2 className="text-2xl font-bold mb-8">Produk Lain dari {product.umkmOwner.umkmName}</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {otherProducts.map(p => (
               <ProductCard key={p.id} product={p} />

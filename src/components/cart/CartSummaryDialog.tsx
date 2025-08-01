@@ -15,7 +15,6 @@ export function CartSummaryDialog() {
   const { isCartSummaryOpen, cartSummaryData, closeCartSummary } = useAuthStore();
   const lastAddedItem = cartSummaryData?.cartItems[0];
 
-  // Fungsi untuk menghitung subtotal keranjang
   const calculateSubtotal = () => {
     if (!cartSummaryData?.cartItems) return 0;
     
@@ -30,35 +29,51 @@ export function CartSummaryDialog() {
 
   return (
     <Dialog open={isCartSummaryOpen} onOpenChange={closeCartSummary}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="text-center text-xl text-green-600">Berhasil Ditambahkan!</DialogTitle>
-          <DialogDescription className="text-center">Produk berikut telah ditambahkan ke keranjang Anda.</DialogDescription>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader className="text-center">
+          <DialogTitle className="text-xl text-nimo-yellow font-bold">Berhasil Ditambahkan</DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground">
+            Produk telah ditambahkan ke keranjang Anda.
+          </DialogDescription>
         </DialogHeader>
         {lastAddedItem && (
           <div className="space-y-4 py-4">
             <div className="flex items-center gap-4">
-              <Image src={lastAddedItem.product.imageUrl || ''} alt={lastAddedItem.product.productName} width={80} height={80} className="rounded-md border object-cover"/>
-              <div>
+              <Image 
+                src={lastAddedItem.product.imageUrl || ''} 
+                alt={lastAddedItem.product.productName} 
+                width={80} 
+                height={80} 
+                className="rounded-lg border object-cover flex-shrink-0"
+              />
+              <div className="flex-grow">
                 <p className="font-semibold">{lastAddedItem.product.productName}</p>
-                <p className="text-sm text-muted-foreground">Jumlah: {lastAddedItem.quantity}</p>
-                <p className="text-sm font-medium">{formatRupiah(Number(lastAddedItem.product.discountedPrice))}</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {formatRupiah(Number(lastAddedItem.product.discountedPrice))} x {lastAddedItem.quantity}
+                </p>
               </div>
             </div>
             <Separator />
-            <div className="flex justify-between font-semibold">
-              <span>Subtotal Keranjang ({cartSummaryData?.cartItems.length} item)</span>
-              <span>{formatRupiah(subtotal)}</span>
+            <div className="flex justify-between items-center text-sm font-medium">
+              <span className="text-muted-foreground">Subtotal ({cartSummaryData?.cartItems.length} item)</span>
+              <span className="text-nimo-yellow text-base font-semibold">{formatRupiah(subtotal)}</span>
             </div>
           </div>
         )}
-        <DialogFooter className="sm:justify-between gap-2">
-          <Button variant="outline" onClick={closeCartSummary}>
-            Lanjut Belanja
+        <DialogFooter className="flex flex-col sm:flex-row-reverse sm:justify-between gap-2 pt-4">
+          <Button 
+            asChild 
+            className="w-full sm:w-auto bg-nimo-yellow hover:bg-yellow-300"
+            onClick={closeCartSummary}
+          >
+            <Link href="/cart" className="text-white">Lihat Keranjang</Link>
           </Button>
-          {/* PERBAIKAN: Menambahkan onClick untuk menutup dialog sebelum navigasi */}
-          <Button asChild className="bg-nimo-yellow text-white hover:bg-nimo-yellow/90" onClick={closeCartSummary}>
-            <Link href="/cart">Lihat Keranjang</Link>
+          <Button 
+            variant="ghost" 
+            onClick={closeCartSummary} 
+            className="w-full sm:w-auto text-muted-foreground border border-gray-400 hover:bg-gray-100 hover:text-foreground"
+          >
+            Lanjut Belanja
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 import { TrendingUp, UserPlus, Leaf } from "lucide-react";
 
 const benefits = [
@@ -24,34 +25,76 @@ const benefits = [
 
 const KeyBenefits = () => {
   return (
-    <section className="bg-[var(--nimo-gray)] py-16 md:py-24">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[var(--nimo-dark)]">
-            Keuntungan Menjadi Mitra NOMI
-          </h2>
-          <p className="mt-4 text-lg text-[var(--nimo-dark)]/80">
-            Platform kami dirancang untuk satu tujuan: membantu bisnis Anda
-            tumbuh secara efisien dan berkelanjutan.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
-          {benefits.map((item, index) => (
-            <div key={index} className="text-center md:text-left">
-              <div className="flex justify-center md:justify-start mb-4">
-                {item.icon}
+    <>
+      <Head>
+        <title>Manfaat Menjadi Mitra Nimo</title>
+        <meta
+          name="description"
+          content="Dapatkan keuntungan finansial dan citra positif dengan menjadi mitra Nimo. Maksimalkan pendapatan, jangkau pelanggan baru, dan tunjukkan komitmen pada keberlanjutan."
+        />
+        <meta
+          name="keywords"
+          content="keuntungan mitra, manfaat mitra, bisnis berkelanjutan, maksimalkan pendapatan, pelanggan baru, citra bisnis positif, food waste, Nimo"
+        />
+
+        {/* Open Graph */}
+        <meta
+          property="og:title"
+          content="Keuntungan Bergabung Sebagai Mitra Nimo"
+        />
+        <meta
+          property="og:description"
+          content="Bergabunglah dengan Nimo dan ubah surplus makanan menjadi profit sambil membangun brand yang peduli lingkungan."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Nimo" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Manfaat Mitra Nimo" />
+        <meta
+          name="twitter:description"
+          content="Lihat bagaimana Nimo dapat membantu bisnis Anda mengurangi limbah dan meningkatkan pendapatan secara bersamaan."
+        />
+
+        {/* Additional SEO */}
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://nimo.id/mitra#keuntungan" />
+      </Head>
+      <section className="bg-[var(--nimo-light)] py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--nimo-dark)]">
+              Keuntungan Menjadi Mitra Nimo
+            </h2>
+            <p className="mt-3 text-[var(--nimo-dark)] text-base sm:text-lg leading-relaxed">
+              Platform kami dirancang untuk satu tujuan: membantu bisnis Anda
+              tumbuh secara efisien dan berkelanjutan.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            {benefits.map((item, index) => (
+              <div
+                key={index}
+                className="text-center bg-gray-100 dark:bg-[var(--background)] p-6 sm:p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              >
+                <div className="flex justify-center mb-4">
+                  <div className="flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 bg-nimo-yellow/10 rounded-full">
+                    {item.icon}
+                  </div>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-[var(--nimo-dark)] mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-sm sm:text-base text-[var(--nimo-dark)] leading-relaxed">
+                  {item.description}
+                </p>
               </div>
-              <h3 className="text-xl font-bold text-[var(--nimo-dark)] mb-2">
-                {item.title}
-              </h3>
-              <p className="text-[var(--nimo-dark)]/80 leading-relaxed">
-                {item.description}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

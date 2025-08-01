@@ -26,7 +26,7 @@ const HeroCustomer = () => {
               favoritmu. Selamatkan makanan lezat dari pemborosan sekaligus
               selamatkan dompetmu.
             </p>
-            <Link href="/deals">
+            <Link href="/products">
               <button className="group inline-flex items-center bg-nimo-yellow text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-500 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                 Lihat Deals Terdekat
                 <Sparkles className="ml-2 transition-transform duration-300 group-hover:rotate-12" />

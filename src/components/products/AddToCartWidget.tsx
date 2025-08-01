@@ -101,7 +101,7 @@ export function AddToCartWidget({ productId, stock }: { productId: string, stock
                 </Button>
             </div>
             {/* Tombol Add to Cart akan disable jika sedang loading atau belum terautentikasi (atau sedang memuat status auth) */}
-            <Button size="lg" className="flex-1 text-lg" onClick={handleAddToCart} disabled={isLoading || authLoading || !isAuthenticated}>
+            <Button size="lg" className="flex-1 text-lg dark:bg-nimo-yellow dark:text-nimo-dark" onClick={handleAddToCart} disabled={isLoading || authLoading || !isAuthenticated}>
                 <ShoppingCart className="mr-2 h-5 w-5" />
                 {isLoading ? "Memproses..." : "Tambah ke Keranjang"}
             </Button>

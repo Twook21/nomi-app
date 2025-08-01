@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { successResponse, errorResponse } from "@/lib/api-response";
-// import { authenticateAndAuthorize } from "@/lib/auth"; // JWT authenticator
-import { getServerSession } from "next-auth/next"; // Import NextAuth
-import { authOptions } from "@/lib/auth-config"; // Import NextAuth config
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth-config";
 
 // =========================================================================
-// Helper function untuk mendapatkan user ID dan metode autentikasi
-// Pindahkan fungsi ini ke lib/auth atau lib/utils untuk reusability
+// Helper function untuk mendapatkan user ID dan metode autentikasi (sama)
 // =========================================================================
 async function getUserAndAuthMethodFromRequest(request: NextRequest) {
     try {
         const authHeader = request.headers.get("authorization");
         if (authHeader?.startsWith("Bearer ")) {
-            const { user } = await (await import("@/lib/auth")).authenticateAndAuthorize(request, ['customer', 'umkm_owner']); // Tetap sertakan peran yang diizinkan untuk JWT
+            const { user } = await (await import("@/lib/auth")).authenticateAndAuthorize(request, ['customer', 'umkm_owner']);
             if (user) {
                 return {
                     userId: user.userId,
@@ -33,7 +31,7 @@ async function getUserAndAuthMethodFromRequest(request: NextRequest) {
                 },
             });
 
-            if (dbUser && (dbUser.role === 'customer' || dbUser.role === 'umkm_owner' || dbUser.role === 'admin')) { // Tambahkan validasi role di sini jika NextAuth user selalu ada
+            if (dbUser && (dbUser.role === 'customer' || dbUser.role === 'umkm_owner' || dbUser.role === 'admin')) {
                 return {
                     userId: dbUser.id,
                     method: 'nextauth' as const,
@@ -50,10 +48,32 @@ async function getUserAndAuthMethodFromRequest(request: NextRequest) {
 }
 // =========================================================================
 
+// --- Helper untuk memeriksa kepemilikan produk oleh user yang login ---
+async function isUserProductOwner(userId: string, productId: string): Promise<boolean> {
+    const product = await prisma.product.findUnique({
+        where: { id: productId },
+        select: { umkmId: true },
+    });
+
+    if (!product) return false; // Produk tidak ditemukan, jadi bukan pemilik
+
+    const userUmkmOwner = await prisma.uMKMOwner.findUnique({
+        where: { userId: userId },
+        select: { id: true },
+    });
+
+    // Jika user punya profil UMKM dan ID UMKM-nya cocok dengan umkmId produk
+    return !!userUmkmOwner && userUmkmOwner.id === product.umkmId;
+}
+// ---
+
 export async function POST(
   request: NextRequest,
-  { params }: { params: { productId: string } }
+  { params: rawParams }: { params: { productId: string } }
 ) {
+  const params = await rawParams; // Await params
+  const { productId } = params;
+
   const authResult = await getUserAndAuthMethodFromRequest(request);
 
   if (!authResult) {
@@ -62,12 +82,10 @@ export async function POST(
 
   const { userId, userRole } = authResult;
 
-  // Otorisasi: Hanya customer atau UMKM owner yang boleh menambah ke keranjang
   if (userRole !== "customer" && userRole !== "umkm_owner") {
     return errorResponse("Forbidden", 403, "Only customers or UMKM owners can add items to cart.");
   }
 
-  const { productId } = params;
   const { quantity } = await request.json();
 
   if (typeof quantity !== "number" || quantity <= 0) {
@@ -75,19 +93,10 @@ export async function POST(
   }
 
   try {
-    let shoppingCart = await prisma.shoppingCart.findUnique({
-      where: { customerId: userId }, // Gunakan userId dari authResult
-    });
-
-    if (!shoppingCart) {
-      shoppingCart = await prisma.shoppingCart.create({
-        data: { customerId: userId }, // Gunakan userId dari authResult
-      });
-    }
-
     const product = await prisma.product.findUnique({
       where: { id: productId },
       select: {
+        umkmId: true, // Ambil ID UMKM dari produk
         stock: true,
         discountedPrice: true,
         isAvailable: true,
@@ -95,14 +104,29 @@ export async function POST(
       },
     });
 
-    if (
-      !product ||
-      !product.isAvailable ||
-      product.expirationDate < new Date()
-    ) {
+    if (!product) {
+      return errorResponse("Product not found", 404);
+    }
+    if (!product.isAvailable || product.expirationDate < new Date()) {
       return errorResponse("Product is not available or has expired", 404);
     }
-    // Periksa apakah stok mencukupi setelah memperhitungkan item yang mungkin sudah ada di keranjang
+    
+    // --- LOGIKA PENJUAL PRODUK SENDIRI ---
+    if (await isUserProductOwner(userId, productId)) {
+        return errorResponse("Anda tidak dapat menambahkan produk Anda sendiri ke keranjang.", 403, "Anda tidak dapat menambahkan produk Anda sendiri ke keranjang.");
+    }
+    // --- AKHIR LOGIKA ---
+
+    let shoppingCart = await prisma.shoppingCart.findUnique({
+      where: { customerId: userId },
+    });
+
+    if (!shoppingCart) {
+      shoppingCart = await prisma.shoppingCart.create({
+        data: { customerId: userId },
+      });
+    }
+
     const existingCartItem = await prisma.cartItem.findFirst({
         where: { cartId: shoppingCart.id, productId: productId },
     });
@@ -141,8 +165,11 @@ export async function POST(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { productId: string } }
+  { params: rawParams }: { params: { productId: string } } // Await params
 ) {
+  const params = await rawParams;
+  const { productId } = params;
+
   const authResult = await getUserAndAuthMethodFromRequest(request);
 
   if (!authResult) {
@@ -151,12 +178,10 @@ export async function PUT(
 
   const { userId, userRole } = authResult;
 
-  // Otorisasi: Hanya customer atau UMKM owner yang boleh mengupdate keranjang
   if (userRole !== "customer" && userRole !== "umkm_owner") {
     return errorResponse("Forbidden", 403, "Only customers or UMKM owners can update cart items.");
   }
 
-  const { productId } = params;
   const { quantity } = await request.json();
 
   if (typeof quantity !== "number" || quantity < 0) {
@@ -164,32 +189,37 @@ export async function PUT(
   }
 
   try {
-    const shoppingCart = await prisma.shoppingCart.findUnique({
-      where: { customerId: userId }, // Gunakan userId dari authResult
-    });
-
-    if (!shoppingCart) {
-      return errorResponse("Shopping cart not found", 404);
-    }
-
     const product = await prisma.product.findUnique({
       where: { id: productId },
-      select: { stock: true, isAvailable: true, expirationDate: true },
+      select: { stock: true, isAvailable: true, expirationDate: true, umkmId: true }, // Ambil umkmId
     });
 
-    if (
-      !product ||
-      !product.isAvailable ||
-      product.expirationDate < new Date()
-    ) {
+    if (!product) {
+      return errorResponse("Product not found", 404);
+    }
+    if (!product.isAvailable || product.expirationDate < new Date()) {
       return errorResponse("Product is not available or has expired", 404);
     }
-    // Periksa stok setelah update kuantitas
+
+    // --- LOGIKA PENJUAL PRODUK SENDIRI ---
+    if (await isUserProductOwner(userId, productId)) {
+        return errorResponse("Forbidden", 403, "Anda tidak dapat mengubah produk Anda sendiri di keranjang.");
+    }
+    // --- AKHIR LOGIKA ---
+
     if (product.stock < quantity) {
       return errorResponse(
         `Insufficient stock. Only ${product.stock} available.`,
         400
       );
+    }
+
+    const shoppingCart = await prisma.shoppingCart.findUnique({
+      where: { customerId: userId },
+    });
+
+    if (!shoppingCart) {
+      return errorResponse("Shopping cart not found", 404);
     }
 
     const existingCartItem = await prisma.cartItem.findFirst({
@@ -224,8 +254,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { productId: string } }
+  { params: rawParams }: { params: { productId: string } } // Await params
 ) {
+  const params = await rawParams;
+  const { productId } = params;
+
   const authResult = await getUserAndAuthMethodFromRequest(request);
 
   if (!authResult) {
@@ -234,16 +267,19 @@ export async function DELETE(
 
   const { userId, userRole } = authResult;
 
-  // Otorisasi: Hanya customer atau UMKM owner yang boleh menghapus dari keranjang
   if (userRole !== "customer" && userRole !== "umkm_owner") {
     return errorResponse("Forbidden", 403, "Only customers or UMKM owners can remove items from cart.");
   }
 
-  const { productId } = params;
-
   try {
+    // --- LOGIKA PENJUAL PRODUK SENDIRI ---
+    if (await isUserProductOwner(userId, productId)) {
+        return errorResponse("Forbidden", 403, "Anda tidak dapat menghapus produk Anda sendiri dari keranjang.");
+    }
+    // --- AKHIR LOGIKA ---
+
     const shoppingCart = await prisma.shoppingCart.findUnique({
-      where: { customerId: userId }, // Gunakan userId dari authResult
+      where: { customerId: userId },
     });
 
     if (!shoppingCart) {

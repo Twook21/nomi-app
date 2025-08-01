@@ -186,7 +186,7 @@ export default function OrderHistoryPage() {
             <div className="container mx-auto py-8 px-4"> {/* Tambahkan container */}
                 <div className="space-y-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                        <h1 className="text-2xl font-bold tracking-tight">Riwayat Pesanan</h1>
+                        <h1 className="text-2xl text-nimo-yellow font-bold tracking-tight">Riwayat Pesanan</h1>
                         <p className="text-sm text-muted-foreground">
                             Total {orders.length} transaksi ditemukan.
                         </p>
@@ -221,7 +221,7 @@ export default function OrderHistoryPage() {
                                         <p className="text-xl font-bold">Total: {formatRupiah(order.totalAmount)}</p>
                                     </CardContent>
                                     <CardFooter className="bg-muted/50 p-4">
-                                        <Button asChild className="w-full">
+                                        <Button asChild className="w-full bg-nimo-yellow text-white hover:bg-amber-400">
                                             <Link href={`/profile/orders/${order.id}`}>Lihat Detail Pesanan</Link>
                                         </Button>
                                     </CardFooter>

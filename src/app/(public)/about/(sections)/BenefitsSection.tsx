@@ -1,104 +1,149 @@
 import React from "react";
-import {
-  Users,
-  Heart,
-  ShieldCheck,
-  TrendingUp,
-  Leaf,
-  Globe,
-} from "lucide-react";
+import { Users, Heart, ShieldCheck, TrendingUp, Leaf, Globe } from "lucide-react";
+import Head from "next/head";
 
 const BenefitsSection = () => {
   return (
-    <section id="benefits" className="py-20 md:py-28">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold">
-            Mengapa Harus Bergabung dengan NOMI?
-          </h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-10">
-          {/* Kartu Konsumen */}
-          <div className="group bg-[var(--nimo-gray)] p-8 rounded-2xl border border-black hover:border-nimo-yellow hover:bg-white transition-all duration-300 shadow-md dark:hover:bg-gray-500 hover:shadow-2xl">
-            <h3 className="text-2xl font-bold mb-8 text-center text-nimo-dark">
-              Untuk Anda, Para Penyelamat Rasa
-            </h3>
-            <ul className="space-y-6">
-              <li className="flex items-center">
-                <Heart className="h-10 w-10 text-nimo-yellow mr-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-lg">
-                    Harga Makanan Lebih Hemat
-                  </h4>
-                  <p className="text-nimo-dark">
-                    Nikmati hidangan favoritmu dengan diskon besar setiap hari.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-center">
-                <ShieldCheck className="h-10 w-10 text-nimo-yellow mr-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-lg">Kualitas Tetap Terjamin</h4>
-                  <p className="text-nimo-dark">
-                    Kami bekerja sama dengan mitra terpercaya untuk memastikan
-                    makanan tetap layak dan lezat.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-center">
-                <Globe className="h-10 w-10 text-nimo-yellow mr-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-lg">
-                    Berkontribusi Selamatkan Bumi
-                  </h4>
-                  <p className="text-nimo-dark">
-                    Setiap pembelian adalah langkah nyata mengurangi jejak
-                    karbon.
-                  </p>
-                </div>
-              </li>
-            </ul>
+    <>
+      <Head>
+        <title>Keuntungan Bergabung dengan Nimo</title>
+        <meta
+          name="description"
+          content="Lihat keuntungan bergabung dengan Nimo, baik untuk konsumen yang ingin hemat maupun untuk mitra bisnis yang ingin mengurangi limbah makanan dan meningkatkan pendapatan."
+        />
+        <meta
+          name="keywords"
+          content="keuntungan nimo, manfaat nimo, diskon makanan, hemat, bisnis F&B, food waste, keberlanjutan, mitra bisnis, pelanggan baru"
+        />
+
+        {/* Open Graph */}
+        <meta property="og:title" content="Keuntungan Bergabung dengan Nimo" />
+        <meta
+          property="og:description"
+          content="Temukan manfaat besar bagi konsumen dan mitra bisnis dalam ekosistem Nimo yang berkelanjutan."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Nimo" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Keuntungan Bergabung dengan Nimo" />
+        <meta
+          name="twitter:description"
+          content="Jadikan setiap pembelianmu langkah nyata untuk menyelamatkan makanan dan mendapatkan keuntungan."
+        />
+
+        {/* Additional SEO */}
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://nimo.id/keuntungan" />
+      </Head>
+      <section id="benefits" className="py-16 md:py-24 bg-[var(--nimo-light)]">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--nimo-dark)]">
+              Mengapa Harus Bergabung dengan Nimo?
+            </h2>
+            <p className="mt-3 text-[var(--nimo-dark)] text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+              Nimo memberikan manfaat bagi semua pihak dalam rantai makanan.
+            </p>
           </div>
-          {/* Kartu Mitra Seller */}
-          <div className="group bg-[var(--nimo-gray)] p-8 rounded-2xl border border-black hover:border-nimo-yellow hover:bg-white dark:hover:bg-gray-500 transition-all duration-300 shadow-md hover:shadow-2xl">
-            <h3 className="text-2xl font-bold mb-8 text-center text-nimo-dark">
-              Untuk Anda, Para Mitra Bisnis
-            </h3>
-            <ul className="space-y-6">
-              <li className="flex items-center">
-                <TrendingUp className="h-10 w-10 text-nimo-yellow mr-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-lg">Stok Berlebih Jadi Cuan</h4>
-                  <p className="text-nimo-dark">
-                    Ubah potensi kerugian menjadi pendapatan tambahan.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-center">
-                <Leaf className="h-10 w-10 text-nimo-yellow mr-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-lg">Brand Peduli Lingkungan</h4>
-                  <p className="text-nimo-dark">
-                    Tunjukkan komitmen bisnismu pada isu keberlanjutan dan tarik
-                    simpati pelanggan.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-center">
-                <Users className="h-10 w-10 text-nimo-yellow mr-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-lg">Jangkauan Konsumen Baru</h4>
-                  <p className="text-nimo-dark">
-                    Dapatkan pelanggan baru yang peduli, loyal, dan antusias
-                    dengan misi Anda.
-                  </p>
-                </div>
-              </li>
-            </ul>
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+            {/* Kartu Konsumen */}
+            <div className="bg-gray-100 dark:bg-[var(--background)] p-6 sm:p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex justify-center md:justify-start items-center h-12 w-12 sm:h-14 sm:w-14 bg-nimo-yellow/10 rounded-full mx-auto md:mx-0 mb-4">
+                <Heart className="h-6 w-6 sm:h-8 sm:w-8 text-nimo-yellow" />
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold mb-6 text-center md:text-left text-[var(--nimo-dark)]">
+                Untuk Anda, Para Penyelamat Rasa
+              </h3>
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <Heart className="h-6 w-6 sm:h-7 sm:w-7 text-nimo-yellow mr-4 mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-bold text-base sm:text-lg text-[var(--nimo-dark)]">
+                      Harga Makanan Lebih Hemat
+                    </h4>
+                    <p className="text-sm sm:text-base text-[var(--nimo-dark)]">
+                      Nikmati hidangan favoritmu dengan diskon besar setiap hari.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <ShieldCheck className="h-6 w-6 sm:h-7 sm:w-7 text-nimo-yellow mr-4 mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-bold text-base sm:text-lg text-[var(--nimo-dark)]">
+                      Kualitas Tetap Terjamin
+                    </h4>
+                    <p className="text-sm sm:text-base text-[var(--nimo-dark)]">
+                      Kami bekerja sama dengan mitra terpercaya untuk memastikan
+                      makanan tetap layak dan lezat.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <Globe className="h-6 w-6 sm:h-7 sm:w-7 text-nimo-yellow mr-4 mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-bold text-base sm:text-lg text-[var(--nimo-dark)]">
+                      Berkontribusi Selamatkan Bumi
+                    </h4>
+                    <p className="text-sm sm:text-base text-[var(--nimo-dark)]">
+                      Setiap pembelian adalah langkah nyata mengurangi jejak
+                      karbon.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            {/* Kartu Mitra Seller */}
+            <div className="bg-gray-100 dark:bg-[var(--background)] p-6 sm:p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex justify-center md:justify-start items-center h-12 w-12 sm:h-14 sm:w-14 bg-nimo-yellow/10 rounded-full mx-auto md:mx-0 mb-4">
+                <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-nimo-yellow" />
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold mb-6 text-center md:text-left text-[var(--nimo-dark)]">
+                Untuk Anda, Para Mitra Bisnis
+              </h3>
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <TrendingUp className="h-6 w-6 sm:h-7 sm:w-7 text-nimo-yellow mr-4 mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-bold text-base sm:text-lg text-[var(--nimo-dark)]">
+                      Stok Berlebih Jadi Cuan
+                    </h4>
+                    <p className="text-sm sm:text-base text-[var(--nimo-dark)]">
+                      Ubah potensi kerugian menjadi pendapatan tambahan.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <Leaf className="h-6 w-6 sm:h-7 sm:w-7 text-nimo-yellow mr-4 mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-bold text-base sm:text-lg text-[var(--nimo-dark)]">
+                      Brand Peduli Lingkungan
+                    </h4>
+                    <p className="text-sm sm:text-base text-[var(--nimo-dark)]">
+                      Tunjukkan komitmen bisnismu pada isu keberlanjutan dan tarik
+                      simpati pelanggan.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <Users className="h-6 w-6 sm:h-7 sm:w-7 text-nimo-yellow mr-4 mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-bold text-base sm:text-lg text-[var(--nimo-dark)]">
+                      Jangkauan Konsumen Baru
+                    </h4>
+                    <p className="text-sm sm:text-base text-[var(--nimo-dark)]">
+                      Dapatkan pelanggan baru yang peduli, loyal, dan antusias
+                      dengan misi Anda.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

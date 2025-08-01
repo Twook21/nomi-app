@@ -11,21 +11,9 @@ import BenefitsSection from "./(sections)/BenefitsSection";
 import TimelineSection from "./(sections)/TimelineSection";
 // import TeamSection from "./(sections)/TeamSection";
 import CtaSection from "./(sections)/CtaSection";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 const AboutPage = () => {
-  const [showButton, setShowButton] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowButton(window.scrollY > 300);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
@@ -42,15 +30,7 @@ const AboutPage = () => {
           <CtaSection />
         </div>
         <Footer />
-        {showButton && (
-          <button
-            onClick={scrollToTop}
-            className="fixed bottom-8 right-8 bg-nimo-yellow text-white px-4 py-2 rounded-full shadow-lg hover:bg-nimo-yellow-700 transition cursor-pointer"
-            aria-label="Back to top"
-          >
-            ↑ Top
-          </button>
-        )}
+        <ScrollToTopButton/>
       </div>
     </main>
   );

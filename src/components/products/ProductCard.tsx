@@ -53,7 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
             }}
           />
           {discountPercentage > 0 && (
-            <Badge className="absolute top-3 left-3 text-xs font-semibold bg-destructive/90 text-destructive-foreground border-0">
+            <Badge className="absolute top-3 left-3 text-xs font-semibold bg-nimo-yellow text-destructive-foreground border-0">
               Diskon {discountPercentage}%
             </Badge>
           )}
@@ -100,7 +100,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 {formatRupiah(product.originalPrice)}
               </p>
             )}
-            <p className="text-base font-bold text-destructive">
+            <p className="text-base font-bold text-nimo-yellow">
               {formatRupiah(product.discountedPrice)}
             </p>
           </div>

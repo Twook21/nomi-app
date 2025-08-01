@@ -11,7 +11,7 @@ const CtaSection = () => {
                 <p className="text-lg text-nimo-light max-w-2xl mx-auto mb-8">
                     Proses pendaftaran hanya 5 menit. Bergabunglah dengan ratusan bisnis lain yang telah merasakan manfaatnya.
                 </p>
-                <Link href="/register-partner">
+                <Link href="/auth/register">
                      <button className="bg-nimo-light text-nimo-yellow font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-200 transition-colors duration-300">
                         Daftarkan Bisnis Anda
                     </button>
