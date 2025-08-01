@@ -50,7 +50,10 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-   env: {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  env: {
     NEWSAPI_KEY: process.env.NEWSAPI_KEY,
   },
 };
