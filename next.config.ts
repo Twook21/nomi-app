@@ -53,11 +53,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    outputFileTracingExcludes: {
-      '/api/**/*': ['./node_modules/@prisma/engines/**/*'],
-    },
-  },
   env: {
     NEWSAPI_KEY: process.env.NEWSAPI_KEY,
   },
