@@ -7,7 +7,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import type { TransformedPost } from "@/app/(public)/blogs/(sections)/PostListItem";
 
-
 export async function generateStaticParams() {
   try {
     const { posts } = await getNews(1, 20); 
@@ -20,9 +19,11 @@ export async function generateStaticParams() {
   }
 }
 
-// generateMetadata
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = await getArticleBySlug(params.slug);
+// ✅ PERBAIKAN: Update generateMetadata untuk Next.js 15
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  // Await params karena sekarang Promise
+  const { slug } = await params;
+  const post = await getArticleBySlug(slug);
 
   if (!post) return { title: "Post Not Found" };
 
@@ -40,15 +41,17 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-
-export default async function BlogDetail({ params }: { params: { slug: string } }) {
-  const post = await getArticleBySlug(params.slug);
+// ✅ PERBAIKAN: Update komponen untuk await params
+export default async function BlogDetail({ params }: { params: Promise<{ slug: string }> }) {
+  // Await params karena sekarang Promise
+  const { slug } = await params;
+  const post = await getArticleBySlug(slug);
   
   if (!post) {
     notFound();
   }
 
-  const relatedArticles = await getRelatedArticles(params.slug, 2);
+  const relatedArticles = await getRelatedArticles(slug, 2);
 
   return (
     <div className="bg-[var(--background)]">
@@ -119,7 +122,31 @@ export default async function BlogDetail({ params }: { params: { slug: string } 
               <div className="grid md:grid-cols-2 gap-6">
                 {relatedArticles.map((relatedPost: TransformedPost) => (
                   <div key={relatedPost.slug} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md">
-                    {/* ... (konten kartu artikel terkait, sudah cocok) ... */}
+                    {/* Konten kartu artikel terkait */}
+                    <div className="relative h-48">
+                      <Image
+                        src={relatedPost.imageUrl}
+                        alt={relatedPost.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-bold text-lg mb-2 line-clamp-2">
+                        <Link href={`/blogs/${relatedPost.slug}`} className="hover:text-nimo-yellow">
+                          {relatedPost.title}
+                        </Link>
+                      </h3>
+                      <p className="text-gray-600 text-sm line-clamp-3 mb-3">
+                        {relatedPost.summary}
+                      </p>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <span>{relatedPost.author}</span>
+                        <span>•</span>
+                        <time>{relatedPost.publishedDate}</time>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
