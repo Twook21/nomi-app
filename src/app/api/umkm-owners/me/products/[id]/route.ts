@@ -76,6 +76,54 @@ async function verifyProductOwnerAndStatus(userId: string, productId: string) {
     return { umkmOwner, product };
 }
 
+export async function DELETE(
+    request: NextRequest,
+    { params: rawParams }: { params: { id: string } }
+) {
+    const params = await rawParams;
+    const { id: productId } = params;
+
+    const authResult = await getUserAndAuthMethodFromRequest(request);
+
+    if (!authResult) {
+        return errorResponse("Unauthorized", 401, "Authentication required.");
+    }
+
+    const { userId, userRole } = authResult;
+
+    // Check if the user has the right role to perform the action.
+    if (userRole !== "umkm_owner" && userRole !== "admin") {
+        return errorResponse("Forbidden", 403, "Anda tidak memiliki izin untuk menghapus produk ini.");
+    }
+
+    // Verify the user is the owner of the product and their profile is verified.
+    const verification = await verifyProductOwnerAndStatus(userId, productId);
+    if (verification.error) {
+        return verification.error;
+    }
+
+    try {
+        // Delete the product from the database.
+        // The `where` clause ensures only the correct product is deleted.
+        const deletedProduct = await prisma.product.delete({
+            where: {
+                id: productId,
+            },
+        });
+
+        // Return a successful response.
+        return successResponse({
+            message: 'Produk berhasil dihapus',
+            product: deletedProduct
+        });
+
+    } catch (e: any) {
+        // Handle cases where the product might not exist or other database errors.
+        console.error(`Error deleting UMKM product ${productId}:`, e);
+        return errorResponse('Gagal menghapus produk', 500, e.message);
+    }
+}
+
 export async function GET(
   request: NextRequest,
   { params: rawParams }: { params: { id: string } } // Gunakan nama berbeda untuk params awal
