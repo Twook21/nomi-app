@@ -12,8 +12,9 @@ import { ProductReviews } from "@/components/products/ProductReviews";
 
 export const dynamic = 'force-dynamic';
 
+// ✅ PERBAIKAN: Update type Props untuk Next.js 15
 type Props = {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 // Fungsi untuk mengambil data produk tunggal dan produk lainnya
@@ -36,12 +37,14 @@ async function getProductData(id: string): Promise<{ product: Product | null; ot
   }
 }
 
-// Fungsi untuk generate metadata dinamis (baik untuk SEO)
+// ✅ PERBAIKAN: Update generateMetadata untuk await params
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const { product } = await getProductData(params.id);
+  // Await params karena sekarang Promise
+  const { id } = await params;
+  const { product } = await getProductData(id);
 
   if (!product) {
     return {
@@ -73,9 +76,11 @@ function formatDate(dateString: string) {
     });
 }
 
-// Komponen Halaman Detail Produk
+// ✅ PERBAIKAN: Update komponen untuk await params
 export default async function ProductDetailPage({ params }: Props) {
-  const { product, otherProducts } = await getProductData(params.id);
+  // Await params karena sekarang Promise
+  const { id } = await params;
+  const { product, otherProducts } = await getProductData(id);
 
   if (!product) {
     notFound();
