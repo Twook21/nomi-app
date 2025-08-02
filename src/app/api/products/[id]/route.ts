@@ -10,11 +10,16 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         umkmOwner: {
           select: { id: true, umkmName: true },
         },
-        // PERBAIKAN: Mengambil semua ulasan untuk produk ini
         reviews: {
           include: {
             customer: {
-              select: { username: true }
+              // PERBAIKAN: Pilih semua kolom customer yang dibutuhkan
+              select: {
+                username: true,
+                name: true,
+                image: true,
+                email: true,
+              }
             }
           },
           orderBy: {

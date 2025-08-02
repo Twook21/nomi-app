@@ -70,7 +70,7 @@ export function ProductReviews({ reviews }: ProductReviewsProps) {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-semibold">{review.customer.email || review.customer.username || review.customer.name || "Pengguna Anonim 2"}</p>
+                  <p className="font-semibold">{review.customer.email || review.customer.username || review.customer.name || "Pengguna Anonim"}</p>
                   <p className="text-xs text-muted-foreground">{formatDate(review.createdAt)}</p>
                 </div>
                 <div className="ml-auto">
