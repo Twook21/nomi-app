@@ -24,7 +24,7 @@ const CtaSection = () => {
             Cari Makanan Hemat
           </a>
           <a
-            href="auth/partner"
+            href="auth/register"
             className="inline-block bg-white text-black font-bold py-4 px-10 rounded-full text-lg hover:bg-gray-200 transition-all duration-300 shadow-lg transform hover:scale-105 w-full sm:w-auto"
           >
             Daftarkan Bisnis Anda

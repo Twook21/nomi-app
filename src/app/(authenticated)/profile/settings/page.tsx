@@ -90,7 +90,7 @@ export default function ProfileSettingsPage() {
   }, [user, isAuthenticated, form]);
 
   const onSubmit = async (values: z.infer<typeof profileSchema>) => {
-    toast.loading("Menyimpan perubahan...", { id: "profile-update" }); // Tambahkan ID untuk toast
+    toast.loading("Menyimpan perubahan...", { id: "profile-update" });
 
     const payload: {
       phoneNumber?: string;
@@ -154,28 +154,28 @@ export default function ProfileSettingsPage() {
 
   if (authLoading || isLoadingData) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <p className="text-lg text-gray-700">Memuat profil Anda...</p>
+      <div className="flex min-h-screen items-center justify-center bg-nimo-light">
+        <p className="text-lg text-nimo-dark">Memuat profil Anda...</p>
       </div>
     );
   }
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
-        <Card className="w-full max-w-md text-center shadow-lg rounded-lg">
+      <div className="flex min-h-screen items-center justify-center bg-nimo-light p-4">
+        <Card className="w-full max-w-md text-center shadow-lg rounded-xl bg-nimo-light">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-gray-800">
+            <CardTitle className="text-2xl font-bold text-nimo-dark">
               Akses Ditolak
             </CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardDescription className="text-nimo-dark/70">
               Silakan login untuk mengakses pengaturan profil Anda.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Button
               asChild
-              className="mt-6 w-full py-2 bg-nimo-yellow text-white hover:bg-nimo-yellow/90 transition-colors duration-200 ease-in-out rounded-md text-lg font-medium"
+              className="mt-6 w-full py-2 bg-nimo-yellow text-nimo-dark hover:bg-nimo-yellow/90 transition-colors duration-200 ease-in-out rounded-xl text-lg font-medium"
             >
               <Link href="/auth/login">Login Sekarang</Link>
             </Button>
@@ -199,27 +199,27 @@ export default function ProfileSettingsPage() {
   const displayName = user.name || displayUsername;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8 flex justify-center items-start">
+    <div className="min-h-screen bg-nimo-light p-4 sm:p-6 lg:p-8 flex justify-center items-start">
       <div className="w-full max-w-4xl space-y-8 mt-8">
         {/* Header Section */}
         <div className="text-center sm:text-left">
-          <h1 className="text-3xl font-extrabold text-gray-900 leading-tight">
+          <h1 className="text-3xl font-extrabold text-nimo-dark leading-tight">
             Pengaturan Akun
           </h1>
-          <p className="mt-2 text-lg text-muted-foreground">
+          <p className="mt-2 text-lg text-nimo-dark/70">
             Kelola informasi akun dan preferensi Anda dengan mudah.
           </p>
         </div>
 
-        <Separator className="bg-gray-200" />
+        <Separator className="bg-nimo-dark/10" />
 
         {/* Profile Card */}
-        <Card className="bg-white shadow-xl rounded-xl border border-gray-200">
+        <Card className="bg-nimo-light shadow-xl rounded-xl border border-nimo-dark/10">
           <CardHeader className="pb-4">
-            <CardTitle className="text-2xl font-semibold text-gray-800">
+            <CardTitle className="text-2xl font-semibold text-nimo-dark">
               Informasi Profil
             </CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardDescription className="text-nimo-dark/70">
               Perbarui detail pribadi Anda. Informasi ini bersifat pribadi dan
               aman.
             </CardDescription>
@@ -231,8 +231,8 @@ export default function ProfileSettingsPage() {
                 className="space-y-8"
               >
                 {/* Avatar and User Info */}
-                <div className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                  <Avatar className="w-24 h-24 sm:w-28 sm:h-28 border-4 border-nimo-yellow/50 shadow-md">
+                <div className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-nimo-light rounded-lg border border-nimo-dark/10">
+                  <Avatar className="w-24 h-24 sm:w-28 sm:h-28 border-4 border-nimo-yellow shadow-md">
                     <AvatarImage
                       src={
                         user.image ||
@@ -241,15 +241,15 @@ export default function ProfileSettingsPage() {
                       alt={displayUsername}
                       className="object-cover"
                     />
-                    <AvatarFallback className="bg-nimo-yellow text-white text-2xl font-bold">
+                    <AvatarFallback className="bg-nimo-yellow text-nimo-dark text-2xl font-bold">
                       {getInitials(displayName)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="space-y-1 text-center sm:text-left">
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-2xl font-bold text-nimo-dark">
                       {displayName}
                     </p>
-                    <p className="text-md text-muted-foreground">
+                    <p className="text-md text-nimo-dark/70">
                       {user.email}
                     </p>
                     {process.env.NODE_ENV === "development" && (
@@ -267,7 +267,7 @@ export default function ProfileSettingsPage() {
                     name="phoneNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-700 font-medium">
+                        <FormLabel className="text-nimo-dark font-medium">
                           Nomor Telepon
                         </FormLabel>
                         <FormControl>
@@ -275,7 +275,7 @@ export default function ProfileSettingsPage() {
                             placeholder="Contoh: 081234567890"
                             {...field}
                             disabled={!isEditing}
-                            className="border-gray-300 focus-visible:ring-nimo-yellow/70"
+                            className="border-nimo-dark/20 focus-visible:ring-nimo-yellow/70"
                           />
                         </FormControl>
                         <FormMessage className="text-red-500 text-sm" />
@@ -287,7 +287,7 @@ export default function ProfileSettingsPage() {
                     name="address"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-700 font-medium">
+                        <FormLabel className="text-nimo-dark font-medium">
                           Alamat
                         </FormLabel>
                         <FormControl>
@@ -295,7 +295,7 @@ export default function ProfileSettingsPage() {
                             placeholder="Contoh: Jl. Merdeka No. 123, Bandung"
                             {...field}
                             disabled={!isEditing}
-                            className="border-gray-300 focus-visible:ring-nimo-yellow/70"
+                            className="border-nimo-dark/20 focus-visible:ring-nimo-yellow/70"
                           />
                         </FormControl>
                         <FormMessage className="text-red-500 text-sm" />
@@ -308,7 +308,7 @@ export default function ProfileSettingsPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem className="md:col-span-2">
-                          <FormLabel className="text-gray-700 font-medium">
+                          <FormLabel className="text-nimo-dark font-medium">
                             Password Baru (Opsional)
                           </FormLabel>
                           <FormControl>
@@ -316,10 +316,10 @@ export default function ProfileSettingsPage() {
                               type="password"
                               placeholder="********"
                               {...field}
-                              className="border-gray-300 focus-visible:ring-nimo-yellow/70"
+                              className="border-nimo-dark/20 focus-visible:ring-nimo-yellow/70"
                             />
                           </FormControl>
-                          <FormDescription className="text-gray-500 text-sm mt-1">
+                          <FormDescription className="text-nimo-dark/70 text-sm mt-1">
                             Kosongkan jika Anda tidak ingin mengubah password
                             Anda.
                           </FormDescription>
@@ -331,7 +331,7 @@ export default function ProfileSettingsPage() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-8">
+                <div className="flex justify-end gap-3 pt-4 border-t border-nimo-dark/10 mt-8">
                   {isEditing ? (
                     <>
                       <Button
@@ -348,14 +348,14 @@ export default function ProfileSettingsPage() {
                             id: "profile-update",
                           });
                         }}
-                        className="px-6 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                        className="px-6 py-2 rounded-md border border-nimo-dark/20 text-nimo-dark hover:bg-nimo-dark/5 transition-colors duration-200"
                       >
                         Batal
                       </Button>
                       <Button
                         type="submit"
-                        className="px-6 py-2 rounded-md bg-nimo-yellow text-white hover:bg-nimo-yellow/90 transition-colors duration-200 font-semibold"
-                        disabled={form.formState.isSubmitting} // Disable button saat submit
+                        className="px-6 py-2 rounded-md bg-nimo-yellow text-nimo-dark hover:bg-nimo-yellow/90 transition-colors duration-200 font-semibold"
+                        disabled={form.formState.isSubmitting}
                       >
                         {form.formState.isSubmitting
                           ? "Menyimpan..."
@@ -366,7 +366,7 @@ export default function ProfileSettingsPage() {
                     <Button
                       type="button"
                       onClick={() => setIsEditing(true)}
-                      className="px-6 py-2 rounded-md bg-nimo-yellow text-white hover:bg-nimo-yellow/90 transition-colors duration-200 font-semibold"
+                      className="px-6 py-2 rounded-md bg-nimo-yellow text-nimo-dark hover:bg-nimo-yellow/90 transition-colors duration-200 font-semibold"
                     >
                       Edit Profil
                     </Button>

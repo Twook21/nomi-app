@@ -81,7 +81,7 @@ const Mission = () => {
               </p>
 
               <div className="pt-4">
-                <Link href="/tentang">
+                <Link href="/about">
                   <button className="inline-block bg-nimo-yellow text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-500 dark:hover:bg-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                     Pelajari Lebih Lanjut
                   </button>
