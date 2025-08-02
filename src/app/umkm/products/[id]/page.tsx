@@ -270,7 +270,7 @@ export default function ProductDetailPage() {
 
             {/* Prices */}
             <div className="space-y-1 mt-2">
-                <p className="text-3xl font-bold text-green-700">
+                <p className="text-3xl font-bold text-nimo-yellow">
                     {formatRupiah(product.discountedPrice)}
                 </p>
                 {discountPercentage > 0 && (
@@ -283,7 +283,7 @@ export default function ProductDetailPage() {
             {/* Stock & Expiration */}
             <div className="space-y-2 mt-4">
                 <div className="flex items-center gap-2">
-                    <PackageCheck className="w-4 h-4 text-green-600"/>
+                    <PackageCheck className="w-4 h-4 text-nimo-yellow"/>
                     <span className="font-medium">Stok: {product.stock} unit</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -343,7 +343,7 @@ export default function ProductDetailPage() {
                   </div>
                   <div>
                     <div className="flex items-center space-x-2">
-                      <p className="font-semibold">{review.customer?.username ?? 'Customer'}</p>
+                      <p className="font-semibold">{review.customer?.name ?? 'Customer'}</p>
                       <span className="flex items-center text-xs text-muted-foreground">
                         <Star className="h-3 w-3 mr-1 fill-yellow-500 text-yellow-500" /> {review.rating.toFixed(1)}
                       </span>

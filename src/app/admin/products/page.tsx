@@ -270,7 +270,7 @@ export default function ManageProductsPage() {
                   />
                   <Bar
                     dataKey="total"
-                    fill="hsl(var(--primary))"
+                    fill="#FBBF24"
                     radius={[4, 4, 0, 0]}
                   />
                 </BarChart>
