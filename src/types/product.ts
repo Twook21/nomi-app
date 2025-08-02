@@ -7,6 +7,7 @@ export interface Review {
         username: string;
         name?: string;
         image?: string;
+        email: string;
     };
 }
 
