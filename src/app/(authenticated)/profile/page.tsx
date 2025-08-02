@@ -1,5 +1,6 @@
-"use client";
-
+// Tambahkan baris ini
+'use client';
+import React, { JSX } from 'react';
 import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useAuthStore } from "@/store/auth";
@@ -19,14 +20,12 @@ import {
   ArrowRight,
   ShoppingBag,
   Package,
-  Clock,
   ChevronRight,
   ShoppingCart,
   User,
   Sun,
   Moon,
 } from "lucide-react";
-import type { Product } from "@/types/product";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Temporary interface for API response
@@ -152,6 +151,8 @@ export default function DashboardPage() {
 
   const [data, setData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  // Perhatikan: Tipe state sudah diubah ke JSX.Element | null
+  const [greetingIcon, setGreetingIcon] = useState<JSX.Element | null>(null);
 
   const fetchData = useCallback(async () => {
     if (!isAuthenticated) {
@@ -195,6 +196,16 @@ export default function DashboardPage() {
     fetchData();
   }, [fetchData]);
 
+  useEffect(() => {
+    const getGreetingIcon = () => {
+      const hour = new Date().getHours();
+      if (hour < 12) return <Sun className="h-8 w-8 text-white animate-spin-slow" />;
+      if (hour < 17) return <Sun className="h-8 w-8 text-white animate-bounce-slow" />;
+      return <Moon className="h-8 w-8 text-white animate-pulse" />;
+    };
+    setGreetingIcon(getGreetingIcon());
+  }, []);
+
   const getDisplayName = () => {
     if (authMethod === "nextauth") {
       return (
@@ -216,12 +227,6 @@ export default function DashboardPage() {
     return "Selamat Malam";
   };
   
-  const getGreetingIcon = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return <Sun className="h-8 w-8 text-white animate-spin-slow" />;
-    if (hour < 17) return <Sun className="h-8 w-8 text-white animate-bounce-slow" />;
-    return <Moon className="h-8 w-8 text-white animate-pulse" />;
-  };
 
   if (!isAuthenticated) {
     return (
@@ -261,7 +266,8 @@ export default function DashboardPage() {
         {/* Konten utama header */}
         <div className="container mx-auto px-4 py-12 relative z-10">
           <div className="flex items-center gap-6">
-            {getGreetingIcon()}
+            {/* Tampilkan ikon dari state yang sudah diatur di client */}
+            {greetingIcon}
             <div className="space-y-1">
               <h1 className="text-4xl font-extrabold text-white tracking-tight bg-clip-text bg-gradient-to-r from-white to-yellow-200 animate-gradient-slow">
                 {getGreeting()}, {getDisplayName()}!
@@ -330,7 +336,7 @@ export default function DashboardPage() {
             </Card>
           ) : (
             <Card className="rounded-2xl shadow-xl border-dashed border-nimo-dark/20 bg-nimo-light">
-              <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+              <CardContent className="p-6 flex flex-col items-start sm:items-center justify-between">
                 <div className="flex items-start sm:items-center space-x-4 mb-4 sm:mb-0">
                   <div className="flex-shrink-0 p-4 bg-nimo-light text-nimo-dark/50 rounded-xl">
                     <ShoppingCart className="w-7 h-7" />

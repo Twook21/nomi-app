@@ -10,7 +10,7 @@ export default function PendingVerificationPage() {
         <div className="container mx-auto py-12 px-4 max-w-2xl">
             <Card className="text-center">
                 <CardHeader>
-                    <div className="mx-auto bg-nimo-yellow/20 text-nimo-yellow p-4 rounded-full w-fit">
+                    <div className="mx-auto bg-nimo-yellow text-nimo-yellow p-4 rounded-full w-fit">
                         <MailCheck className="h-12 w-12" />
                     </div>
                     <CardTitle className="mt-4 text-2xl">Pendaftaran Sedang Ditinjau</CardTitle>

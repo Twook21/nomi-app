@@ -53,9 +53,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  env: {
-    NEWSAPI_KEY: process.env.NEWSAPI_KEY,
-  },
 };
 
 module.exports = nextConfig;
