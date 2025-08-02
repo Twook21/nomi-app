@@ -7,10 +7,10 @@ const Testimonial = () => {
   return (
     <>
       <Head>
-        <title>Testimoni Mitra Nimo - Kafe Senja</title>
+        <title>Testimoni Mitra Nomi - Kafe Senja</title>
         <meta
           name="description"
-          content="Baca testimoni dari Sarah Widianti, pemilik Kafe Senja, tentang bagaimana Nimo membantu mengurangi food cost dan mendapatkan pelanggan baru yang loyal."
+          content="Baca testimoni dari Sarah Widianti, pemilik Kafe Senja, tentang bagaimana Nomi membantu mengurangi food cost dan mendapatkan pelanggan baru yang loyal."
         />
         <meta
           name="keywords"
@@ -21,17 +21,17 @@ const Testimonial = () => {
         <meta property="og:title" content="Testimoni Mitra: Kafe Senja" />
         <meta
           property="og:description"
-          content="Kisah sukses Kafe Senja dalam mengelola surplus makanan dengan bantuan Nimo."
+          content="Kisah sukses Kafe Senja dalam mengelola surplus makanan dengan bantuan Nomi."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Nimo" />
+        <meta property="og:site_name" content="Nomi" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Testimoni dari Kafe Senja" />
         <meta
           name="twitter:description"
-          content="Simak pengalaman nyata dari mitra Nimo dalam mengubah tantangan menjadi peluang."
+          content="Simak pengalaman nyata dari mitra Nomi dalam mengubah tantangan menjadi peluang."
         />
 
         {/* Additional SEO */}
@@ -43,7 +43,7 @@ const Testimonial = () => {
           <div className="max-w-3xl mx-auto text-center relative p-8 rounded-xl shadow-sm">
             <Quote className="absolute top-0 left-0 text-nimo-yellow/10 h-16 w-16" />
             <p className="text-xl md:text-2xl font-light italic text-[var(--nimo-dark)] leading-relaxed z-10 relative">
-              "Nimo mengubah cara kami mengelola surplus. Food cost menurun
+              "Nomi mengubah cara kami mengelola surplus. Food cost menurun
               signifikan dan kami mendapatkan pelanggan baru yang loyal. Ini
               adalah win-win solution yang brilian."
             </p>

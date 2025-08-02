@@ -11,10 +11,10 @@ const HeroPartner = () => {
   return (
     <>
       <Head>
-        <title>Nimo untuk Mitra Bisnis - Ubah Surplus Jadi Profit</title>
+        <title>Nomi untuk Mitra Bisnis - Ubah Surplus Jadi Profit</title>
         <meta
           name="description"
-          content="Bergabunglah dengan Nimo dan ubah makanan berlebih Anda menjadi keuntungan. Jangkau ribuan pelanggan baru, kurangi limbah, dan tingkatkan pendapatan bisnis F&B Anda."
+          content="Bergabunglah dengan Nomi dan ubah makanan berlebih Anda menjadi keuntungan. Jangkau ribuan pelanggan baru, kurangi limbah, dan tingkatkan pendapatan bisnis F&B Anda."
         />
         <meta
           name="keywords"
@@ -22,20 +22,20 @@ const HeroPartner = () => {
         />
 
         {/* Open Graph */}
-        <meta property="og:title" content="Bergabung Sebagai Mitra Nimo" />
+        <meta property="og:title" content="Bergabung Sebagai Mitra Nomi" />
         <meta
           property="og:description"
           content="Solusi cerdas untuk bisnis F&B dalam mengelola surplus makanan dan meningkatkan profit."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Nimo" />
+        <meta property="og:site_name" content="Nomi" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Mitra Nimo: Solusi Profit & Lingkungan" />
+        <meta name="twitter:title" content="Mitra Nomi: Solusi Profit & Lingkungan" />
         <meta
           name="twitter:description"
-          content="Daftar sekarang dan mulailah mengubah surplus makanan menjadi profit dengan Nimo."
+          content="Daftar sekarang dan mulailah mengubah surplus makanan menjadi profit dengan Nomi."
         />
 
         {/* Additional SEO */}
@@ -60,7 +60,7 @@ const HeroPartner = () => {
               </h1>
               <p className="text-lg text-[var(--nimo-dark)]/80 leading-relaxed max-w-xl mb-8">
                 Jangan biarkan makanan berlebih menjadi kerugian. Bergabunglah
-                dengan Nimo untuk menjangkau ribuan pelanggan baru dan
+                dengan <span className="text-bold text-nimo-yellow">NOMI</span> untuk menjangkau ribuan pelanggan baru dan
                 meningkatkan pendapatan Anda.
               </p>
               <Link href="/auth/register">
@@ -80,7 +80,7 @@ const HeroPartner = () => {
             >
               <Image
                 src="/images/partner.png"
-                alt="Aplikasi Nimo untuk Mitra"
+                alt="Aplikasi Nomi untuk Mitra"
                 layout="fill"
                 objectFit="cover"
                 priority

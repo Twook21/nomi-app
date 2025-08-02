@@ -43,7 +43,7 @@ const Contact = () => {
 
           <div className="max-w-2xl mx-auto bg-white dark:bg-[var(--background)] rounded-2xl shadow-xl dark:shadow-none dark:border dark:border-gray-700 p-8 md:p-12 transition-colors duration-300">
             <h4 className="text-2xl font-bold text-center text-[var(--nimo-dark)] mb-8">
-              Hubungi Customer Service NOMI
+              Hubungi Customer Service <span className="text-bold text-nimo-yellow">NOMI</span>
             </h4>
             <div className="space-y-6">
               <a

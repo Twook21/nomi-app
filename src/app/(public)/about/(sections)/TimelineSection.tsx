@@ -5,10 +5,10 @@ const TimelineSection = () => {
   return (
     <>
       <Head>
-        <title>Roadmap & Timeline Nimo</title>
+        <title>Roadmap & Timeline Nomi</title>
         <meta
           name="description"
-          content="Lihat roadmap Nimo dari awal ide hingga rencana ekspansi nasional. Pelajari perjalanan kami dalam mengurangi limbah makanan di Indonesia."
+          content="Lihat roadmap Nomi dari awal ide hingga rencana ekspansi nasional. Pelajari perjalanan kami dalam mengurangi limbah makanan di Indonesia."
         />
         <meta
           name="keywords"
@@ -16,17 +16,17 @@ const TimelineSection = () => {
         />
 
         {/* Open Graph */}
-        <meta property="og:title" content="Perjalanan Nimo" />
+        <meta property="og:title" content="Perjalanan Nomi" />
         <meta
           property="og:description"
-          content="Ikuti perjalanan Nimo dari awal hingga menjadi gerakan nasional melawan limbah makanan."
+          content="Ikuti perjalanan Nomi dari awal hingga menjadi gerakan nasional melawan limbah makanan."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Nimo" />
+        <meta property="og:site_name" content="Nomi" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Roadmap Nimo" />
+        <meta name="twitter:title" content="Roadmap Nomi" />
         <meta
           name="twitter:description"
           content="Peta jalan kami untuk menciptakan ekosistem pangan yang lebih berkelanjutan."
@@ -60,7 +60,7 @@ const TimelineSection = () => {
                     Ide & Validasi Konsep
                   </h4>
                   <p className="mt-2 text-sm text-[var(--nimo-dark)]">
-                    Nimo lahir dari riset mendalam tentang masalah food waste dan
+                    Nomi lahir dari riset mendalam tentang masalah food waste dan
                     kebutuhan pasar di Indonesia.
                   </p>
                 </div>
@@ -77,7 +77,7 @@ const TimelineSection = () => {
                     Peluncuran Platform & Mitra Perdana
                   </h4>
                   <p className="mt-2 text-sm text-[var(--nimo-dark)]">
-                    Platform Nimo resmi diluncurkan di Jabodetabek, menggandeng
+                    Platform Nomi resmi diluncurkan di Jabodetabek, menggandeng
                     beberapa mitra pertama.
                   </p>
                 </div>
@@ -92,7 +92,7 @@ const TimelineSection = () => {
                     Peluncuran Aplikasi Mobile
                   </h4>
                   <p className="mt-2 text-sm text-[var(--nimo-dark)]">
-                    Aplikasi Nimo hadir di iOS & Android untuk pengalaman yang
+                    Aplikasi Nomi hadir di iOS & Android untuk pengalaman yang
                     lebih mudah dan cepat.
                   </p>
                 </div>
@@ -109,7 +109,7 @@ const TimelineSection = () => {
                     Ekspansi Nasional
                   </h4>
                   <p className="mt-2 text-sm text-[var(--nimo-dark)]">
-                    Membawa misi Nimo ke kota-kota besar lain di seluruh
+                    Membawa misi Nomi ke kota-kota besar lain di seluruh
                     Indonesia.
                   </p>
                 </div>

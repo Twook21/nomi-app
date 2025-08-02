@@ -6,10 +6,10 @@ const BenefitsSection = () => {
   return (
     <>
       <Head>
-        <title>Keuntungan Bergabung dengan Nimo</title>
+        <title>Keuntungan Bergabung dengan Nomi</title>
         <meta
           name="description"
-          content="Lihat keuntungan bergabung dengan Nimo, baik untuk konsumen yang ingin hemat maupun untuk mitra bisnis yang ingin mengurangi limbah makanan dan meningkatkan pendapatan."
+          content="Lihat keuntungan bergabung dengan Nomi, baik untuk konsumen yang ingin hemat maupun untuk mitra bisnis yang ingin mengurangi limbah makanan dan meningkatkan pendapatan."
         />
         <meta
           name="keywords"
@@ -17,17 +17,17 @@ const BenefitsSection = () => {
         />
 
         {/* Open Graph */}
-        <meta property="og:title" content="Keuntungan Bergabung dengan Nimo" />
+        <meta property="og:title" content="Keuntungan Bergabung dengan Nomi" />
         <meta
           property="og:description"
-          content="Temukan manfaat besar bagi konsumen dan mitra bisnis dalam ekosistem Nimo yang berkelanjutan."
+          content="Temukan manfaat besar bagi konsumen dan mitra bisnis dalam ekosistem Nomi yang berkelanjutan."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Nimo" />
+        <meta property="og:site_name" content="Nomi" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Keuntungan Bergabung dengan Nimo" />
+        <meta name="twitter:title" content="Keuntungan Bergabung dengan Nomi" />
         <meta
           name="twitter:description"
           content="Jadikan setiap pembelianmu langkah nyata untuk menyelamatkan makanan dan mendapatkan keuntungan."
@@ -41,10 +41,10 @@ const BenefitsSection = () => {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--nimo-dark)]">
-              Mengapa Harus Bergabung dengan Nimo?
+              Mengapa Harus Bergabung dengan <span className="text-bold text-nimo-yellow">NOMI</span>?
             </h2>
             <p className="mt-3 text-[var(--nimo-dark)] text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-              Nimo memberikan manfaat bagi semua pihak dalam rantai makanan.
+              Nomi memberikan manfaat bagi semua pihak dalam rantai makanan.
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-8 md:gap-12">

@@ -13,7 +13,7 @@ const steps = [
     icon: <MapPin size={36} className="text-nimo-yellow" />,
     title: "Temukan Penawaran Menarik",
     description:
-      "Jelajahi NIMO dan temukan berbagai flash deal lezat di sekitar Anda melalui peta interaktif.",
+      "Jelajahi NOMI dan temukan berbagai flash deal lezat di sekitar Anda melalui peta interaktif.",
   },
   {
     icon: <ShoppingBag size={36} className="text-nimo-yellow" />,
@@ -27,7 +27,7 @@ const steps = [
 const howToSchema = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Cara Kerja Nimo",
+  "name": "Cara Kerja Nomi",
   "description": "Ikuti 3 langkah mudah untuk menyelamatkan makanan dan mendapatkan diskon.",
   "image": {
     "@type": "ImageObject",
@@ -49,20 +49,20 @@ const HowItWorks = () => {
   return (
     <>
       <Head>
-        <title>Cara Kerja Nimo - Selangkah demi Selangkah</title>
-        <meta name="description" content="Pelajari cara kerja Nimo dalam 3 langkah mudah: mitra mengunggah deal, Anda menemukan penawaran menarik di sekitar, lalu memesan dan mengambil makanan dengan harga diskon." />
-        <meta name="keywords" content="cara pakai Nimo, langkah mudah, food waste, aplikasi makanan, beli makanan diskon, ambil makanan, Nimo" />
+        <title>Cara Kerja Nomi - Selangkah demi Selangkah</title>
+        <meta name="description" content="Pelajari cara kerja Nomi dalam 3 langkah mudah: mitra mengunggah deal, Anda menemukan penawaran menarik di sekitar, lalu memesan dan mengambil makanan dengan harga diskon." />
+        <meta name="keywords" content="cara pakai Nomi, langkah mudah, food waste, aplikasi makanan, beli makanan diskon, ambil makanan, Nomi" />
         
         {/* Open Graph Tags */}
-        <meta property="og:title" content="Cara Kerja Nimo: Selangkah demi Selangkah" />
-        <meta property="og:description" content="Hanya dengan 3 langkah mudah, Anda bisa menyelamatkan makanan dan mendapatkan deal menarik di Nimo." />
+        <meta property="og:title" content="Cara Kerja Nomi: Selangkah demi Selangkah" />
+        <meta property="og:description" content="Hanya dengan 3 langkah mudah, Anda bisa menyelamatkan makanan dan mendapatkan deal menarik di Nomi." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://nimo.id/how-it-works" />
-        <meta property="og:site_name" content="Nimo" />
+        <meta property="og:site_name" content="Nomi" />
         
         {/* Twitter Card Tags */}
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Cara Kerja Nimo" />
+        <meta name="twitter:title" content="Cara Kerja Nomi" />
         <meta name="twitter:description" content="Mau tahu bagaimana cara menyelamatkan makanan dan berhemat? Pelajari 3 langkah mudahnya di sini!" />
         
         {/* Schema.org Structured Data */}

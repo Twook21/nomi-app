@@ -37,7 +37,7 @@ const formSchema = z.object({
 export function RegisterForm() {
   const router = useRouter();
   const { setUser, setToken } = useAuthStore(); // Destructure setUser dan setToken
-  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,28 +55,33 @@ export function RegisterForm() {
     try {
       const payload = { ...values, role: "customer" };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
 
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Registrasi gagal, silakan coba lagi.");
+        throw new Error(
+          result.message || "Registrasi gagal, silakan coba lagi."
+        );
       }
-      
+
       // PENTING: Simpan token dan user data ke store setelah register berhasil
-      console.log('Register successful, result:', result);
-      
+      console.log("Register successful, result:", result);
+
       if (result.token) {
-        console.log('Setting token after register');
+        console.log("Setting token after register");
         setToken(result.token);
       }
-      
+
       if (result.user) {
-        console.log('Setting user after register');
+        console.log("Setting user after register");
         // Pastikan user object sesuai dengan interface User
         const userData = {
           id: result.user.id,
@@ -91,20 +96,20 @@ export function RegisterForm() {
         };
         setUser(userData);
       }
-      
+
       toast.success("Registrasi Berhasil! 🎉", {
         id: "register",
         description: "Anda akan dialihkan ke halaman profile.",
         duration: 2000,
       });
-      
-      // Redirect ke profile settings alih-alih login
-      setTimeout(() => router.push('/profile/settings'), 2000);
 
+      // Redirect ke profile settings alih-alih login
+      setTimeout(() => router.push("/profile/settings"), 2000);
     } catch (error) {
       toast.error("Oh, terjadi kesalahan!", {
         id: "register",
-        description: error instanceof Error ? error.message : "Error tidak diketahui",
+        description:
+          error instanceof Error ? error.message : "Error tidak diketahui",
       });
     }
   }
@@ -112,7 +117,9 @@ export function RegisterForm() {
   return (
     <Card className="mx-auto max-w-sm w-full">
       <CardHeader>
-        <CardTitle className="text-2xl">Register</CardTitle>
+        <CardTitle className="text-2xl  text-center">
+          <span className="text-nimo-yellow">NOMI </span>Register
+        </CardTitle>
         <CardDescription>
           Buat akun baru untuk mulai menyelamatkan makanan
         </CardDescription>
@@ -126,8 +133,8 @@ export function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="john doe" {...field} />
+                  <FormControl className="border border-nimo-yellow">
+                    <Input placeholder="Masukan Nama" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -139,8 +146,8 @@ export function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="m@example.com" {...field} />
+                  <FormControl className="border border-nimo-yellow">
+                    <Input placeholder="Masukan Email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -152,8 +159,12 @@ export function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
+                  <FormControl className="border border-nimo-yellow">
+                    <Input
+                      type="password"
+                      placeholder="Masukan Password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -165,8 +176,8 @@ export function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nomor Telepon</FormLabel>
-                  <FormControl>
-                    <Input placeholder="081234567890" {...field} />
+                  <FormControl className="border border-nimo-yellow">
+                    <Input placeholder="Masukan No HP" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -178,14 +189,21 @@ export function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Alamat</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Jl. Merdeka No. 1" {...field} />
+                  <FormControl className="border border-nimo-yellow">
+                    <Input
+                      placeholder="Masukan Alamat Lengkap Anda"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full bg-nimo-yellow"
+              disabled={form.formState.isSubmitting}
+            >
               {form.formState.isSubmitting ? "Memproses..." : "Buat Akun"}
             </Button>
           </form>

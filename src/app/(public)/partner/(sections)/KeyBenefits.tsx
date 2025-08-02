@@ -27,34 +27,34 @@ const KeyBenefits = () => {
   return (
     <>
       <Head>
-        <title>Manfaat Menjadi Mitra Nimo</title>
+        <title>Manfaat Menjadi Mitra Nomi</title>
         <meta
           name="description"
-          content="Dapatkan keuntungan finansial dan citra positif dengan menjadi mitra Nimo. Maksimalkan pendapatan, jangkau pelanggan baru, dan tunjukkan komitmen pada keberlanjutan."
+          content="Dapatkan keuntungan finansial dan citra positif dengan menjadi mitra Nomi. Maksimalkan pendapatan, jangkau pelanggan baru, dan tunjukkan komitmen pada keberlanjutan."
         />
         <meta
           name="keywords"
-          content="keuntungan mitra, manfaat mitra, bisnis berkelanjutan, maksimalkan pendapatan, pelanggan baru, citra bisnis positif, food waste, Nimo"
+          content="keuntungan mitra, manfaat mitra, bisnis berkelanjutan, maksimalkan pendapatan, pelanggan baru, citra bisnis positif, food waste, Nomi"
         />
 
         {/* Open Graph */}
         <meta
           property="og:title"
-          content="Keuntungan Bergabung Sebagai Mitra Nimo"
+          content="Keuntungan Bergabung Sebagai Mitra Nomi"
         />
         <meta
           property="og:description"
-          content="Bergabunglah dengan Nimo dan ubah surplus makanan menjadi profit sambil membangun brand yang peduli lingkungan."
+          content="Bergabunglah dengan Nomi dan ubah surplus makanan menjadi profit sambil membangun brand yang peduli lingkungan."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Nimo" />
+        <meta property="og:site_name" content="Nomi" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Manfaat Mitra Nimo" />
+        <meta name="twitter:title" content="Manfaat Mitra Nomi" />
         <meta
           name="twitter:description"
-          content="Lihat bagaimana Nimo dapat membantu bisnis Anda mengurangi limbah dan meningkatkan pendapatan secara bersamaan."
+          content="Lihat bagaimana Nomi dapat membantu bisnis Anda mengurangi limbah dan meningkatkan pendapatan secara bersamaan."
         />
 
         {/* Additional SEO */}
@@ -65,7 +65,7 @@ const KeyBenefits = () => {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--nimo-dark)]">
-              Keuntungan Menjadi Mitra Nimo
+              Keuntungan Menjadi Mitra <span className="text-bold text-nimo-yellow">NOMI</span>
             </h2>
             <p className="mt-3 text-[var(--nimo-dark)] text-base sm:text-lg leading-relaxed">
               Platform kami dirancang untuk satu tujuan: membantu bisnis Anda

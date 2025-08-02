@@ -129,7 +129,7 @@ export function LoginForm() {
   return (
     <Card className="mx-auto max-w-sm w-full">
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardTitle className="text-2xl text-center"><span className="text-nimo-yellow">NOMI </span>Login</CardTitle>
         <CardDescription>
           Masukkan email atau username untuk masuk ke akun Anda
         </CardDescription>
@@ -166,9 +166,9 @@ export function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email atau Username</FormLabel>
-                  <FormControl>
+                  <FormControl className="border border-nimo-yellow">
                     <Input
-                      placeholder="m@example.com atau johndoe"
+                      placeholder="Masukan email"
                       {...field}
                     />
                   </FormControl>
@@ -182,8 +182,8 @@ export function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
+                  <FormControl className="border border-nimo-yellow">
+                    <Input type="password" placeholder="Masukan password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -191,7 +191,7 @@ export function LoginForm() {
             />
             <Button
               type="submit"
-              className="w-full"
+              className="w-full bg-nimo-yellow"
               disabled={form.formState.isSubmitting}
             >
               {form.formState.isSubmitting ? "Memproses..." : "Login"}
@@ -200,7 +200,7 @@ export function LoginForm() {
         </Form>
         
         <div className="mt-4 text-center text-sm">
-          Belum punya akun?{" "}
+          Belum punya akun?
           <Link href="/auth/register" className="underline">
             Register di sini
           </Link>

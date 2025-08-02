@@ -5,13 +5,13 @@ import Head from "next/head"; // Import Head dari next/head
 const heroSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Selamatkan Makanan, Hemat Pengeluaran dengan Nimo",
-  "description": "Nimo adalah platform yang menghubungkan Anda dengan restoran dan toko untuk menyelamatkan makanan lezat yang berlebih dengan harga diskon hingga 70%. Bergabunglah dengan gerakan anti-food waste kami dan bantu selamatkan bumi, satu hidangan sekali waktu.",
+  "name": "Selamatkan Makanan, Hemat Pengeluaran dengan Nomi",
+  "description": "Nomi adalah platform yang menghubungkan Anda dengan restoran dan toko untuk menyelamatkan makanan lezat yang berlebih dengan harga diskon hingga 70%. Bergabunglah dengan gerakan anti-food waste kami dan bantu selamatkan bumi, satu hidangan sekali waktu.",
   "url": "https://nimo.id", // Ganti dengan URL halaman utama Anda
   "image": "https://images.squarespace-cdn.com/content/v1/5d09c24ef3d12d000101d11a/1727747313456-CTO7DZ2ZY2XH0UIQY2BZ/COLLINS+Website+Group+Shot_Internal.jpg?format=2500w", // Ganti dengan URL gambar hero yang sebenarnya
   "mainEntity": {
     "@type": "WebSite",
-    "name": "Nimo",
+    "name": "Nomi",
     "url": "https://nimo.id",
     "potentialAction": {
       "@type": "SearchAction",
@@ -25,22 +25,22 @@ const Hero = () => {
   return (
     <>
       <Head>
-        <title>Selamatkan Makanan, Hemat Uang dengan Nimo | Gerakan Anti-Food Waste</title>
-        <meta name="description" content="Nimo adalah aplikasi anti-food waste yang menghubungkan Anda dengan ribuan restoran dan toko untuk mendapatkan makanan lezat dengan diskon besar. Daftar sekarang dan mulai bantu selamatkan lingkungan." />
-        <meta name="keywords" content="anti food waste, limbah makanan, hemat pengeluaran, makanan diskon, restoran, Nimo, Nomi, aplikasi makanan" />
+        <title>Selamatkan Makanan, Hemat Uang dengan Nomi | Gerakan Anti-Food Waste</title>
+        <meta name="description" content="Nomi adalah aplikasi anti-food waste yang menghubungkan Anda dengan ribuan restoran dan toko untuk mendapatkan makanan lezat dengan diskon besar. Daftar sekarang dan mulai bantu selamatkan lingkungan." />
+        <meta name="keywords" content="anti food waste, limbah makanan, hemat pengeluaran, makanan diskon, restoran, Nomi, Nomi, aplikasi makanan" />
         
         {/* Open Graph Tags */}
-        <meta property="og:title" content="Selamatkan Makanan, Hemat Pengeluaran dengan Nimo" />
-        <meta property="og:description" content="Bergabunglah dengan Nimo dan dapatkan makanan berkualitas dengan harga terjangkau. Setiap pembelian Anda adalah kontribusi nyata untuk lingkungan." />
+        <meta property="og:title" content="Selamatkan Makanan, Hemat Pengeluaran dengan Nomi" />
+        <meta property="og:description" content="Bergabunglah dengan Nomi dan dapatkan makanan berkualitas dengan harga terjangkau. Setiap pembelian Anda adalah kontribusi nyata untuk lingkungan." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://nimo.id" />
         <meta property="og:image" content="https://images.squarespace-cdn.com/content/v1/5d09c24ef3d12d000101d11a/1727747313456-CTO7DZ2ZY2XH0UIQY2BZ/COLLINS+Website+Group+Shot_Internal.jpg?format=2500w" />
-        <meta property="og:site_name" content="Nimo" />
+        <meta property="og:site_name" content="Nomi" />
         
         {/* Twitter Card Tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Selamatkan Makanan dengan Nimo" />
-        <meta name="twitter:description" content="Dapatkan makanan lezat dengan diskon hingga 70% dan bantu kurangi food waste. Mulai petualangan hematmu bersama Nimo!" />
+        <meta name="twitter:title" content="Selamatkan Makanan dengan Nomi" />
+        <meta name="twitter:description" content="Dapatkan makanan lezat dengan diskon hingga 70% dan bantu kurangi food waste. Mulai petualangan hematmu bersama Nomi!" />
         <meta name="twitter:image" content="https://images.squarespace-cdn.com/content/v1/5d09c24ef3d12d000101d11a/1727747313456-CTO7DZ2ZY2XH0UIQY2BZ/COLLINS+Website+Group+Shot_Internal.jpg?format=2500w" />
 
         {/* Schema.org Structured Data */}
@@ -71,7 +71,7 @@ const Hero = () => {
             </span>
           </h2>
           <p className="text-base text-white xs:text-lg font-bold md:text-xl opacity-90 mb-8 md:mb-10 max-w-md md:max-w-3xl mx-auto">
-            <span className="text-nimo-yellow">NIMO</span> menghubungkanmu dengan
+            <span className="text-nimo-yellow">NOMI</span> menghubungkanmu dengan
             restoran dan toko untuk menyelamatkan makanan lezat berlebih dengan
             harga diskon. Bantu bumi, satu hidangan sekali waktu.
           </p>
