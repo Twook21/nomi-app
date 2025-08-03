@@ -273,7 +273,7 @@ export default function DashboardPage() {
                 {getGreeting()}, {getDisplayName()}!
               </h1>
               <p className="text-lg text-white/90">
-                Selamat datang kembali di Bandung, mari kelola aktivitas Anda.
+                Selamat datang kembali di NOMI, mari kelola aktivitas Anda.
               </p>
             </div>
           </div>

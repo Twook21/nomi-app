@@ -30,9 +30,8 @@ async function FilteredProductList({
   category?: string;
   search?: string;
 }) {
-  // Bangun URL API secara dinamis dan lebih aman
-  const params = new URLSearchParams(); // --- PERUBAHAN DI SINI --- // Selalu pastikan hanya produk yang tersedia (aktif) yang diambil untuk pelanggan.
-  params.append("isAvailable", "true"); // -------------------------
+  const params = new URLSearchParams();
+  params.append("isAvailable", "true");
   if (category) params.append("category", category);
   if (search) params.append("search", search);
   const queryString = params.toString();
@@ -51,11 +50,11 @@ async function FilteredProductList({
 
     if (products.length === 0) {
       return (
-        <div className="col-span-full text-center py-16">
-          <p className="text-xl font-semibold text-[var(--nimo-dark)]">
+        <div className="col-span-full text-center py-8 md:py-16">
+          <p className="text-lg md:text-xl font-semibold text-[var(--nimo-dark)]">
             Oops! Tidak ada produk ditemukan.
           </p>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-sm md:text-base text-muted-foreground mt-2">
             Coba gunakan kata kunci lain atau periksa kategori lainnya.
           </p>
         </div>
@@ -104,27 +103,31 @@ export default function ProductsPage({ searchParams }: ProductsPageProps) {
 
   return (
     <div className="bg-[var(--nimo-gray)] dark:bg-background min-h-screen">
-      <div className="container mx-auto py-8 px-4">
+      {/* PERBAIKAN: Gunakan padding vertikal yang lebih kecil untuk mobile */}
+      <div className="container mx-auto py-6 md:py-8 px-4">
         <section>
           {/* Header Section */}
           <div
-            className="text-center bg-[var(--nimo-light)] dark:bg-card p-8 rounded-lg shadow-sm mb-8 lazy-bg"
+            className="text-center bg-[var(--nimo-light)] dark:bg-card p-6 md:p-8 rounded-lg shadow-sm mb-6 md:mb-8 lazy-bg"
             style={{
               backgroundImage: `url(images/bg-header.jpg)`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
           >
-            <h1 className="text-4xl font-bold text-white">
+            {/* PERBAIKAN: Gunakan ukuran font yang responsif */}
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
               {pageTitle}
             </h1>
-            <p className="text-white mt-2 mb-6 max-w-2xl mx-auto">
+            {/* PERBAIKAN: Gunakan ukuran font yang responsif */}
+            <p className="text-sm md:text-base text-white mt-2 mb-4 md:mb-6 max-w-2xl mx-auto">
               {search
                 ? `Menampilkan hasil untuk pencarian "${search}"`
                 : category
                 ? `Menampilkan semua produk dalam kategori pilihan Anda.`
                 : `Jelajahi semua penawaran terbaik yang tersedia saat ini.`}
             </p>
+            {/* PERBAIKAN: Pastikan ProductSearch di tengah */}
             <div className="flex justify-center">
               <ProductSearch />
             </div>
@@ -132,12 +135,14 @@ export default function ProductsPage({ searchParams }: ProductsPageProps) {
           {/* Product Grid Section */}
           <Suspense
             fallback={
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              // PERBAIKAN: Grid hanya 1 kolom untuk mobile, 2 untuk sm, dst.
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 <LoadingSkeleton />
               </div>
             }
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {/* PERBAIKAN: Grid hanya 1 kolom untuk mobile, 2 untuk sm, dst. */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               <FilteredProductList category={category} search={search} />
             </div>
           </Suspense>
