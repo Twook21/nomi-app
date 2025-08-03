@@ -2,9 +2,9 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useAuthStore } from "@/store/auth";
-import { useAuth } from "@/hooks/use-auth"; // Import useAuth hook
+import { useAuth } from "@/hooks/use-auth"; 
 import { toast } from "sonner";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation"; 
 import {
   Card,
   CardContent,
@@ -17,8 +17,6 @@ import {
   ShoppingCart,
   Package,
   Star,
-  Trophy, // Ini tidak digunakan
-  TrendingUp, // Ini tidak digunakan
 } from "lucide-react";
 import {
   Line,
@@ -30,7 +28,7 @@ import {
 } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-import { Button } from "@/components/ui/button"; // <--- TAMBAHKAN INI
+import { Button } from "@/components/ui/button"; 
 
 function formatRupiah(amount: number) {
   return new Intl.NumberFormat("id-ID", {

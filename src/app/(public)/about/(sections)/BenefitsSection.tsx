@@ -16,7 +16,6 @@ const BenefitsSection = () => {
           content="keuntungan nimo, manfaat nimo, diskon makanan, hemat, bisnis F&B, food waste, keberlanjutan, mitra bisnis, pelanggan baru"
         />
 
-        {/* Open Graph */}
         <meta property="og:title" content="Keuntungan Bergabung dengan Nomi" />
         <meta
           property="og:description"
@@ -25,7 +24,6 @@ const BenefitsSection = () => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Nomi" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Keuntungan Bergabung dengan Nomi" />
         <meta
@@ -33,7 +31,6 @@ const BenefitsSection = () => {
           content="Jadikan setiap pembelianmu langkah nyata untuk menyelamatkan makanan dan mendapatkan keuntungan."
         />
 
-        {/* Additional SEO */}
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://nimo.id/keuntungan" />
       </Head>
@@ -48,7 +45,6 @@ const BenefitsSection = () => {
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-            {/* Kartu Konsumen */}
             <div className="bg-gray-100 dark:bg-[var(--background)] p-6 sm:p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
               <div className="flex justify-center md:justify-start items-center h-12 w-12 sm:h-14 sm:w-14 bg-nimo-yellow/10 rounded-full mx-auto md:mx-0 mb-4">
                 <Heart className="h-6 w-6 sm:h-8 sm:w-8 text-nimo-yellow" />
@@ -94,7 +90,6 @@ const BenefitsSection = () => {
                 </li>
               </ul>
             </div>
-            {/* Kartu Mitra Seller */}
             <div className="bg-gray-100 dark:bg-[var(--background)] p-6 sm:p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
               <div className="flex justify-center md:justify-start items-center h-12 w-12 sm:h-14 sm:w-14 bg-nimo-yellow/10 rounded-full mx-auto md:mx-0 mb-4">
                 <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-nimo-yellow" />

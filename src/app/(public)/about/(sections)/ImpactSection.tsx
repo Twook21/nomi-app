@@ -22,7 +22,6 @@ export const ImpactSection = () => {
           content="dampak, impact, food waste, limbah makanan, target, goal, sustainability, lingkungan, bisnis F&B"
         />
 
-        {/* Open Graph */}
         <meta property="og:title" content="Target Dampak Nimo" />
         <meta
           property="og:description"
@@ -31,7 +30,6 @@ export const ImpactSection = () => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Nimo" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Target Dampak Nimo" />
         <meta
@@ -39,7 +37,6 @@ export const ImpactSection = () => {
           content="Misi kami untuk mengurangi limbah makanan, satu porsi pada satu waktu."
         />
 
-        {/* Additional SEO */}
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://nimo.id/dampak" />
       </Head>

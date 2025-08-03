@@ -1,9 +1,7 @@
-// lib/prisma.ts
 import { PrismaClient } from "@prisma/client";
 
 let prisma: PrismaClient;
 
-// Pastikan hanya ada satu instance PrismaClient di lingkungan pengembangan
 if (process.env.NODE_ENV === "production") {
   prisma = new PrismaClient();
 } else {

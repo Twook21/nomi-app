@@ -23,7 +23,6 @@ const TableActions = ({ umkm, onVerified }: { umkm: AdminUmkmProfile, onVerified
     toast.loading(`Sedang ${action} ${umkm.umkmName}...`);
     
     try {
-      // PERBAIKAN: Support dual auth
       let headers: HeadersInit = { 'Content-Type': 'application/json' };
       let credentials: RequestCredentials = 'omit';
 
@@ -55,7 +54,6 @@ const TableActions = ({ umkm, onVerified }: { umkm: AdminUmkmProfile, onVerified
       
       onVerified(umkm.id);
       
-      // TAMBAHKAN: Log untuk debugging
       console.log(`UMKM ${action} result:`, result);
       
     } catch (error) {

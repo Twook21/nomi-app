@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import Head from "next/head"; // Import Head dari next/head
+import Head from "next/head"; 
 
 const faqData = [
   {
@@ -35,7 +35,6 @@ const faqData = [
   },
 ];
 
-// Siapkan structured data (Schema.org) untuk SEO
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -64,19 +63,16 @@ const Faqs = () => {
         <meta name="description" content="Temukan jawaban untuk pertanyaan umum seputar Nimo, mulai dari cara kerja aplikasi, keamanan makanan, hingga cara mendaftar sebagai mitra bisnis." />
         <meta name="keywords" content="faq Nimo, tanya jawab, bantuan Nimo, cara pakai Nimo, makanan diskon, limbah makanan, food waste, mitra Nimo" />
         
-        {/* Open Graph */}
         <meta property="og:title" content="FAQ Nimo" />
         <meta property="og:description" content="Semua yang perlu Anda tahu tentang Nimo, layanan kami, dan cara kerja aplikasi. Temukan jawabannya di sini!" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://nimo.id/faq" />
         <meta property="og:site_name" content="Nimo" />
         
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="FAQ Nimo" />
         <meta name="twitter:description" content="Punya pertanyaan? Cek FAQ kami untuk jawaban cepat seputar aplikasi Nimo." />
         
-        {/* Schema.org Structured Data for Rich Snippets */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

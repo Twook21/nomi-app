@@ -11,7 +11,6 @@ const HeroCustomer = () => {
     <section className="bg-[var(--background)]">
       <div className="container mx-auto px-4 sm:px-6 py-20 md:py-26">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Kolom Teks */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -34,7 +33,6 @@ const HeroCustomer = () => {
             </Link>
           </motion.div>
 
-          {/* Kolom Gambar */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}

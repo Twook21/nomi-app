@@ -9,7 +9,6 @@ export const HeroSection = () => {
         <meta name="description" content="Nomi adalah platform yang memberdayakan UMKM F&B di Indonesia untuk mengurangi limbah makanan berlebih, sekaligus menawarkan makanan berkualitas dengan harga diskon untuk masyarakat." />
         <meta name="keywords" content="tentang Nomi, anti food waste, limbah makanan, UMKM, Indonesia, startup, sustainability, makanan diskon" />
         
-        {/* Open Graph */}
         <meta property="og:title" content="Tentang Nomi: Platform Anti-Food Waste Indonesia" />
         <meta property="og:description" content="Nomi membantu UMKM F&B mengubah makanan berlebih menjadi keuntungan dan masyarakat mendapatkan makanan lezat dengan harga terjangkau." />
         <meta property="og:type" content="website" />
@@ -17,7 +16,6 @@ export const HeroSection = () => {
         <meta property="og:image" content="https://nimo.id/images/about-hero.png" />
         <meta property="og:site_name" content="Nomi" />
         
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Tentang Nomi" />
         <meta name="twitter:description" content="Pelajari misi Nomi dalam mengatasi food waste di Indonesia dan bagaimana kami berkolaborasi dengan UMKM F&B." />
@@ -39,7 +37,6 @@ export const HeroSection = () => {
               </p>
             </div>
             
-            {/* Mengganti komponen Image dengan div background-image */}
             <div
               className="relative w-full h-72 md:h-[450px] rounded-2xl overflow-hidden shadow-2xl"
               style={{
@@ -48,7 +45,6 @@ export const HeroSection = () => {
                 backgroundPosition: "center",
               }}
             >
-              {/* Tidak ada konten di dalam div ini karena gambar sudah menjadi background */}
             </div>
           </div>
         </div>

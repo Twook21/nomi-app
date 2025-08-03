@@ -2,49 +2,47 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useAuthStore } from "@/store/auth";
-import { useAuth } from "@/hooks/use-auth"; // Import useAuth hook
+import { useAuth } from "@/hooks/use-auth"; 
 import type { UmkmOrder } from "@/types/umkm_order";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DataTable } from "@/components/umkm/ProductDataTable"; // Pastikan ini bisa digunakan untuk order
+import { DataTable } from "@/components/umkm/ProductDataTable"; 
 import { getOrderColumns } from "@/components/umkm/OrderTableColumns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // Import Tabs components
-import { Package, Truck, CheckCircle2, XCircle, Clock } from "lucide-react"; // Icons for status cards
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; 
+import { Package, Truck, CheckCircle2, XCircle, Clock } from "lucide-react"; 
 
-// Skeleton untuk halaman daftar pesanan UMKM
 function OrdersPageSkeleton() {
     return (
         <div className="container mx-auto py-8 px-4 space-y-6 animate-pulse">
             <h1 className="text-2xl font-bold mb-6"><Skeleton className="h-8 w-64" /></h1>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5"> {/* For status summary cards */}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5"> 
                 <Skeleton className="h-28 w-full" />
                 <Skeleton className="h-28 w-full" />
                 <Skeleton className="h-28 w-full" />
                 <Skeleton className="h-28 w-full" />
                 <Skeleton className="h-28 w-full" />
             </div>
-            <Skeleton className="h-10 w-full" /> {/* Tabs list */}
+            <Skeleton className="h-10 w-full" /> 
             <Card>
                 <CardContent className="p-4">
-                    <Skeleton className="h-96 w-full" /> {/* DataTable placeholder */}
+                    <Skeleton className="h-96 w-full" /> 
                 </CardContent>
             </Card>
         </div>
     );
 }
 
-// Tipe untuk Order Status Counts dari API
 interface OrderStatusCounts {
     pending: number;
     processing: number;
     shipped: number;
     delivered: number;
     cancelled: number;
-    [key: string]: number; // Allow indexing with string
+    [key: string]: number; 
 }
 
 export default function UmkmOrdersPage() {
@@ -54,8 +52,8 @@ export default function UmkmOrdersPage() {
 
   const [orders, setOrders] = useState<UmkmOrder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<string>('active'); // 'active' atau 'completed'
-  const [orderStatusCounts, setOrderStatusCounts] = useState<OrderStatusCounts>({ // State untuk menyimpan hitungan status
+  const [activeTab, setActiveTab] = useState<string>('active'); 
+  const [orderStatusCounts, setOrderStatusCounts] = useState<OrderStatusCounts>({ 
       pending: 0, processing: 0, shipped: 0, delivered: 0, cancelled: 0
   });
 
@@ -72,7 +70,6 @@ export default function UmkmOrdersPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      // Tentukan filter status berdasarkan tab aktif
       let statusFilter: string[] = [];
       if (activeTab === 'active') {
           statusFilter = ['pending', 'processing', 'shipped'];
@@ -80,9 +77,8 @@ export default function UmkmOrdersPage() {
           statusFilter = ['delivered', 'cancelled'];
       }
 
-      // Bangun URL dengan parameter orderStatus
       const params = new URLSearchParams();
-      statusFilter.forEach(status => params.append('orderStatus', status)); // Mengirim multiple orderStatus params
+      statusFilter.forEach(status => params.append('orderStatus', status)); 
       const queryString = params.toString();
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/umkm-owners/me/orders?${queryString}`, {
@@ -110,7 +106,7 @@ export default function UmkmOrdersPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated, user, authMethod, token, logout, router, activeTab]); // Tambahkan activeTab ke dependencies
+  }, [isAuthenticated, user, authMethod, token, logout, router, activeTab]); 
 
   useEffect(() => {
     if (!authLoading) {
@@ -129,14 +125,11 @@ export default function UmkmOrdersPage() {
     }
   }, [authLoading, isAuthenticated, user, router, fetchOrders]);
 
-  const columns = getOrderColumns(); // getOrderColumns mungkin perlu fungsi refresh data sebagai argumen
-
-  // Tampilkan loading skeleton jika sedang loading auth atau data
+  const columns = getOrderColumns(); 
   if (authLoading || isLoading) {
     return <OrdersPageSkeleton />;
   }
 
-  // Tampilkan pesan jika tidak terautentikasi (setelah loading selesai)
   if (!isAuthenticated) {
     return (
         <div className="container mx-auto py-8 px-4">
@@ -150,7 +143,6 @@ export default function UmkmOrdersPage() {
     );
   }
 
-  // Tampilkan pesan jika user bukan UMKM owner atau belum terverifikasi
   if (user?.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified') {
       return (
           <div className="container mx-auto py-8 px-4">
@@ -175,7 +167,6 @@ export default function UmkmOrdersPage() {
     <div className="container mx-auto py-8 px-4">
       <h1 className="text-2xl font-bold mb-6">Pesanan Masuk</h1>
       
-      {/* Ringkasan Status Pesanan */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -249,7 +240,7 @@ export default function UmkmOrdersPage() {
           </Card>
         </TabsContent>
         <TabsContent value="completed">
-          <Card className="mt-6"> {/* Tambahkan margin top jika perlu */}
+          <Card className="mt-6"> 
             <CardHeader>
                 <CardTitle>Daftar Pesanan Selesai</CardTitle>
             </CardHeader>

@@ -7,7 +7,7 @@ const heroSchema = {
   "@type": "WebPage",
   "name": "Selamatkan Makanan, Hemat Pengeluaran dengan Nomi",
   "description": "Nomi adalah platform yang menghubungkan Anda dengan restoran dan toko untuk menyelamatkan makanan lezat yang berlebih dengan harga diskon hingga 70%. Bergabunglah dengan gerakan anti-food waste kami dan bantu selamatkan bumi, satu hidangan sekali waktu.",
-  "url": "https://nimo.id", // Ganti dengan URL halaman utama Anda
+  "url": "https://nimo.id", 
   "image": "https://images.squarespace-cdn.com/content/v1/5d09c24ef3d12d000101d11a/1727747313456-CTO7DZ2ZY2XH0UIQY2BZ/COLLINS+Website+Group+Shot_Internal.jpg?format=2500w", // Ganti dengan URL gambar hero yang sebenarnya
   "mainEntity": {
     "@type": "WebSite",
@@ -15,7 +15,7 @@ const heroSchema = {
     "url": "https://nimo.id",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://nimo.id/products?q={search_term_string}", // Sesuaikan dengan URL pencarian di website Anda
+      "target": "https://nimo.id/products?q={search_term_string}", 
       "query-input": "required name=search_term_string"
     }
   }
@@ -29,7 +29,6 @@ const Hero = () => {
         <meta name="description" content="Nomi adalah aplikasi anti-food waste yang menghubungkan Anda dengan ribuan restoran dan toko untuk mendapatkan makanan lezat dengan diskon besar. Daftar sekarang dan mulai bantu selamatkan lingkungan." />
         <meta name="keywords" content="anti food waste, limbah makanan, hemat pengeluaran, makanan diskon, restoran, Nomi, Nomi, aplikasi makanan" />
         
-        {/* Open Graph Tags */}
         <meta property="og:title" content="Selamatkan Makanan, Hemat Pengeluaran dengan Nomi" />
         <meta property="og:description" content="Bergabunglah dengan Nomi dan dapatkan makanan berkualitas dengan harga terjangkau. Setiap pembelian Anda adalah kontribusi nyata untuk lingkungan." />
         <meta property="og:type" content="website" />
@@ -37,13 +36,11 @@ const Hero = () => {
         <meta property="og:image" content="https://images.squarespace-cdn.com/content/v1/5d09c24ef3d12d000101d11a/1727747313456-CTO7DZ2ZY2XH0UIQY2BZ/COLLINS+Website+Group+Shot_Internal.jpg?format=2500w" />
         <meta property="og:site_name" content="Nomi" />
         
-        {/* Twitter Card Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Selamatkan Makanan dengan Nomi" />
         <meta name="twitter:description" content="Dapatkan makanan lezat dengan diskon hingga 70% dan bantu kurangi food waste. Mulai petualangan hematmu bersama Nomi!" />
         <meta name="twitter:image" content="https://images.squarespace-cdn.com/content/v1/5d09c24ef3d12d000101d11a/1727747313456-CTO7DZ2ZY2XH0UIQY2BZ/COLLINS+Website+Group+Shot_Internal.jpg?format=2500w" />
 
-        {/* Schema.org Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

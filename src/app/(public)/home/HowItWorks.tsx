@@ -23,7 +23,6 @@ const steps = [
   },
 ];
 
-// Siapkan structured data (Schema.org) untuk SEO
 const howToSchema = {
   "@context": "https://schema.org",
   "@type": "HowTo",
@@ -31,16 +30,16 @@ const howToSchema = {
   "description": "Ikuti 3 langkah mudah untuk menyelamatkan makanan dan mendapatkan diskon.",
   "image": {
     "@type": "ImageObject",
-    "url": "https://nimo.id/images/how-it-works-banner.png" // Ganti dengan URL gambar relevan
+    "url": "https://nimo.id/images/how-it-works-banner.png" 
   },
   "step": steps.map((step, index) => ({
     "@type": "HowToStep",
-    "url": `https://nimo.id/how-it-works#step-${index + 1}`, // URL unik per langkah
+    "url": `https://nimo.id/how-it-works#step-${index + 1}`, 
     "name": step.title,
     "text": step.description,
     "image": {
       "@type": "ImageObject",
-      "url": "https://nimo.id/images/how-it-works-icon.png" // Ganti dengan URL ikon yang relevan
+      "url": "https://nimo.id/images/how-it-works-icon.png" 
     }
   }))
 };
@@ -53,19 +52,16 @@ const HowItWorks = () => {
         <meta name="description" content="Pelajari cara kerja Nomi dalam 3 langkah mudah: mitra mengunggah deal, Anda menemukan penawaran menarik di sekitar, lalu memesan dan mengambil makanan dengan harga diskon." />
         <meta name="keywords" content="cara pakai Nomi, langkah mudah, food waste, aplikasi makanan, beli makanan diskon, ambil makanan, Nomi" />
         
-        {/* Open Graph Tags */}
         <meta property="og:title" content="Cara Kerja Nomi: Selangkah demi Selangkah" />
         <meta property="og:description" content="Hanya dengan 3 langkah mudah, Anda bisa menyelamatkan makanan dan mendapatkan deal menarik di Nomi." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://nimo.id/how-it-works" />
         <meta property="og:site_name" content="Nomi" />
         
-        {/* Twitter Card Tags */}
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="Cara Kerja Nomi" />
         <meta name="twitter:description" content="Mau tahu bagaimana cara menyelamatkan makanan dan berhemat? Pelajari 3 langkah mudahnya di sini!" />
         
-        {/* Schema.org Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

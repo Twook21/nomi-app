@@ -17,7 +17,6 @@ const Testimonial = () => {
           content="testimoni nimo, ulasan mitra, kafe senja, food cost, pelanggan loyal, win-win solution"
         />
 
-        {/* Open Graph */}
         <meta property="og:title" content="Testimoni Mitra: Kafe Senja" />
         <meta
           property="og:description"
@@ -26,7 +25,6 @@ const Testimonial = () => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Nomi" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Testimoni dari Kafe Senja" />
         <meta
@@ -34,7 +32,6 @@ const Testimonial = () => {
           content="Simak pengalaman nyata dari mitra Nomi dalam mengubah tantangan menjadi peluang."
         />
 
-        {/* Additional SEO */}
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://nimo.id/mitra#testimoni" />
       </Head>

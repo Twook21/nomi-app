@@ -1,5 +1,5 @@
 import React from "react";
-import Head from "next/head"; // Import Head dari next/head
+import Head from "next/head"; 
 
 const CTA = () => {
   return (
@@ -14,7 +14,6 @@ const CTA = () => {
           name="keywords"
           content="daftar Nimo, anti food waste, gerakan lingkungan, hemat makanan, selamatkan bumi, aplikasi makanan, promo makanan"
         />
-        {/* Open Graph Tags */}
         <meta
           property="og:title"
           content="Jangan Biarkan Makanan Terbuang Sia-sia!"
@@ -24,10 +23,8 @@ const CTA = () => {
           content="Daftar di Nimo sekarang untuk menjadi bagian dari solusi. Mulailah berhemat dan berkontribusi positif bagi lingkungan."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://nimo.id/daftar" />{" "}
-        {/* Sesuaikan dengan URL halaman pendaftaran */}
+        <meta property="og:url" content="https://nimo.id/daftar" />
         <meta property="og:site_name" content="Nimo" />
-        {/* Twitter Card Tags */}
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="Bergabung dengan Nimo Sekarang" />
         <meta

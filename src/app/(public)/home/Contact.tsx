@@ -1,5 +1,5 @@
 import React from "react";
-import Head from "next/head"; // Import Head dari next/head
+import Head from "next/head"; 
 import { Mail, MessageSquare, Phone } from "lucide-react";
 
 const Contact = () => {
@@ -10,20 +10,15 @@ const Contact = () => {
         <meta name="description" content="Butuh bantuan? Hubungi Customer Service Nimo melalui email, WhatsApp, atau telepon. Kami siap membantu Anda terkait pertanyaan, masalah, atau umpan balik." />
         <meta name="keywords" content="kontak Nimo, customer service, dukungan, bantuan, email, WhatsApp, telepon, Nomi, food waste" />
         
-        {/* Open Graph Tags */}
         <meta property="og:title" content="Hubungi Nimo - Kami Siap Membantu!" />
         <meta property="og:description" content="Dapatkan bantuan cepat dari tim Nimo. Hubungi kami melalui berbagai kanal komunikasi yang tersedia." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://nimo.id/kontak" /> {/* Sesuaikan dengan URL halaman kontak Anda */}
         <meta property="og:site_name" content="Nimo" />
-        {/* Anda bisa menambahkan og:image jika ada gambar relevan untuk halaman kontak */}
-        {/* <meta property="og:image" content="https://nimo.id/images/contact-banner.png" /> */}
         
-        {/* Twitter Card Tags */}
-        <meta name="twitter:card" content="summary" /> {/* summary atau summary_large_image */}
+        
+        <meta name="twitter:card" content="summary" /> 
         <meta name="twitter:title" content="Hubungi Nimo" />
         <meta name="twitter:description" content="Tim dukungan Nimo siap menjawab pertanyaan Anda. Kontak kami sekarang!" />
-        {/* <meta name="twitter:image" content="https://nimo.id/images/contact-banner.png" /> */}
       </Head>
 
       <section
@@ -70,12 +65,11 @@ const Contact = () => {
                   <p className="text-[var(--nimo-dark)]">+62 812-3456-7890</p>
                 </div>
               </a>
-              {/* Telepon tidak bisa diklik, jadi tidak menggunakan <a> */}
               <div className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
                 <Phone className="w-6 h-6 text-nimo-yellow mr-4 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold text-[var(--nimo-dark)]">Telepon</p> {/* Mengubah warna teks agar konsisten */}
-                  <p className="text-[var(--nimo-dark)]"> {/* Mengubah warna teks agar konsisten */}
+                  <p className="font-semibold text-[var(--nimo-dark)]">Telepon</p> 
+                  <p className="text-[var(--nimo-dark)]"> 
                     (021) 555-0123
                   </p>
                 </div>

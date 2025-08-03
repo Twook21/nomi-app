@@ -1,10 +1,3 @@
-/*
-================================================================================
-File: src/components/products/ProductCardSkeleton.tsx (NEW FILE)
-Description: Komponen untuk menampilkan UI kerangka (skeleton) saat
-data produk sedang dimuat. Ini memberikan UX yang lebih baik.
-================================================================================
-*/
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 

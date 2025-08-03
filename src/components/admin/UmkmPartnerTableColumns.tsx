@@ -79,7 +79,6 @@ export const getUmkmPartnerColumns = (
             <DropdownMenuItem asChild>
               <Link href={`/admin/umkm-partners/${umkm.id}`}>Lihat Detail</Link>
             </DropdownMenuItem>
-            {/* Aksi Nonaktifkan/Aktifkan akan ditambahkan di sini */}
           </DropdownMenuContent>
         </DropdownMenu>
       );

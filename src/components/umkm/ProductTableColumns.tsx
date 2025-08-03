@@ -8,7 +8,7 @@ import { MoreHorizontal, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { DeleteProductDialog } from "./DeleteProductDialog"; // Pastikan path ini benar
+import { DeleteProductDialog } from "./DeleteProductDialog"; 
 
 const TableActions = ({ product, onSuccess }: { product: Product, onSuccess: () => void }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -62,10 +62,6 @@ export const getColumns = (onSuccess: () => void): ColumnDef<Product>[] => [
     cell: ({ row }) => (
       <div className="flex items-center gap-1">
         <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-        {/* FIX: Menggunakan Nullish Coalescing Operator (??)
-          Ini akan menggunakan nilai 0 jika `averageRating` adalah null atau undefined,
-          sehingga mencegah error saat `.toFixed()` dipanggil.
-        */}
         {(row.original.averageRating ?? 0).toFixed(1)}
       </div>
     ),

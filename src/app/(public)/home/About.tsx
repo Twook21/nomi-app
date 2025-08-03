@@ -28,23 +28,19 @@ const About = () => {
         <meta name="description" content="Nimo menyediakan solusi tiga arah untuk mengatasi food waste: membantu bisnis F&B mengurangi limbah dan meningkatkan profit, memberikan makanan berkualitas dengan harga terjangkau untuk masyarakat, dan melindungi lingkungan dari emisi gas rumah kaca." />
         <meta name="keywords" content="food waste, anti limbah makanan, bisnis F&B, makanan murah, lingkungan, UMKM, sustainability, eco-friendly" />
         
-        {/* Open Graph */}
         <meta property="og:title" content="Nimo - Solusi Anti Food Waste Tiga Arah" />
         <meta property="og:description" content="Platform yang menghubungkan bisnis F&B dengan konsumen untuk mengurangi food waste sambil menguntungkan semua pihak dan melindungi lingkungan." />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Nimo" />
         
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Nimo - Solusi Anti Food Waste Tiga Arah" />
         <meta name="twitter:description" content="Kurangi limbah makanan, tingkatkan profit bisnis, hemat pengeluaran konsumen, dan selamatkan lingkungan." />
         
-        {/* Additional SEO */}
         <meta name="robots" content="index, follow" />
         <meta name="author" content="Nimo" />
         <link rel="canonical" href="https://nimo.id/tentang" />
         
-        {/* Schema.org structured data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

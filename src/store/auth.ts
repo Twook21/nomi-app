@@ -51,7 +51,6 @@ export const useAuthStore = create<AuthState>()(
       setToken: (token: string) => {
         console.log('Setting token in store:', !!token);
         set({ token });
-        // Auto-load profile when token is set
         setTimeout(() => {
           get().loadUserProfile();
         }, 100);
@@ -105,9 +104,7 @@ export const useAuthStore = create<AuthState>()(
           console.log('Profile API response:', { status: response.status, result });
 
           if (response.ok) {
-            // PENTING: Sesuaikan dengan struktur response API Anda
-            // Dari kode API route.ts, response structure adalah langsung result (bukan result.data)
-            const userData = result.id ? result : result.data; // Fallback jika wrapped dalam data
+            const userData = result.id ? result : result.data; 
             
             const user: User = {
               id: userData.id,
@@ -126,12 +123,11 @@ export const useAuthStore = create<AuthState>()(
           } else {
             console.error('Failed to load user profile:', result.message || 'Unknown error');
             if (response.status === 401) {
-              get().logout(); // Logout jika token invalid
+              get().logout();
             }
           }
         } catch (error) {
           console.error('Error fetching user profile:', error);
-          // Jangan logout pada network error, tapi set user ke null
           set({ user: null });
         }
       },
@@ -190,13 +186,11 @@ export const useAuthStore = create<AuthState>()(
         activeView: state.activeView,
         authMethod: state.authMethod,
       }),
-      // Fix onRehydrateStorage - gunakan return function
       onRehydrateStorage: () => {
         return (state) => {
           console.log('Store rehydrated, token:', !!state?.token);
           if (state?.token && !state?.user) {
             console.log('Token found but no user, loading profile...');
-            // Delay sedikit untuk memastikan store sudah ready
             setTimeout(() => {
               state.loadUserProfile();
             }, 100);

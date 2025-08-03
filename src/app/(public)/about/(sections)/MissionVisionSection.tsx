@@ -1,4 +1,3 @@
-// src/components/pages/about/MissionVisionSection.tsx
 import React from "react";
 import { Target, Rocket, CheckCircle } from "lucide-react";
 import Head from "next/head";
@@ -23,7 +22,6 @@ export const MissionVisionSection = () => {
           content="visi nimo, misi nimo, food waste, limbah makanan, keberlanjutan, UMKM, makanan terjangkau, lingkungan"
         />
 
-        {/* Open Graph */}
         <meta property="og:title" content="Visi dan Misi Nimo" />
         <meta
           property="og:description"
@@ -32,7 +30,6 @@ export const MissionVisionSection = () => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Nimo" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Visi dan Misi Nimo" />
         <meta
@@ -40,7 +37,6 @@ export const MissionVisionSection = () => {
           content="Bergabunglah dengan misi kami untuk mengurangi food waste dan memberdayakan komunitas."
         />
 
-        {/* Additional SEO */}
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://nimo.id/tentang-kami#visi-misi" />
       </Head>
@@ -61,7 +57,6 @@ export const MissionVisionSection = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start">
-            {/* Visi */}
             <div className="bg-gray-100 dark:bg-[var(--background)] p-6 sm:p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-300 transform hover:-translate-y-1">
               <div className="flex justify-center md:justify-start items-center h-12 w-12 sm:h-14 sm:w-14 bg-nimo-yellow/10 rounded-full mx-auto md:mx-0 mb-4">
                 <Target className="h-6 w-6 sm:h-8 ml-3 sm:w-8 text-nimo-yellow" />
@@ -76,7 +71,6 @@ export const MissionVisionSection = () => {
               </p>
             </div>
 
-            {/* Misi */}
             <div className="bg-white dark:bg-[var(--background)] p-6 sm:p-8 rounded-xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="flex justify-center md:justify-start items-center h-12 w-12 sm:h-14 sm:w-14 bg-nimo-yellow/10 rounded-full mx-auto md:mx-0 mb-4">
                 <Rocket className="h-6 w-6 sm:h-8 ml-3 sm:w-8 text-nimo-yellow" />

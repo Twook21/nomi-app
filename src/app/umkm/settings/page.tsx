@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react'; // Tambahkan useCallback
+import { useState, useEffect, useCallback } from 'react'; 
 import { useAuthStore } from '@/store/auth';
-import { useAuth } from '@/hooks/use-auth'; // Import useAuth hook
+import { useAuth } from '@/hooks/use-auth'; 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -13,15 +13,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
-import type { UmkmProfile } from '@/types/umkm_profile'; // Pastikan UmkmProfile type sudah lengkap
-import { Skeleton } from '@/components/ui/skeleton'; // Import Skeleton
-import { useRouter } from 'next/navigation'; // Import useRouter
-import Link from 'next/link'; // Import Link
+import type { UmkmProfile } from '@/types/umkm_profile'; 
+import { Skeleton } from '@/components/ui/skeleton'; 
+import { useRouter } from 'next/navigation'; 
+import Link from 'next/link'; 
 
-// Skema Zod yang sudah diperbaiki
 const umkmProfileSchema = z.object({
   umkmName: z.string().min(3, "Nama UMKM minimal 3 karakter."),
-  umkmDescription: z.string().nullable().optional(), // Pastikan ini nullable dan optional
+  umkmDescription: z.string().nullable().optional(), 
   umkmAddress: z.string().min(10, "Alamat UMKM minimal 10 karakter."),
   umkmPhoneNumber: z.string().min(10, "Nomor telepon minimal 10 digit."),
   umkmEmail: z.string().email("Format email tidak valid."),
@@ -29,13 +28,12 @@ const umkmProfileSchema = z.object({
   bankAccountNumber: z.string().nullable().optional(),
 });
 
-// Skeleton untuk halaman pengaturan UMKM
 function UmkmSettingsSkeleton() {
     return (
         <div className="container mx-auto py-8 px-4 max-w-3xl space-y-6 animate-pulse">
             <Skeleton className="h-8 w-48" />
             <Skeleton className="h-4 w-64" />
-            <Skeleton className="h-0.5 w-full" /> {/* Separator */}
+            <Skeleton className="h-0.5 w-full" /> 
             <Card>
                 <CardHeader>
                     <Skeleton className="h-6 w-32" />
@@ -68,9 +66,7 @@ function UmkmSettingsSkeleton() {
 
 export default function UmkmSettingsPage() {
   const router = useRouter();
-  // Gunakan useAuth hook untuk status otentikasi terpadu
   const { user, isAuthenticated, isLoading: authLoading, authMethod } = useAuth();
-  // Ambil token dan logout dari useAuthStore
   const { token, logout } = useAuthStore();
 
   const [profile, setProfile] = useState<UmkmProfile | null>(null);
@@ -81,17 +77,16 @@ export default function UmkmSettingsPage() {
     resolver: zodResolver(umkmProfileSchema),
     defaultValues: {
         umkmName: "",
-        umkmDescription: null, // Default ke null
+        umkmDescription: null, 
         umkmAddress: "",
         umkmPhoneNumber: "",
         umkmEmail: "",
-        bankName: null, // Default ke null
-        bankAccountNumber: null, // Default ke null
+        bankName: null, 
+        bankAccountNumber: null, 
     },
   });
 
   const fetchProfile = useCallback(async () => {
-    // Hanya fetch jika sudah terautentikasi dan merupakan UMKM owner
     if (!isAuthenticated || !user || user.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified') {
       setIsLoading(false);
       return;
@@ -117,14 +112,13 @@ export default function UmkmSettingsPage() {
           return;
         } else if (response.status === 404) {
             toast.error("Profil UMKM tidak ditemukan.", { description: "Silakan daftar sebagai mitra UMKM." });
-            router.replace('/profile/become-partner'); // Redirect jika profil tidak ditemukan
+            router.replace('/profile/become-partner'); 
             return;
         }
         throw new Error((await response.json()).message || "Gagal mengambil profil UMKM.");
       }
       const result = await response.json();
       setProfile(result);
-      // PERBAIKAN: Menyesuaikan data untuk form.reset (menggunakan nullish coalescing)
       form.reset({
         umkmName: result.umkmName || "",
         umkmDescription: result.umkmDescription || null,
@@ -136,14 +130,13 @@ export default function UmkmSettingsPage() {
       });
     } catch (error) {
       toast.error("Gagal memuat profil.", { description: error instanceof Error ? error.message : "Terjadi kesalahan." });
-      setProfile(null); // Set profile to null on error
+      setProfile(null); 
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated, user, authMethod, token, form, router, logout]); // Tambahkan semua dependencies
+  }, [isAuthenticated, user, authMethod, token, form, router, logout]); 
 
   useEffect(() => {
-    // Panggil fetchProfile hanya jika status autentikasi sudah selesai dimuat
     if (!authLoading) {
         if (!isAuthenticated) {
             router.replace('/auth/login');
@@ -161,7 +154,6 @@ export default function UmkmSettingsPage() {
   }, [authLoading, isAuthenticated, user, router, fetchProfile]);
 
   const onSubmit = async (values: z.infer<typeof umkmProfileSchema>) => {
-    // Cek otorisasi lagi sebelum update
     if (!isAuthenticated || !user || user.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified') {
         toast.error("Tidak dapat menyimpan perubahan. Sesi berakhir atau Anda tidak memiliki izin.");
         logout();
@@ -196,7 +188,7 @@ export default function UmkmSettingsPage() {
           throw new Error(result.message || "Gagal memperbarui profil.");
       }
       
-      setProfile(result.umkm); // Update state dengan data terbaru
+      setProfile(result.umkm); 
       toast.success("Profil toko berhasil diperbarui!");
       setIsEditing(false);
     } catch (error) {
@@ -204,12 +196,10 @@ export default function UmkmSettingsPage() {
     }
   };
 
-  // Tampilkan loading skeleton jika sedang loading auth atau data
   if (authLoading || isLoading) {
     return <UmkmSettingsSkeleton />;
   }
 
-  // Tampilkan pesan jika tidak terautentikasi (setelah loading selesai)
   if (!isAuthenticated) {
     return (
         <div className="container mx-auto py-8 px-4">
@@ -223,7 +213,6 @@ export default function UmkmSettingsPage() {
     );
   }
 
-  // Tampilkan pesan jika user bukan UMKM owner atau belum terverifikasi
   if (user?.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified') {
       return (
           <div className="container mx-auto py-8 px-4">
@@ -245,7 +234,7 @@ export default function UmkmSettingsPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-3xl"> {/* Tambahkan container */}
+    <div className="container mx-auto py-8 px-4 max-w-3xl"> 
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold">Pengaturan Toko</h1>
@@ -324,7 +313,6 @@ export default function UmkmSettingsPage() {
                     <>
                       <Button type="button" variant="ghost" onClick={() => {
                         setIsEditing(false);
-                        // Reset form ke data awal (pastikan profile tidak null)
                         if (profile) {
                             form.reset({
                                 umkmName: profile.umkmName || "",

@@ -43,7 +43,6 @@ export function LoginForm() {
     },
   });
 
-  // Existing credential login function
   async function onSubmit(values: z.infer<typeof formSchema>) {
     toast.loading("Mencoba masuk...");
     try {
@@ -67,11 +66,9 @@ export function LoginForm() {
         toast.success("Login Berhasil!", { duration: 1500 });
 
         setTimeout(() => {
-          // PERBAIKAN: Logika redirect yang lebih aman
           if (result.user.role === "admin") {
             router.push("/admin");
           } else {
-            // Semua peran lain (customer, umkm_owner) masuk ke dasbor customer
             router.push("/profile");
           }
           router.refresh();
@@ -98,7 +95,6 @@ export function LoginForm() {
       });
 
       if (result?.ok) {
-        // Get session after successful sign in
         const session = await getSession();
         
         if (session?.user) {
@@ -135,7 +131,6 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Google Sign In Button */}
         <Button
           type="button"
           variant="outline"
@@ -157,7 +152,6 @@ export function LoginForm() {
           </div>
         </div>
 
-        {/* Existing form */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField

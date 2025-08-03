@@ -38,20 +38,29 @@ export default function AdminDashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  
-  // Menggunakan hook useAuth yang unified
+
   const { user, authMethod } = useAuth();
-  
-  // Mengambil fungsi dari auth store
+
   const { logout } = useAuthStore();
 
-  // Fungsi untuk mendapatkan inisial nama
-  const getInitials = (name?: string, username?: string, email?: string): string => {
+  const getInitials = (
+    name?: string,
+    username?: string,
+    email?: string
+  ): string => {
     if (name) {
-      return name.split(" ").map((n) => n[0]).join("").toUpperCase();
+      return name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase();
     }
     if (username) {
-      return username.split(" ").map((n) => n[0]).join("").toUpperCase();
+      return username
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase();
     }
     if (email) {
       return email.charAt(0).toUpperCase();
@@ -59,20 +68,19 @@ export default function AdminDashboardLayout({
     return "A";
   };
 
-  // Fungsi untuk mendapatkan display name
   const getDisplayName = (): string => {
-    return user?.name || user?.username || user?.email?.split("@")[0] || "Admin";
+    return (
+      user?.name || user?.username || user?.email?.split("@")[0] || "Admin"
+    );
   };
 
-  // Fungsi untuk mendapatkan avatar URL
   const getAvatarUrl = (): string => {
-    // Prioritas: Google image -> Dicebear based on display name
     if (user?.image) return user.image;
     return `https://api.dicebear.com/7.x/initials/svg?seed=${getDisplayName()}`;
   };
 
   const handleLogout = async () => {
-    await logout(); // Logout akan handle baik JWT maupun NextAuth
+    await logout(); 
     toast.success("Anda berhasil logout.");
     router.push("/");
   };
@@ -80,7 +88,6 @@ export default function AdminDashboardLayout({
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-60 flex-col border-r bg-background sm:flex">
-        {/* Bagian Logo (Tetap di atas) */}
         <div className="flex h-16 items-center justify-center border-b px-4">
           <Link
             href="/"
@@ -91,7 +98,6 @@ export default function AdminDashboardLayout({
           </Link>
         </div>
 
-        {/* Bagian Navigasi (Bisa di-scroll jika tidak cukup) */}
         <div className="flex-1 overflow-y-auto">
           <nav className="flex flex-col gap-2 p-4">
             {sidebarNavItems.map((item) => (
@@ -100,7 +106,8 @@ export default function AdminDashboardLayout({
                 href={item.href}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                  pathname === item.href && "bg-accent text-primary font-semibold"
+                  pathname === item.href &&
+                    "bg-accent text-primary font-semibold"
                 )}
               >
                 <item.icon className="h-4 w-4" />
@@ -110,26 +117,26 @@ export default function AdminDashboardLayout({
           </nav>
         </div>
 
-        {/* Bagian Profil & Logout (Tetap di bawah) */}
         <div className="mt-auto border-t p-4">
-          <Link 
-            href="/admin/profile" 
+          <Link
+            href="/admin/profile"
             className="mb-3 flex items-center gap-3 rounded-lg p-2 hover:bg-accent"
           >
             <Avatar className="h-9 w-9">
-              <AvatarImage 
-                src={getAvatarUrl()} 
-                alt={getDisplayName()} 
-              />
+              <AvatarImage src={getAvatarUrl()} alt={getDisplayName()} />
               <AvatarFallback>
-                {getInitials(user?.name, user?.username, user?.email)}
+                {getInitials(
+                  user?.name ?? undefined,
+                  user?.username ?? undefined,
+                  user?.email ?? undefined
+                )}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <p className="text-sm font-semibold">{getDisplayName()}</p>
               <div className="flex items-center gap-1">
                 <p className="text-xs text-muted-foreground">Administrator</p>
-                {authMethod === 'nextauth' && (
+                {authMethod === "nextauth" && (
                   <Badge variant="outline" className="text-xs px-1 py-0">
                     Google
                   </Badge>
@@ -137,10 +144,10 @@ export default function AdminDashboardLayout({
               </div>
             </div>
           </Link>
-          
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start" 
+
+          <Button
+            variant="ghost"
+            className="w-full justify-start"
             onClick={handleLogout}
           >
             <LogOut className="mr-2 h-4 w-4" />

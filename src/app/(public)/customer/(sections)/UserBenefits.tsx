@@ -38,7 +38,6 @@ const UserBenefits = () => {
           content="keuntungan konsumen, hemat makanan, diskon kuliner, jelajahi makanan, dampak positif, lingkungan, food waste, nimo"
         />
 
-        {/* Open Graph */}
         <meta property="og:title" content="Nikmati Keuntungan Konsumen Bersama Nimo" />
         <meta
           property="og:description"
@@ -47,7 +46,6 @@ const UserBenefits = () => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Nimo" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Manfaat Jadi Konsumen Nimo" />
         <meta
@@ -55,14 +53,12 @@ const UserBenefits = () => {
           content="Temukan cara baru menikmati makanan lezat dengan harga terjangkau sambil peduli lingkungan."
         />
 
-        {/* Additional SEO */}
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://nimo.id/konsumen#manfaat" />
       </Head>
       <section className="bg-[var(--nimo-light)] py-16 md:py-24">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Kolom Gambar */}
             <div className="w-full h-96 relative rounded-2xl shadow-lg overflow-hidden">
               <Image
                 src="/images/benefits.png"
@@ -72,7 +68,6 @@ const UserBenefits = () => {
                 className="rounded-2xl"
               />
             </div>
-            {/* Kolom Teks Benefit */}
             <div className="space-y-8">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--nimo-dark)]">
                 Lebih dari Sekadar Makanan Murah

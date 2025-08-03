@@ -82,11 +82,8 @@ export default async function ProductDetailPage({ params }: Props) {
   );
 
   return (
-    // PERBAIKAN: Gunakan padding vertikal yang lebih kecil untuk mobile
     <div className="container mx-auto max-w-5xl py-6 md:py-10 px-4">
-      {/* PERBAIKAN: Grid default 1 kolom, jadi gambar di atas info produk */}
       <div className="grid md:grid-cols-2 gap-8 md:gap-10">
-        {/* Kolom Gambar */}
         <div className="w-full">
           <div className="relative aspect-square rounded-xl overflow-hidden border bg-gray-50 dark:bg-gray-800">
             <ProductImage src={product.imageUrl} alt={product.productName} />
@@ -101,12 +98,9 @@ export default async function ProductDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Kolom Informasi Produk */}
         <div className="flex flex-col space-y-4 md:space-y-6">
-          {/* PERBAIKAN: Ukuran font judul lebih kecil di mobile */}
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">{product.productName}</h1>
           
-          {/* PERBAIKAN: Ukuran font info toko lebih kecil di mobile */}
           <div className="flex items-center gap-2 text-base md:text-lg text-muted-foreground">
             <Store className="w-4 h-4 md:w-5 md:h-5" />
             <span className="font-medium">oleh <span className="text-foreground">{product.umkmOwner.umkmName}</span></span>
@@ -129,7 +123,6 @@ export default async function ProductDetailPage({ params }: Props) {
           
           <div className="pt-4 md:pt-6">
             <div className="flex items-baseline gap-2 md:gap-4 mb-4">
-              {/* PERBAIKAN: Ukuran font harga lebih kecil di mobile */}
               <p className="text-3xl sm:text-4xl font-bold text-nimo-yellow">
                 {formatRupiah(product.discountedPrice)}
               </p>
@@ -144,18 +137,13 @@ export default async function ProductDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Bagian Ulasan Produk */}
-      {/* PERBAIKAN: Jarak antar bagian lebih kecil di mobile */}
       <div className="mt-12 md:mt-20">
         <ProductReviews reviews={product.reviews || []} />
       </div>
 
-      {/* Bagian Produk Lain dari Toko Ini */}
       {otherProducts.length > 0 && (
         <div className="mt-12 md:mt-20">
-          {/* PERBAIKAN: Ukuran font judul dan margin lebih kecil di mobile */}
           <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-8">Produk Lain dari {product.umkmOwner.umkmName}</h2>
-          {/* PERBAIKAN: Grid hanya 2 kolom di mobile */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {otherProducts.map(p => (
               <ProductCard key={p.id} product={p} />

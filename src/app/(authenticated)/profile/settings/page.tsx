@@ -31,7 +31,6 @@ import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
-// Skema validasi untuk form edit profil
 const profileSchema = z.object({
   phoneNumber: z
     .string()
@@ -213,7 +212,6 @@ export default function ProfileSettingsPage() {
 
         <Separator className="bg-nimo-dark/10" />
 
-        {/* Profile Card */}
         <Card className="bg-nimo-light shadow-xl rounded-xl border border-nimo-dark/10">
           <CardHeader className="pb-4">
             <CardTitle className="text-2xl font-semibold text-nimo-dark">
@@ -230,7 +228,6 @@ export default function ProfileSettingsPage() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-8"
               >
-                {/* Avatar and User Info */}
                 <div className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-nimo-light rounded-lg border border-nimo-dark/10">
                   <Avatar className="w-24 h-24 sm:w-28 sm:h-28 border-4 border-nimo-yellow shadow-md">
                     <AvatarImage
@@ -260,7 +257,6 @@ export default function ProfileSettingsPage() {
                   </div>
                 </div>
 
-                {/* Form Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
@@ -330,7 +326,6 @@ export default function ProfileSettingsPage() {
                   )}
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex justify-end gap-3 pt-4 border-t border-nimo-dark/10 mt-8">
                   {isEditing ? (
                     <>

@@ -15,12 +15,10 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
-// Tipe data untuk statistik sekarang lebih sederhana
 interface ProductStats {
   totalSold: number;
 }
 
-// Helper functions (sudah ada)
 function formatRupiah(amount: number) {
     return new Intl.NumberFormat("id-ID", {
         style: "currency",
@@ -42,44 +40,36 @@ function formatDate(dateString: string) {
     }
 }
 
-// Skeleton untuk halaman detail produk UMKM (diperbarui sesuai layout baru)
 function ProductDetailSkeleton() {
     return (
         <div className="container mx-auto py-8 px-4 space-y-6 animate-pulse">
-            {/* Header section with title and edit button */}
             <div className="flex justify-between items-center mb-6">
-                <Skeleton className="h-10 w-96" /> {/* Title skeleton */}
-                <Skeleton className="h-10 w-32" /> {/* Edit button skeleton */}
+                <Skeleton className="h-10 w-96" /> 
+                <Skeleton className="h-10 w-32" /> 
             </div>
 
-            {/* Main content grid: Product image, core info, analytics cards */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-                {/* Product Image Skeleton (Col 1) */}
                 <Skeleton className="md:col-span-1 lg:col-span-1 aspect-square w-full rounded-lg" />
 
-                {/* Core Product Info Skeleton (Col 2) */}
                 <div className="md:col-span-1 lg:col-span-1 flex flex-col space-y-3">
-                    <Skeleton className="h-8 w-full" /> {/* Product Name */}
-                    <Skeleton className="h-4 w-1/2" /> {/* Category */}
-                    <Skeleton className="h-8 w-2/3 mt-2" /> {/* Prices */}
-                    <Skeleton className="h-6 w-full mt-4" /> {/* Stock */}
-                    <Skeleton className="h-6 w-full" /> {/* Expiration */}
+                    <Skeleton className="h-8 w-full" /> 
+                    <Skeleton className="h-4 w-1/2" /> 
+                    <Skeleton className="h-8 w-2/3 mt-2" /> 
+                    <Skeleton className="h-6 w-full mt-4" /> 
+                    <Skeleton className="h-6 w-full" /> 
                 </div>
 
-                {/* Analytics Cards Skeletons (Col 3) */}
-                <div className="md:col-span-2 lg:col-span-1 space-y-4"> {/* On medium, spans 2 columns */}
+                <div className="md:col-span-2 lg:col-span-1 space-y-4"> 
                     <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><Skeleton className="h-4 w-2/3" /><Skeleton className="h-4 w-4 rounded-full" /></CardHeader><CardContent><Skeleton className="h-8 w-full" /></CardContent></Card>
                     <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><Skeleton className="h-4 w-2/3" /><Skeleton className="h-4 w-4 rounded-full" /></CardHeader><CardContent><Skeleton className="h-8 w-full" /></CardContent></Card>
                 </div>
             </div>
 
-            {/* Description Card Skeleton */}
             <Card className="mb-8">
                 <CardHeader><Skeleton className="h-6 w-1/4" /></CardHeader>
                 <CardContent><Skeleton className="h-24 w-full" /></CardContent>
             </Card>
 
-            {/* Reviews Card Skeleton */}
             <Card>
                 <CardHeader><Skeleton className="h-6 w-1/4" /></CardHeader>
                 <CardContent><Skeleton className="h-48 w-full" /></CardContent>
@@ -226,7 +216,6 @@ export default function ProductDetailPage() {
     );
   }
 
-  // Hitung diskon
   const discountPercentage = product.originalPrice && product.discountedPrice !== undefined && product.originalPrice > product.discountedPrice
     ? Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)
     : 0;
@@ -242,9 +231,7 @@ export default function ProductDetailPage() {
         </Button>
       </div>
       
-      {/* Grid Utama: Gambar, Info Inti, Analitik */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8"> {/* Main grid with 3 columns on large */}
-        {/* Kolom 1: Gambar Produk */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8"> 
         <div className="md:col-span-1 lg:col-span-1 relative aspect-square w-full rounded-lg overflow-hidden border">
             <Image 
                 src={product.imageUrl || 'https://placehold.co/600x600?text=No+Image'} 
@@ -263,12 +250,10 @@ export default function ProductDetailPage() {
             )}
         </div>
 
-        {/* Kolom 2: Informasi Produk Inti (Nama, Harga, Stok, Kadaluarsa, Kategori) */}
         <div className="md:col-span-1 lg:col-span-1 flex flex-col space-y-3">
             <h2 className="text-2xl font-bold">{product.productName}</h2>
             <p className="text-sm text-muted-foreground">Kategori: <span className="font-medium text-foreground">{product.category?.categoryName || 'Tidak Diketahui'}</span></p>
 
-            {/* Prices */}
             <div className="space-y-1 mt-2">
                 <p className="text-3xl font-bold text-nimo-yellow">
                     {formatRupiah(product.discountedPrice)}
@@ -280,7 +265,6 @@ export default function ProductDetailPage() {
                 )}
             </div>
 
-            {/* Stock & Expiration */}
             <div className="space-y-2 mt-4">
                 <div className="flex items-center gap-2">
                     <PackageCheck className="w-4 h-4 text-nimo-yellow"/>
@@ -293,8 +277,7 @@ export default function ProductDetailPage() {
             </div>
         </div>
 
-        {/* Kolom 3: Kartu Analitik Utama (Rating & Terjual) - Stacked Vertically */}
-        <div className="md:col-span-2 lg:col-span-1 space-y-4"> {/* On medium, spans 2 columns */}
+        <div className="md:col-span-2 lg:col-span-1 space-y-4"> 
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Rating Rata-rata</CardTitle>
@@ -318,7 +301,6 @@ export default function ProductDetailPage() {
         </div>
       </div>
       
-      {/* Deskripsi Produk (Full width, setelah grid utama) */}
       <Card className="mb-8">
           <CardHeader><CardTitle>Deskripsi Produk</CardTitle></CardHeader>
           <CardContent>
@@ -328,7 +310,6 @@ export default function ProductDetailPage() {
           </CardContent>
       </Card>
 
-      {/* Ulasan Terbaru (Full width, setelah deskripsi) */}
       <Card>
         <CardHeader>
           <CardTitle>Ulasan Terbaru</CardTitle>

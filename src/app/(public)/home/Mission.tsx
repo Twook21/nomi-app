@@ -30,18 +30,15 @@ const Mission = () => {
         <meta name="description" content="Nimo adalah platform yang mengubah surplus makanan menjadi berkah. Misi kami adalah membantu masyarakat berhemat, mendukung bisnis lokal, dan menyelamatkan bumi dari limbah makanan." />
         <meta name="keywords" content="misi, tujuan, food waste, anti limbah makanan, Nomi, bisnis F&B, UMKM, keberlanjutan" />
         
-        {/* Open Graph */}
         <meta property="og:title" content="Misi Nimo: Menghubungkan Makanan Berlebih dengan Keberkahan" />
         <meta property="og:description" content="Pelajari bagaimana Nimo berupaya mengatasi food waste dengan memberikan manfaat nyata bagi konsumen, bisnis, dan lingkungan." />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Nimo" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Misi Nimo" />
         <meta name="twitter:description" content="Temukan cara Nimo menciptakan solusi yang menguntungkan semua pihak dalam mengatasi masalah food waste." />
         
-        {/* Additional SEO */}
         <link rel="canonical" href="https://nimo.id/misi" />
       </Head>
 

@@ -21,7 +21,6 @@ const HeroPartner = () => {
           content="mitra nimo, daftar mitra, bisnis F&B, food waste, surplus makanan, profit, pendapatan tambahan, keberlanjutan"
         />
 
-        {/* Open Graph */}
         <meta property="og:title" content="Bergabung Sebagai Mitra Nomi" />
         <meta
           property="og:description"
@@ -30,7 +29,6 @@ const HeroPartner = () => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Nomi" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Mitra Nomi: Solusi Profit & Lingkungan" />
         <meta
@@ -38,14 +36,12 @@ const HeroPartner = () => {
           content="Daftar sekarang dan mulailah mengubah surplus makanan menjadi profit dengan Nomi."
         />
 
-        {/* Additional SEO */}
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://nimo.id/mitra" />
       </Head>
       <section className="bg-[var(--background)]">
         <div className="container mx-auto px-4 sm:px-6 py-20 md:py-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Kolom Teks */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -71,7 +67,6 @@ const HeroPartner = () => {
               </Link>
             </motion.div>
 
-            {/* Kolom Gambar */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}

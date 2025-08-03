@@ -38,7 +38,7 @@ export function UpdateRoleDialog({
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/users/${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ ...user, role: selectedRole }), // Kirim semua data user
+        body: JSON.stringify({ ...user, role: selectedRole }), 
       });
 
       if (!response.ok) {

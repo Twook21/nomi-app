@@ -28,7 +28,6 @@ import {
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Temporary interface for API response
 interface ApiProduct {
   id: string;
   productName: string;
@@ -78,7 +77,6 @@ function getDiscountPercentage(original: string, discounted: string) {
   return Math.round(((originalPrice - discountedPrice) / originalPrice) * 100);
 }
 
-// Minimal Product Card for Dashboard
 function MinimalProductCard({ product }: { product: ApiProduct }) {
   const discountPercentage = getDiscountPercentage(
     product.originalPrice,
@@ -151,7 +149,6 @@ export default function DashboardPage() {
 
   const [data, setData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  // Perhatikan: Tipe state sudah diubah ke JSX.Element | null
   const [greetingIcon, setGreetingIcon] = useState<JSX.Element | null>(null);
 
   const fetchData = useCallback(async () => {
@@ -256,17 +253,13 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-nimo-light text-nimo-dark">
-      {/* Header dengan hiasan dan animasi */}
       <div className="bg-nimo-yellow relative overflow-hidden">
-        {/* Hiasan background tambahan */}
         <div className="absolute inset-0 bg-yellow-300 opacity-10 bg-[radial-gradient(circle_at_center,rgba(255,255,0,0.2)_0%,transparent_60%)]"></div>
         <div className="absolute inset-0 bg-[url('/images/subtle-pattern.png')] opacity-15 bg-repeat"></div>
         <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-nimo-yellow/80 to-transparent"></div>
 
-        {/* Konten utama header */}
         <div className="container mx-auto px-4 py-12 relative z-10">
           <div className="flex items-center gap-6">
-            {/* Tampilkan ikon dari state yang sudah diatur di client */}
             {greetingIcon}
             <div className="space-y-1">
               <h1 className="text-4xl font-extrabold text-white tracking-tight bg-clip-text bg-gradient-to-r from-white to-yellow-200 animate-gradient-slow">
@@ -280,7 +273,6 @@ export default function DashboardPage() {
         </div>
       </div>
       
-      {/* Konten Dashboard lainnya */}
       <div className="container mx-auto px-4 py-8 space-y-10">
         <section>
           {isLoading ? (

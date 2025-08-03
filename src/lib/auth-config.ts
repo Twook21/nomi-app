@@ -1,5 +1,3 @@
-// src/lib/auth-configs.ts
-
 import { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -56,7 +54,6 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        // Hitung status UMKM
         const hasUmkmProfile = !!user.umkmOwner;
         const isVerified = user.umkmOwner?.isVerified || false;
 
@@ -69,7 +66,6 @@ export const authOptions: NextAuthOptions = {
           username: user.username,
           phoneNumber: user.phoneNumber || null,
           address: user.address || null,
-          // PERBAIKAN: Gunakan naming yang konsisten
           umkmProfileStatus: hasUmkmProfile ? (isVerified ? 'verified' : 'pending') : null
         }
       }
@@ -83,12 +79,10 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, trigger }) {
-      // Saat login awal atau manual update
       if (user || trigger === "update") {
         let userData = user;
         
-        // Jika trigger update atau setiap kali JWT dipanggil, fetch fresh data dari database
-        // PERBAIKAN: Selalu fetch fresh data untuk memastikan role dan UMKM status terbaru
+        
         if ((trigger === "update" || !token.role) && token.email) {
           const dbUser = await prisma.user.findUnique({
             where: { email: token.email as string },
@@ -121,7 +115,6 @@ export const authOptions: NextAuthOptions = {
           }
         }
         
-        // Update token dengan data terbaru
         if (userData) {
           token.id = userData.id;
           token.email = userData.email;
@@ -139,8 +132,7 @@ export const authOptions: NextAuthOptions = {
     },
     
     async session({ session, token }) {
-      // PERBAIKAN: Untuk Google login, selalu fetch data terbaru dari database
-      // karena Google login menggunakan adapter, bukan authorize function
+      
       if (session.user?.email && !token.role) {
         const dbUser = await prisma.user.findUnique({
           where: { email: session.user.email },
@@ -167,7 +159,6 @@ export const authOptions: NextAuthOptions = {
           session.user.umkmProfileStatus = hasUmkmProfile ? (isVerified ? 'verified' : 'pending') : null;
         }
       } else {
-        // Untuk Credentials login, gunakan data dari token
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.username = token.username;

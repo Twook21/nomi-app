@@ -4,8 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useAuthStore } from "@/store/auth";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DataTable } from "@/components/umkm/ProductDataTable"; // Pastikan path ini sesuai
-import { getUmkmPartnerColumns } from "@/components/admin/UmkmPartnerTableColumns"; // Pastikan path ini sesuai
+import { DataTable } from "@/components/umkm/ProductDataTable"; 
+import { getUmkmPartnerColumns } from "@/components/admin/UmkmPartnerTableColumns"; 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,9 +18,8 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
-import type { AdminUmkmProfile } from "@/types/admin_umkm"; // Pastikan path ini sesuai
+import type { AdminUmkmProfile } from "@/types/admin_umkm"; 
 
-// --- INTERFACES ---
 interface UmkmStats {
   totalUmkm: number;
   verifiedUmkm: number;
@@ -31,7 +30,6 @@ interface GrowthData {
   total: number;
 }
 
-// --- MAIN COMPONENT ---
 export default function ManageUmkmPartnersPage() {
   const { token } = useAuthStore();
   const [umkmList, setUmkmList] = useState<AdminUmkmProfile[]>([]);
@@ -40,7 +38,7 @@ export default function ManageUmkmPartnersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("createdAt"); // State baru untuk sorting
+  const [sortBy, setSortBy] = useState("createdAt"); 
 
   const fetchData = useCallback(async () => {
     if (!token) return;
@@ -49,7 +47,7 @@ export default function ManageUmkmPartnersPage() {
       const queryParams = new URLSearchParams({
         isVerified: filter,
         search: searchTerm,
-        sortBy: sortBy, // Menambahkan parameter sorting
+        sortBy: sortBy, 
       });
       const [listRes, statsRes, growthRes] = await Promise.all([
         fetch(
@@ -80,10 +78,9 @@ export default function ManageUmkmPartnersPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [token, filter, searchTerm, sortBy]); // Tambahkan sortBy ke dependencies
+  }, [token, filter, searchTerm, sortBy]); 
 
   useEffect(() => {
-    // Debounce untuk mengurangi frekuensi fetch saat mengetik atau filter
     const handler = setTimeout(() => {
       fetchData();
     }, 500);
@@ -181,7 +178,6 @@ export default function ManageUmkmPartnersPage() {
       <Card>
         <CardHeader>
           <CardTitle>Daftar Mitra UMKM</CardTitle>
-          {/* --- KONTROL BARU UNTUK FILTER & SORT --- */}
           <div className="flex flex-col md:flex-row items-center gap-4 pt-4">
             <div className="relative flex-1 w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />

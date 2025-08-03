@@ -57,9 +57,8 @@ interface ExpiringProduct {
   };
 }
 
-// --- MAIN COMPONENT ---
+
 export default function ManageProductsPage() {
-  // State management
   const { token } = useAuthStore();
   const [products, setProducts] = useState<Product[]>([]);
   const [stats, setStats] = useState<ProductStats | null>(null);
@@ -71,7 +70,6 @@ export default function ManageProductsPage() {
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Data fetching logic
   const fetchData = useCallback(async () => {
     if (!token) return;
     setIsLoading(true);
@@ -80,7 +78,6 @@ export default function ManageProductsPage() {
       if (filter !== "all") queryParams.append("isAvailable", filter);
       if (searchTerm) queryParams.append("search", searchTerm);
 
-      // Menggabungkan semua panggilan API ke dalam Promise.all
       const [listRes, statsRes, salesRes, expiringRes] = await Promise.all([
         fetch(
           `${
@@ -104,7 +101,6 @@ export default function ManageProductsPage() {
         throw new Error("Gagal mengambil sebagian data dasbor.");
       }
 
-      // Set semua state dari hasil API
       setProducts(await listRes.json());
       setStats(await statsRes.json());
       setSalesData(await salesRes.json());
@@ -119,15 +115,13 @@ export default function ManageProductsPage() {
     }
   }, [token, filter, searchTerm]);
 
-  // Effect untuk fetch data dengan debounce
   useEffect(() => {
     const handler = setTimeout(() => {
       fetchData();
-    }, 500); // Debounce 500ms
+    }, 500); 
     return () => clearTimeout(handler);
   }, [fetchData]);
 
-  // Callback untuk refresh data setelah aksi di tabel
   const handleSuccessOnAction = () => {
     fetchData();
   };
@@ -136,7 +130,6 @@ export default function ManageProductsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Bagian Kartu Statistik Utama (Tidak Berubah) */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -231,7 +224,6 @@ export default function ManageProductsPage() {
         </Card>
       </div>
 
-      {/* BAGIAN BARU: Grafik Penjualan & Produk Kritis */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
@@ -328,7 +320,6 @@ export default function ManageProductsPage() {
         </Card>
       </div>
 
-      {/* Bagian Tabel Produk (Dengan Perbaikan) */}
       <Card>
         <CardHeader>
           <>

@@ -37,7 +37,6 @@ const KeyBenefits = () => {
           content="keuntungan mitra, manfaat mitra, bisnis berkelanjutan, maksimalkan pendapatan, pelanggan baru, citra bisnis positif, food waste, Nomi"
         />
 
-        {/* Open Graph */}
         <meta
           property="og:title"
           content="Keuntungan Bergabung Sebagai Mitra Nomi"
@@ -49,7 +48,6 @@ const KeyBenefits = () => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Nomi" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Manfaat Mitra Nomi" />
         <meta
@@ -57,7 +55,6 @@ const KeyBenefits = () => {
           content="Lihat bagaimana Nomi dapat membantu bisnis Anda mengurangi limbah dan meningkatkan pendapatan secara bersamaan."
         />
 
-        {/* Additional SEO */}
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://nimo.id/mitra#keuntungan" />
       </Head>

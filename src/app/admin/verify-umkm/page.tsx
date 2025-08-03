@@ -18,7 +18,6 @@ export default function VerifyUmkmPage() {
   const fetchUnverifiedUmkm = useCallback(async () => {
     setIsLoading(true);
     try {
-      // PERBAIKAN: Support dual auth
       let headers: HeadersInit = { 'Content-Type': 'application/json' };
       let credentials: RequestCredentials = 'omit';
 

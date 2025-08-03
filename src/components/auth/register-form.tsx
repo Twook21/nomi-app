@@ -23,9 +23,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth"; // Import auth store
+import { useAuthStore } from "@/store/auth"; 
 
-// Skema validasi menggunakan Zod, disesuaikan dengan API
 const formSchema = z.object({
   username: z.string().min(3, "Username minimal 3 karakter"),
   email: z.string().email("Format email tidak valid"),
@@ -36,7 +35,7 @@ const formSchema = z.object({
 
 export function RegisterForm() {
   const router = useRouter();
-  const { setUser, setToken } = useAuthStore(); // Destructure setUser dan setToken
+  const { setUser, setToken } = useAuthStore(); 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -72,7 +71,6 @@ export function RegisterForm() {
         );
       }
 
-      // PENTING: Simpan token dan user data ke store setelah register berhasil
       console.log("Register successful, result:", result);
 
       if (result.token) {
@@ -82,7 +80,6 @@ export function RegisterForm() {
 
       if (result.user) {
         console.log("Setting user after register");
-        // Pastikan user object sesuai dengan interface User
         const userData = {
           id: result.user.id,
           username: result.user.username,
@@ -90,9 +87,9 @@ export function RegisterForm() {
           name: result.user.name || null,
           image: result.user.image || null,
           role: result.user.role,
-          umkmProfileStatus: null, // Default untuk user baru
-          address: values.address || null, // Dari form
-          phoneNumber: values.phoneNumber || null, // Dari form
+          umkmProfileStatus: null, 
+          address: values.address || null, 
+          phoneNumber: values.phoneNumber || null, 
         };
         setUser(userData);
       }
@@ -103,7 +100,6 @@ export function RegisterForm() {
         duration: 2000,
       });
 
-      // Redirect ke profile settings alih-alih login
       setTimeout(() => router.push("/profile/settings"), 2000);
     } catch (error) {
       toast.error("Oh, terjadi kesalahan!", {

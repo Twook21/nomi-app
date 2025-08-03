@@ -2,10 +2,10 @@
 
 "use client";
 
-import { useEffect, useState, useCallback } from "react"; // Tambahkan useCallback
+import { useEffect, useState, useCallback } from "react"; 
 import { useRouter, useParams } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
-import { useAuth } from "@/hooks/use-auth"; // Import useAuth hook
+import { useAuth } from "@/hooks/use-auth"; 
 import type { Order } from "@/types/order";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,9 +14,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button"; // Import Button for login
+import { Button } from "@/components/ui/button"; 
 
-// Fungsi untuk format mata uang Rupiah
 function formatRupiah(amount: number) {
     return new Intl.NumberFormat("id-ID", {
         style: "currency",
@@ -25,7 +24,6 @@ function formatRupiah(amount: number) {
     }).format(amount);
 }
 
-// Fungsi untuk format tanggal
 function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString("id-ID", {
         year: 'numeric',
@@ -36,7 +34,6 @@ function formatDate(dateString: string) {
     });
 }
 
-// Mapping status ke warna badge
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" } = {
     pending: "secondary",
     processing: "outline",
@@ -48,16 +45,14 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | 
 export default function OrderDetailPage() {
     const router = useRouter();
     const params = useParams();
-    // Gunakan useAuth hook untuk status otentikasi terpadu
     const { isAuthenticated, isLoading: authLoading, authMethod } = useAuth();
-    const { token, logout } = useAuthStore(); // Masih butuh token untuk JWT method jika belum diuseAuth
+    const { token, logout } = useAuthStore(); 
 
     const [order, setOrder] = useState<Order | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const orderId = params.id as string;
 
     const fetchOrder = useCallback(async () => {
-        // Cek autentikasi dari useAuth hook
         if (!isAuthenticated || !orderId) {
             setIsLoading(false);
             return;
@@ -66,23 +61,20 @@ export default function OrderDetailPage() {
         setIsLoading(true);
         try {
             let headers: HeadersInit = {};
-            // Set header Authorization untuk JWT
             if (authMethod === 'jwt' && token) {
                 headers['Authorization'] = `Bearer ${token}`;
             }
-            // Untuk NextAuth, `credentials: 'include'` akan otomatis mengirim cookie
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/orders/${orderId}`, {
                 headers,
-                credentials: authMethod === 'nextauth' ? 'include' : 'omit', // Penting untuk NextAuth
+                credentials: authMethod === 'nextauth' ? 'include' : 'omit', 
             });
 
             if (!response.ok) {
-                // NextAuth handles 401 via session provider, but a manual fetch might still need this.
-                // However, useSession's status should catch it.
+                
                 if (response.status === 401) {
                     toast.error("Sesi Anda berakhir.");
-                    logout(); // Trigger manual logout for Zustand store and redirects
+                    logout();
                     router.push('/auth/login');
                     return;
                 }
@@ -95,15 +87,14 @@ export default function OrderDetailPage() {
             toast.error("Gagal Memuat Pesanan", {
                 description: error instanceof Error ? error.message : "Pesanan tidak ditemukan atau terjadi kesalahan.",
             });
-            router.back(); // Kembali ke halaman sebelumnya jika gagal
+            router.back(); 
         } finally {
             setIsLoading(false);
         }
-    }, [isAuthenticated, authMethod, token, orderId, router, logout]); // Tambahkan semua dependencies
+    }, [isAuthenticated, authMethod, token, orderId, router, logout]); 
 
     useEffect(() => {
-        // Panggil fetchOrder hanya jika isAuthenticated sudah diketahui dan true
-        if (!authLoading && orderId) { // Pastikan status autentikasi sudah selesai dimuat dan orderId ada
+        if (!authLoading && orderId) { 
             if (!isAuthenticated) {
                 router.replace('/auth/login');
             } else {
@@ -113,7 +104,6 @@ export default function OrderDetailPage() {
     }, [authLoading, isAuthenticated, orderId, router, fetchOrder]);
 
 
-    // Tampilkan loading state jika authLoading atau data sedang dimuat
     if (authLoading || isLoading) {
         return (
             <div className="container mx-auto py-8 px-4">
@@ -123,7 +113,6 @@ export default function OrderDetailPage() {
         );
     }
 
-    // Tampilkan pesan jika tidak terautentikasi (setelah loading selesai)
     if (!isAuthenticated) {
         return (
             <div className="container mx-auto py-8 px-4">
@@ -137,7 +126,6 @@ export default function OrderDetailPage() {
         );
     }
 
-    // Tampilkan pesan jika pesanan tidak ditemukan (setelah loading selesai dan isAuthenticated)
     if (!order) {
         return (
             <div className="container mx-auto py-8 px-4">
@@ -152,7 +140,7 @@ export default function OrderDetailPage() {
     }
 
     return (
-        <div className="container mx-auto py-8 px-4"> {/* Tambahkan container */}
+        <div className="container mx-auto py-8 px-4"> 
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Detail Pesanan #{order.id.substring(0, 8)}</h1>
                 <Badge variant={statusVariant[order.orderStatus] || 'default'} className="capitalize text-base">
@@ -176,7 +164,6 @@ export default function OrderDetailPage() {
                             {order.orderItems.map(item => (
                                 <div key={item.id} className="flex items-center justify-between">
                                     <div className="flex items-center gap-4">
-                                        {/* Tambahkan fallback untuk imageUrl */}
                                         <Image src={item.product.imageUrl || 'https://placehold.co/64'} alt={item.product.productName} width={64} height={64} className="rounded-md border object-cover" />
                                         <div>
                                             <Link href={`/products/${item.product.id}`} className="font-medium hover:underline">{item.product.productName}</Link>
@@ -198,7 +185,7 @@ export default function OrderDetailPage() {
                         </div>
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Pengiriman</span>
-                            <span>Rp 0</span> {/* Asumsi biaya pengiriman 0 */}
+                            <span>Rp 0</span> 
                         </div>
                         <div className="flex justify-between font-bold text-lg">
                             <span>Total</span>

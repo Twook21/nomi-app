@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
-import { useAuth } from "@/hooks/use-auth"; // Import useAuth hook
+import { useAuth } from "@/hooks/use-auth"; 
 import type { UmkmOrder } from "@/types/umkm_order";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
+import { Skeleton } from "@/components/ui/skeleton"; 
 
 function formatRupiah(amount: number) {
   return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(amount);
@@ -31,17 +31,17 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | 
 };
 const orderStatuses: UmkmOrder['orderStatus'][] = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
 
-// Skeleton untuk halaman detail pesanan UMKM
+
 function OrderDetailPageSkeleton() {
     return (
         <div className="container mx-auto py-8 px-4 grid gap-4 md:grid-cols-3 animate-pulse">
             <div className="md:col-span-2 space-y-4">
-                <Skeleton className="h-20 w-full" /> {/* Order info card */}
-                <Skeleton className="h-64 w-full" /> {/* Order items card */}
+                <Skeleton className="h-20 w-full" /> 
+                <Skeleton className="h-64 w-full" /> 
             </div>
             <div className="md:col-span-1 space-y-4">
-                <Skeleton className="h-48 w-full" /> {/* Customer details card */}
-                <Skeleton className="h-32 w-full" /> {/* Change status card */}
+                <Skeleton className="h-48 w-full" /> 
+                <Skeleton className="h-32 w-full" /> 
             </div>
         </div>
     );
@@ -50,9 +50,7 @@ function OrderDetailPageSkeleton() {
 export default function UmkmOrderDetailPage() {
   const params = useParams();
   const router = useRouter();
-  // Gunakan useAuth hook untuk status otentikasi terpadu
   const { user, isAuthenticated, isLoading: authLoading, authMethod } = useAuth();
-  // Ambil token dan logout dari useAuthStore
   const { token, logout } = useAuthStore();
 
   const [order, setOrder] = useState<UmkmOrder | null>(null);
@@ -60,7 +58,6 @@ export default function UmkmOrderDetailPage() {
   const orderId = params.id as string;
 
   const fetchOrder = useCallback(async () => {
-    // Hanya fetch jika sudah terautentikasi dan merupakan UMKM owner, dan orderId ada
     if (!isAuthenticated || !user || user.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified' || !orderId) {
       setIsLoading(false);
       return;
@@ -86,7 +83,7 @@ export default function UmkmOrderDetailPage() {
           return;
         } else if (response.status === 404) {
             toast.error("Pesanan tidak ditemukan.", { description: "Pesanan yang Anda cari tidak ada." });
-            setOrder(null); // Set order to null to show not found message
+            setOrder(null); 
             return;
         }
         throw new Error((await response.json()).message || "Gagal mengambil detail pesanan.");
@@ -95,14 +92,13 @@ export default function UmkmOrderDetailPage() {
       setOrder(result);
     } catch (error) {
       toast.error("Gagal memuat pesanan.", { description: error instanceof Error ? error.message : "Terjadi kesalahan." });
-      setOrder(null); // Set order to null on general error
+      setOrder(null); 
     } finally {
       setIsLoading(false);
     }
   }, [isAuthenticated, user, authMethod, token, orderId, router, logout]);
 
   useEffect(() => {
-    // Panggil fetchOrder hanya jika status autentikasi sudah selesai dimuat dan orderId ada
     if (!authLoading && orderId) {
         if (!isAuthenticated) {
             router.replace('/auth/login');
@@ -120,7 +116,6 @@ export default function UmkmOrderDetailPage() {
   }, [authLoading, isAuthenticated, user, orderId, router, fetchOrder]);
 
   const handleStatusUpdate = async (newStatus: UmkmOrder['orderStatus']) => {
-    // Cek otorisasi lagi sebelum update status
     if (!isAuthenticated || !user || user.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified' || !orderId) {
         toast.error("Tidak dapat memperbarui status. Sesi berakhir atau Anda tidak memiliki izin.");
         logout();
@@ -154,18 +149,16 @@ export default function UmkmOrderDetailPage() {
           throw new Error((await response.json()).message || "Gagal memperbarui status.");
       }
       toast.success("Status pesanan berhasil diperbarui!");
-      fetchOrder(); // Muat ulang data untuk menampilkan status terbaru
+      fetchOrder(); 
     } catch (error) {
       toast.error("Gagal memperbarui status.", { description: error instanceof Error ? error.message : "Terjadi kesalahan." });
     }
   };
 
-  // Tampilkan loading skeleton jika sedang loading auth atau data
   if (authLoading || isLoading) {
     return <OrderDetailPageSkeleton />;
   }
 
-  // Tampilkan pesan jika tidak terautentikasi (setelah loading selesai)
   if (!isAuthenticated) {
     return (
         <div className="container mx-auto py-8 px-4">
@@ -179,7 +172,6 @@ export default function UmkmOrderDetailPage() {
     );
   }
 
-  // Tampilkan pesan jika user bukan UMKM owner atau belum terverifikasi
   if (user?.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified') {
       return (
           <div className="container mx-auto py-8 px-4">
@@ -200,7 +192,6 @@ export default function UmkmOrderDetailPage() {
       );
   }
 
-  // Jika pesanan tidak ditemukan setelah loading selesai dan user terotorisasi
   if (!order) {
     return (
         <div className="container mx-auto py-8 px-4">
@@ -215,7 +206,7 @@ export default function UmkmOrderDetailPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4"> {/* Tambahkan container */}
+    <div className="container mx-auto py-8 px-4"> 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="md:col-span-2 space-y-4">
           <Card>

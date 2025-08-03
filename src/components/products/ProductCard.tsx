@@ -1,5 +1,3 @@
-// File: components/products/ProductCard.tsx
-
 "use client";
 
 import type { Product } from "@/types/product";
@@ -7,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Star, PackageCheck } from "lucide-react"; // [MODIFIKASI] Tambahkan ikon
+import { Star, PackageCheck } from "lucide-react"; 
 
 interface ProductCardProps {
   product: Product;
@@ -59,7 +57,6 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </CardHeader>
         <CardContent className="p-3 flex flex-col">
-          {/* [MODIFIKASI] Area informasi rating & terjual */}
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2 h-4">
             {product.averageRating > 0 ? (
               <>
@@ -72,7 +69,6 @@ export function ProductCard({ product }: ProductCardProps) {
                 )}
               </>
             ) : (
-              // ✨ UI Improvement: Tampilkan ini jika belum ada rating
               <span className="text-gray-400 italic">Belum ada penilaian</span>
             )}
 
@@ -83,7 +79,6 @@ export function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          {/* Wrapper untuk konten utama agar tombol bisa didorong ke bawah */}
           <div className="flex-grow">
             <h3 className="font-bold text-base truncate text-[var(--nimo-dark)] uppercase">
               {product.productName}
@@ -93,7 +88,6 @@ export function ProductCard({ product }: ProductCardProps) {
             </p>
           </div>
 
-          {/* Harga */}
           <div>
             {product.originalPrice > product.discountedPrice && (
               <p className="text-xs text-muted-foreground line-through">

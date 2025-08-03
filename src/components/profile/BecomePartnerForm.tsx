@@ -1,5 +1,3 @@
-// Di BecomePartnerForm component
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -17,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { useEffect } from "react";
-import { useSession } from "next-auth/react"; // TAMBAHKAN INI
+import { useSession } from "next-auth/react"; 
 
 const partnerSchema = z.object({
   umkmName: z.string().min(3, "Nama UMKM minimal 3 karakter."),
@@ -32,7 +30,7 @@ const partnerSchema = z.object({
 export function BecomePartnerForm() {
   const { isAuthenticated, isLoading: authLoading, authMethod, user } = useAuth();
   const { token, setUser, logout } = useAuthStore();
-  const { update: updateSession } = useSession(); // TAMBAHKAN INI
+  const { update: updateSession } = useSession(); 
   const router = useRouter();
 
   const form = useForm<z.infer<typeof partnerSchema>>({
@@ -94,17 +92,13 @@ export function BecomePartnerForm() {
         throw new Error(result.message || "Gagal mendaftar.");
       }
 
-      // PERBAIKAN: Handle update untuk kedua metode auth
       if (authMethod === 'nextauth') {
-        // Untuk NextAuth: Trigger session refresh
-        await updateSession(); // Ini akan trigger JWT callback dengan trigger: "update"
+        await updateSession(); 
         
-        // Optional: Tambahkan delay kecil untuk memastikan session terupdate
         setTimeout(() => {
-          router.refresh(); // Refresh server components
+          router.refresh(); 
         }, 100);
       } else {
-        // Untuk JWT: Update state lokal (tetap seperti sekarang)
         if (user) {
           setUser({
               ...user,
@@ -127,7 +121,6 @@ export function BecomePartnerForm() {
     }
   }
 
-  // ... rest of component remains the same
   if (authLoading) {
     return (
         <div className="space-y-8">

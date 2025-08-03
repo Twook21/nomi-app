@@ -1,23 +1,21 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react"; // Tambahkan useCallback
-import { useParams, useRouter } from "next/navigation"; // Import useRouter
+import { useEffect, useState, useCallback } from "react"; 
+import { useParams, useRouter } from "next/navigation"; 
 import { useAuthStore } from "@/store/auth";
-import { useAuth } from "@/hooks/use-auth"; // Import useAuth hook
+import { useAuth } from "@/hooks/use-auth"; 
 import type { Product } from "@/types/product";
 import { toast } from "sonner";
 import { ProductForm } from "@/components/umkm/ProductForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
-import { Button } from "@/components/ui/button"; // Import Button
-import Link from "next/link"; // Import Link
+import { Skeleton } from "@/components/ui/skeleton"; 
+import { Button } from "@/components/ui/button"; 
+import Link from "next/link"; 
 
 export default function EditProductPage() {
   const params = useParams();
   const router = useRouter();
-  // Gunakan useAuth hook untuk status otentikasi terpadu
   const { user, isAuthenticated, isLoading: authLoading, authMethod } = useAuth();
-  // Ambil token dan logout dari useAuthStore
   const { token, logout } = useAuthStore();
   
   const [product, setProduct] = useState<Product | null>(null);
@@ -25,7 +23,6 @@ export default function EditProductPage() {
   const productId = params.id as string;
 
   const fetchProduct = useCallback(async () => {
-    // Hanya fetch jika sudah terautentikasi, merupakan UMKM owner, dan produkId ada
     if (!isAuthenticated || !user || user.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified' || !productId) {
       setIsLoading(false);
       return;
@@ -43,7 +40,6 @@ export default function EditProductPage() {
       });
 
       if (!response.ok) {
-        // Handle 401/403/404 Unauthorized/Forbidden/Not Found secara spesifik
         if (response.status === 401 || response.status === 403) {
             toast.error("Akses ditolak.", { description: "Anda tidak memiliki izin untuk mengedit produk ini atau sesi Anda berakhir." });
             logout();
@@ -51,7 +47,7 @@ export default function EditProductPage() {
             return;
         } else if (response.status === 404) {
             toast.error("Produk tidak ditemukan.", { description: "Produk yang Anda coba edit tidak ada." });
-            router.replace('/umkm/products'); // Redirect ke daftar produk
+            router.replace('/umkm/products'); 
             return;
         }
         throw new Error((await response.json()).message || "Gagal mengambil data produk.");
@@ -62,14 +58,13 @@ export default function EditProductPage() {
       toast.error("Gagal memuat data produk.", {
         description: error instanceof Error ? error.message : "Terjadi kesalahan.",
       });
-      setProduct(null); // Set product to null on error
+      setProduct(null); 
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated, user, authMethod, token, productId, router, logout]); // Tambahkan semua dependencies
+  }, [isAuthenticated, user, authMethod, token, productId, router, logout]); 
 
   useEffect(() => {
-    // Panggil fetchProduct hanya jika status autentikasi sudah selesai dimuat dan productId ada
     if (!authLoading && productId) {
         if (!isAuthenticated) {
             router.replace('/auth/login');
@@ -86,7 +81,6 @@ export default function EditProductPage() {
     }
   }, [authLoading, isAuthenticated, user, productId, router, fetchProduct]);
 
-  // Tampilkan loading skeleton jika sedang loading auth atau data
   if (authLoading || isLoading) {
     return (
         <div className="container mx-auto py-8 px-4 max-w-3xl">
@@ -96,14 +90,13 @@ export default function EditProductPage() {
                     <Skeleton className="h-4 w-64" />
                 </CardHeader>
                 <CardContent>
-                    <Skeleton className="h-[500px] w-full" /> {/* Skeleton untuk form */}
+                    <Skeleton className="h-[500px] w-full" /> 
                 </CardContent>
             </Card>
         </div>
     );
   }
 
-  // Tampilkan pesan jika tidak terautentikasi atau tidak memiliki izin
   if (!isAuthenticated || user?.role !== 'umkm_owner' || user.umkmProfileStatus !== 'verified') {
     return (
         <div className="container mx-auto py-8 px-4 max-w-3xl">
@@ -119,7 +112,7 @@ export default function EditProductPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-3xl"> {/* Tambahkan container */}
+    <div className="container mx-auto py-8 px-4 max-w-3xl"> 
         <Card>
             <CardHeader>
                 <CardTitle>Edit Produk</CardTitle>

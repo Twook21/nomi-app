@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Head from "next/head"; // Import Head dari next/head
+import Head from "next/head"; 
 import { ArrowRight } from "lucide-react";
 
 const categoriesData = [
@@ -19,19 +19,15 @@ const Categories = () => {
         <meta name="description" content="Jelajahi berbagai kategori makanan di Nimo seperti Makanan Kering, Roti dan Kue, Makanan Olahan, dan Minuman. Dapatkan produk berkualitas dengan harga terjangkau dan bantu kurangi food waste." />
         <meta name="keywords" content="kategori makanan, Nimo, makanan kering, roti, kue, minuman, makanan olahan, beli makanan, diskon makanan, anti food waste" />
         
-        {/* Open Graph Tags */}
         <meta property="og:title" content="Kategori Makanan di Nimo" />
         <meta property="og:description" content="Temukan beragam kategori makanan yang bisa Anda selamatkan hari ini di Nimo. Mulai dari roti, kue, minuman, hingga makanan olahan." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://nimo.id/kategori" />
         <meta property="og:site_name" content="Nimo" />
-        <meta property="og:image" content="https://nimo.id/images/kategori_banner.png" /> {/* Ganti dengan URL gambar yang relevan */}
         
-        {/* Twitter Card Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Kategori Makanan di Nimo" />
         <meta name="twitter:description" content="Jelajahi kategori makanan favoritmu dan mulai selamatkan makanan berlebih bersama Nimo sekarang!" />
-        <meta name="twitter:image" content="https://nimo.id/images/kategori_banner.png" /> {/* Ganti dengan URL gambar yang relevan */}
       </Head>
       <section id="categories" className="py-20 bg-nimo-light">
         <div className="container mx-auto px-6">

@@ -17,7 +17,6 @@ export function useAuth() {
         authMethod 
       });
 
-      // Handle NextAuth session
       if (status === "authenticated" && session?.user && authMethod !== 'nextauth') {
         console.log('Setting up NextAuth user');
         setUser({
@@ -28,15 +27,14 @@ export function useAuth() {
           username: session.user.username,
           role: session.user.role as any,
           umkmProfileStatus: session.user.umkmProfileStatus as any,
-          address: null, // NextAuth biasanya tidak punya ini
-          phoneNumber: null, // NextAuth biasanya tidak punya ini
+          address: null, 
+          phoneNumber: null, 
         });
         setAuthMethod('nextauth');
         setIsInitialized(true);
         return;
       }
 
-      // Handle JWT token case
       if (token && !user && authMethod !== 'nextauth') {
         console.log('Token found but no user, loading profile...');
         setAuthMethod('jwt');
@@ -45,21 +43,18 @@ export function useAuth() {
         return;
       }
 
-      // Handle case where we have token and user
       if (token && user && authMethod === 'jwt') {
         console.log('JWT auth already initialized');
         setIsInitialized(true);
         return;
       }
 
-      // No authentication
       if (status !== 'loading' && !token) {
         console.log('No authentication found');
         setIsInitialized(true);
         return;
       }
 
-      // Session still loading
       if (status === 'loading') {
         console.log('Session still loading...');
         return;
@@ -71,7 +66,6 @@ export function useAuth() {
     initializeAuth();
   }, [session, status, token, user, authMethod, setUser, setAuthMethod, loadUserProfile]);
 
-  // Return unified auth state
   const isAuthenticated = (status === "authenticated" && session) || (token && user);
   const currentUser = session?.user || user;
   const isLoading = status === "loading" || !isInitialized;
@@ -89,6 +83,6 @@ export function useAuth() {
     isAuthenticated,
     isLoading,
     authMethod,
-    refreshUser: loadUserProfile, // Expose refresh function
+    refreshUser: loadUserProfile, 
   };
 }

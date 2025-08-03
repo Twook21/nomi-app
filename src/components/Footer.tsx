@@ -6,9 +6,7 @@ const Footer = () => {
   return (
     <footer className="bg-black text-gray-300">
       <div className="container mx-auto px-6 py-12">
-        {/* Kontainer utama dengan layout grid untuk kolom-kolom */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Kolom 1: Brand dan Tagline */}
           <div className="sm:col-span-2 lg:col-span-1">
             <h2 className="text-2xl font-bold text-nimo-yellow mb-2">NOMI</h2>
             <p className="text-gray-400 text-sm max-w-xs">
@@ -16,7 +14,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Kolom 2: Navigasi Utama */}
           <div>
             <h5 className="font-bold uppercase tracking-wider text-white mb-4">
               Navigasi
@@ -55,7 +52,6 @@ const Footer = () => {
             </nav>
           </div>
 
-          {/* Kolom 3: Legal & Kontak */}
           <div>
             <h5 className="font-bold uppercase tracking-wider text-white mb-4">
               Lainnya
@@ -76,7 +72,6 @@ const Footer = () => {
             </nav>
           </div>
 
-          {/* Kolom 4: Sosial Media */}
           <div>
             <h5 className="font-bold uppercase tracking-wider text-white mb-4">
               Ikuti Kami
@@ -114,7 +109,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Garis pemisah dan copyright */}
         <div className="mt-10 border-t border-gray-700 pt-6 text-center text-gray-500 text-sm">
           <p>
             &copy; {new Date().getFullYear()} NOMI. Semua Hak Cipta Dilindungi.

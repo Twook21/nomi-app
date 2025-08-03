@@ -12,7 +12,6 @@ export function ProductSearch() {
   const initialSearch = searchParams.get('search') || '';
   const [searchTerm, setSearchTerm] = useState(initialSearch);
 
-  // Update state jika parameter URL berubah
   useEffect(() => {
     setSearchTerm(searchParams.get('search') || '');
   }, [searchParams]);

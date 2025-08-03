@@ -1,5 +1,3 @@
-// File: src/app/umkm/products/page.tsx
-
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -134,12 +132,11 @@ export default function UmkmProductsPage() {
     }
   }, [authLoading, isAuthenticated, user, router, fetchData]);
 
-  // PERBAIKAN: Bungkus handleSuccess dengan useCallback
   const handleSuccess = useCallback(() => {
     fetchData();
-  }, [fetchData]); // Pastikan fetchData adalah dependensi
+  }, [fetchData]); 
 
-  const columns = getColumns(handleSuccess); // Ini sekarang seharusnya tidak error
+  const columns = getColumns(handleSuccess); 
 
   if (authLoading || isLoading) {
     return (

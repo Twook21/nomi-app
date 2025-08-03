@@ -1,5 +1,3 @@
-// File: src/components/umkm/ProductForm.tsx
-
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -9,7 +7,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormControl, // Pastikan FormControl diimpor
+  FormControl, 
   FormDescription,
   FormField,
   FormItem,
@@ -234,7 +232,6 @@ export function ProductForm({ initialData }: ProductFormProps) {
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  {/* Hapus asChild di sini */}
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Pilih kategori..." />

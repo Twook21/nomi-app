@@ -12,7 +12,6 @@ const CtaCustomer = () => {
                     <p className="text-lg text-nimo-light max-w-2xl mx-auto mb-8">
                         Ribuan porsi makanan lezat menantimu dengan harga miring. Mulai petualangan kulinermu sekarang!
                     </p>
-                    {/* Jika web-app, gunakan Link. Jika mobile app, ganti dengan tombol App Store/Play Store */}
                     <Link href="/products">
                          <button className="bg-nimo-yellow text-white font-bold py-3 px-10 rounded-full text-lg hover:bg-yellow-500 transition-colors duration-300">
                             Mulai Berhemat Sekarang

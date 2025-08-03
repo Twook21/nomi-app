@@ -37,7 +37,6 @@ const HowItWorksCustomer = () => {
           content="cara kerja nimo, konsumen, langkah mudah, pesan makanan, diskon makanan, hemat, aplikasi"
         />
 
-        {/* Open Graph */}
         <meta
           property="og:title"
           content="Proses Mudah Pesan Makanan di Nimo"
@@ -49,7 +48,6 @@ const HowItWorksCustomer = () => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Nimo" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Cara Kerja Nimo: Semudah 3 Langkah" />
         <meta
@@ -57,7 +55,6 @@ const HowItWorksCustomer = () => {
           content="Ikuti 3 langkah sederhana untuk bergabung dengan gerakan penyelamat makanan."
         />
 
-        {/* Additional SEO */}
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://nimo.id/konsumen#cara-kerja" />
       </Head>

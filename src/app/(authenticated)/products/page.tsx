@@ -103,10 +103,8 @@ export default function ProductsPage({ searchParams }: ProductsPageProps) {
 
   return (
     <div className="bg-[var(--nimo-gray)] dark:bg-background min-h-screen">
-      {/* PERBAIKAN: Gunakan padding vertikal yang lebih kecil untuk mobile */}
       <div className="container mx-auto py-6 md:py-8 px-4">
         <section>
-          {/* Header Section */}
           <div
             className="text-center bg-[var(--nimo-light)] dark:bg-card p-6 md:p-8 rounded-lg shadow-sm mb-6 md:mb-8 lazy-bg"
             style={{
@@ -115,11 +113,9 @@ export default function ProductsPage({ searchParams }: ProductsPageProps) {
               backgroundPosition: "center",
             }}
           >
-            {/* PERBAIKAN: Gunakan ukuran font yang responsif */}
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
               {pageTitle}
             </h1>
-            {/* PERBAIKAN: Gunakan ukuran font yang responsif */}
             <p className="text-sm md:text-base text-white mt-2 mb-4 md:mb-6 max-w-2xl mx-auto">
               {search
                 ? `Menampilkan hasil untuk pencarian "${search}"`
@@ -127,21 +123,17 @@ export default function ProductsPage({ searchParams }: ProductsPageProps) {
                 ? `Menampilkan semua produk dalam kategori pilihan Anda.`
                 : `Jelajahi semua penawaran terbaik yang tersedia saat ini.`}
             </p>
-            {/* PERBAIKAN: Pastikan ProductSearch di tengah */}
             <div className="flex justify-center">
               <ProductSearch />
             </div>
           </div>
-          {/* Product Grid Section */}
           <Suspense
             fallback={
-              // PERBAIKAN: Grid hanya 1 kolom untuk mobile, 2 untuk sm, dst.
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 <LoadingSkeleton />
               </div>
             }
           >
-            {/* PERBAIKAN: Grid hanya 1 kolom untuk mobile, 2 untuk sm, dst. */}
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               <FilteredProductList category={category} search={search} />
             </div>

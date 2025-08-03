@@ -1,5 +1,3 @@
-// components/ScrollToTopButton.tsx
-
 'use client';
 
 import { useEffect, useState } from "react";
@@ -22,7 +20,6 @@ export default function ScrollToTopButton() {
     const start = window.scrollY;
     const duration = 500;
     
-    // Memberikan tipe data 'number | null' pada startTime
     let startTime: number | null = null;
 
     const animateScroll = (currentTime: number) => {

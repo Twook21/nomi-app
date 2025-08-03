@@ -37,7 +37,6 @@ export default function Deals() {
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -57,7 +56,6 @@ export default function Deals() {
           </Link>
         </div>
 
-        {/* Product List */}
         <Suspense fallback={
           <div className="flex gap-4 overflow-x-auto">
             <LoadingSkeleton />

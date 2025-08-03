@@ -14,7 +14,6 @@ const TeamSection = () => {
           mengubah cara kita memandang dan mengelola makanan.
         </p>
         <div className="flex justify-center items-center flex-wrap gap-8">
-          {/* Ganti dengan data tim Anda */}
           <div className="text-center group">
             <div className="relative h-28 w-28 rounded-full overflow-hidden border-4 border-nimo-yellow/50 group-hover:border-nimo-yellow transition-all duration-300 shadow-lg mx-auto">
               <Image

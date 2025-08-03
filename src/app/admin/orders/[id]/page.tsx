@@ -10,7 +10,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 
-// Tipe data spesifik untuk halaman ini
 interface OrderDetail {
   id: string;
   totalAmount: number;

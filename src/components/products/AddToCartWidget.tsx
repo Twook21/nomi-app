@@ -9,7 +9,6 @@ import { ShoppingCart, Plus, Minus } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 import type { Cart } from "@/types/cart";
-// PERBAIKAN: Import Input
 import { Input } from "@/components/ui/input";
 
 export function AddToCartWidget({ productId, stock }: { productId: string, stock: number }) {
@@ -30,7 +29,6 @@ export function AddToCartWidget({ productId, stock }: { productId: string, stock
       return;
     }
 
-    // PERBAIKAN: Validasi kuantitas sebelum mengirim permintaan
     if (quantity < 1 || quantity > stock) {
         toast.error(`Jumlah harus antara 1 sampai ${stock}.`);
         return;
@@ -86,13 +84,11 @@ export function AddToCartWidget({ productId, stock }: { productId: string, stock
     }
   };
 
-  // PERBAIKAN: Handler untuk input teks
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
     if (!isNaN(value)) {
       setQuantity(Math.min(stock, Math.max(1, value)));
     } else {
-      // Atur ke 1 jika input kosong
       setQuantity(1);
     }
   };
@@ -105,7 +101,6 @@ export function AddToCartWidget({ productId, stock }: { productId: string, stock
                     <Minus className="h-3 w-3 md:h-4 md:w-4" />
                 </Button>
                 
-                {/* PERBAIKAN: Ganti span dengan input */}
                 <Input
                   type="number"
                   value={quantity}

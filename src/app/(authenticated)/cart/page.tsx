@@ -368,7 +368,7 @@ export default function CartPage() {
   );
 }
 
-// Komponen untuk UI Loading Keranjang
+// Komponen UI Loading Keranjang
 function CartLoadingSkeleton() {
   return (
     <div className="container mx-auto py-12 px-4 md:px-6">

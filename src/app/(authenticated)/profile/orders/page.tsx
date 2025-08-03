@@ -5,8 +5,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
-import { useAuth } from "@/hooks/use-auth"; // Import useAuth hook
-import type { Order, Review } from "@/types/order"; // Pastikan Order dan Review sudah memiliki semua field yang diperlukan
+import { useAuth } from "@/hooks/use-auth"; 
+import type { Order, Review } from "@/types/order"; 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,7 +19,6 @@ import { ReviewDialog } from "@/components/profile/ReviewDialog";
 import { FileText, ShoppingCart, Star } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
-// Fungsi untuk format mata uang Rupiah
 function formatRupiah(amount: number) {
     return new Intl.NumberFormat("id-ID", {
         style: "currency",
@@ -28,7 +27,6 @@ function formatRupiah(amount: number) {
     }).format(amount);
 }
 
-// Fungsi untuk format tanggal
 function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString("id-ID", {
         year: 'numeric',
@@ -37,7 +35,6 @@ function formatDate(dateString: string) {
     });
 }
 
-// Mapping status ke warna badge
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" } = {
     pending: "secondary",
     processing: "outline",
@@ -46,7 +43,6 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | 
     cancelled: "destructive",
 };
 
-// Interface untuk state dialog review
 interface ReviewDialogState {
     productId: string;
     productName: string;
@@ -58,16 +54,14 @@ interface ReviewDialogState {
 
 export default function OrderHistoryPage() {
     const router = useRouter();
-    // Gunakan useAuth hook untuk status otentikasi terpadu
     const { isAuthenticated, isLoading: authLoading, authMethod } = useAuth();
-    const { token, logout } = useAuthStore(); // Masih butuh token untuk JWT method jika belum diuseAuth
+    const { token, logout } = useAuthStore(); 
 
     const [orders, setOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [reviewDialogState, setReviewDialogState] = useState<ReviewDialogState | null>(null);
 
     const fetchOrders = useCallback(async () => {
-        // Cek autentikasi dari useAuth hook
         if (!isAuthenticated) {
             setIsLoading(false);
             return;
@@ -76,23 +70,19 @@ export default function OrderHistoryPage() {
         setIsLoading(true);
         try {
             let headers: HeadersInit = {};
-            // Set header Authorization untuk JWT
             if (authMethod === 'jwt' && token) {
                 headers['Authorization'] = `Bearer ${token}`;
             }
-            // Untuk NextAuth, `credentials: 'include'` akan otomatis mengirim cookie
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/orders`, {
                 headers,
-                credentials: authMethod === 'nextauth' ? 'include' : 'omit', // Penting untuk NextAuth
+                credentials: authMethod === 'nextauth' ? 'include' : 'omit', 
             });
 
             if (!response.ok) {
-                // NextAuth handles 401 via session provider, but a manual fetch might still need this.
-                // However, useSession's status should catch it.
                 if (response.status === 401) {
                     toast.error("Sesi Anda berakhir.");
-                    logout(); // Trigger manual logout for Zustand store and redirects
+                    logout(); 
                     router.push('/auth/login');
                     return;
                 }
@@ -105,11 +95,10 @@ export default function OrderHistoryPage() {
         } finally {
             setIsLoading(false);
         }
-    }, [isAuthenticated, authMethod, token, router, logout]); // Tambahkan semua dependencies
+    }, [isAuthenticated, authMethod, token, router, logout]); 
 
     useEffect(() => {
-        // Panggil fetchOrders hanya jika isAuthenticated sudah diketahui dan true
-        if (!authLoading) { // Pastikan status autentikasi sudah selesai dimuat
+        if (!authLoading) { 
             if (!isAuthenticated) {
                 router.replace('/auth/login');
             } else {
@@ -122,7 +111,6 @@ export default function OrderHistoryPage() {
     const activeOrders = orders.filter(o => o.orderStatus !== 'delivered' && o.orderStatus !== 'cancelled');
     const completedOrders = orders.filter(o => o.orderStatus === 'delivered' || o.orderStatus === 'cancelled');
 
-    // Tampilkan loading state jika authLoading atau data sedang dimuat
     if (authLoading || isLoading) {
         return (
             <div className="container mx-auto py-8 px-4">
@@ -158,7 +146,6 @@ export default function OrderHistoryPage() {
         );
     }
 
-    // Tampilkan pesan jika tidak terautentikasi (setelah loading selesai)
     if (!isAuthenticated) {
         return (
             <div className="container mx-auto py-8 px-4">
@@ -183,7 +170,7 @@ export default function OrderHistoryPage() {
                 initialData={reviewDialogState?.initialData}
                 onSuccess={fetchOrders}
             />
-            <div className="container mx-auto py-8 px-4"> {/* Tambahkan container */}
+            <div className="container mx-auto py-8 px-4"> 
                 <div className="space-y-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                         <h1 className="text-2xl text-nimo-yellow font-bold tracking-tight">Riwayat Pesanan</h1>

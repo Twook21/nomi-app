@@ -41,8 +41,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-// --- Komponen Tombol Ganti Tema ---
-// PERBAIKAN: Tambahkan props untuk menerima className
+
 const ThemeToggleButton = ({ className }: { className?: string }) => {
   const [theme, setTheme] = useState(() =>
     typeof window !== "undefined"
@@ -69,7 +68,7 @@ const ThemeToggleButton = ({ className }: { className?: string }) => {
       size="icon"
       onClick={toggleTheme}
       aria-label="Toggle Theme"
-      // PERBAIKAN: Terapkan className di sini
+      
       className={className}
     >
       <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -79,7 +78,7 @@ const ThemeToggleButton = ({ className }: { className?: string }) => {
   );
 };
 
-// --- Definisi Data Navigasi ---
+
 const customerNavLinks = [
   { href: "/products", label: "Produk", icon: HandPlatter },
   { href: "/profile", label: "Dasbor", exact: true, icon: UserCircle },
@@ -92,15 +91,13 @@ const umkmNavLinks = [
   { href: "/umkm/orders", label: "Pesanan Masuk", icon: Handshake },
 ];
 
-// --- Komponen Utama Navbar ---
+
 export function Navbar() {
   const [isClient, setIsClient] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Menggunakan hook useAuth yang unified
   const { user, isAuthenticated, authMethod } = useAuth();
 
-  // Mengambil fungsi dari auth store
   const { logout, activeView, switchView, cartCount, fetchCartCount, token } =
     useAuthStore();
 
@@ -111,7 +108,6 @@ export function Navbar() {
     setIsClient(true);
   }, []);
 
-  // Fetch cart count untuk JWT method atau jika ada token
   useEffect(() => {
     if (token && authMethod === "jwt") {
       fetchCartCount(token);
@@ -123,7 +119,7 @@ export function Navbar() {
     toast.success("Anda berhasil logout.");
     router.push("/");
     router.refresh();
-    setIsMobileMenuOpen(false); // Tutup menu setelah logout
+    setIsMobileMenuOpen(false); 
   };
 
   const handleSwitchView = () => {
@@ -137,10 +133,9 @@ export function Navbar() {
       router.push("/profile");
     }
     router.refresh();
-    setIsMobileMenuOpen(false); // Tutup menu setelah beralih
+    setIsMobileMenuOpen(false); 
   };
 
-  // Fungsi untuk mendapatkan inisial nama
   const getInitials = (
     name?: string,
     username?: string,
@@ -166,18 +161,15 @@ export function Navbar() {
     return "U";
   };
 
-  // Fungsi untuk mendapatkan display name
   const getDisplayName = (): string => {
     return user?.name || user?.username || user?.email?.split("@")[0] || "User";
   };
 
-  // Fungsi untuk mendapatkan avatar URL
   const getAvatarUrl = (): string => {
     if (user?.image) return user.image;
     return `https://api.dicebear.com/7.x/initials/svg?seed=${getDisplayName()}`;
   };
 
-  // Fungsi untuk menentukan menu aktif yang lebih akurat
   const isActive = (href: string, exact?: boolean) => {
     if (href === "/") return pathname === href;
 
@@ -210,32 +202,26 @@ export function Navbar() {
   const navLinks =
     isClient && activeView === "umkm" ? umkmNavLinks : customerNavLinks;
 
-  // PERBAIKAN: Fungsi helper untuk mengecek status UMKM
   const getUmkmStatus = () => {
-    // PERBAIKAN: Tambahkan optional chaining (?) untuk user
     const status = user?.umkmProfileStatus;
     return status;
   };
 
-  // PERBAIKAN: Fungsi untuk mengecek apakah user bisa jadi mitra
   const canBecomeMitra = () => {
     const status = getUmkmStatus();
     return status === null || status === undefined || status === "";
   };
 
-  // PERBAIKAN: Fungsi untuk mengecek apakah user sudah verified
   const isVerified = () => {
     const status = getUmkmStatus();
     return status === "verified";
   };
 
-  // PERBAIKAN: Fungsi untuk mengecek apakah user dalam status pending
   const isPending = () => {
     const status = getUmkmStatus();
     return status === "pending";
   };
 
-  // Komponen MobileDrawer untuk navigasi mobile
   const MobileDrawer = () => (
     <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
       <SheetTrigger asChild>
@@ -252,7 +238,6 @@ export function Navbar() {
           </div>
         </SheetHeader>
 
-        {/* PERUBAHAN: TAMPILKAN AVATAR, NAMA, DAN EMAIL DI SINI */}
         {isClient && isAuthenticated && user && (
           <div className="flex flex-col items-start gap-4 p-4 border-b pb-4 mb-4">
             <div className="flex items-center gap-4">
@@ -301,7 +286,6 @@ export function Navbar() {
                 <span>{link.label}</span>
               </Link>
             ))}
-            {/* PERUBAHAN: Tombol keranjang dan tema di sini */}
             {activeView === "customer" && (
               <Link
                 href="/cart"
@@ -324,7 +308,6 @@ export function Navbar() {
               <ThemeToggleButton />
             </div>
           </div>
-          {/* Menu Profil */}
           {user && (
             <div className="mt-8 border-t pt-4 space-y-1">
               <h3 className="text-sm font-semibold text-gray-500 mb-2 px-4">
@@ -404,7 +387,6 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Menu Desktop */}
           <div className="hidden md:flex flex-1 justify-center">
             {isClient && isAuthenticated && (
               <div className="flex items-center space-x-8">
@@ -421,7 +403,6 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Tombol Aksi Kanan (Semua Tampilan) */}
           <div className="flex-1 flex justify-end">
             <div className="flex items-center gap-2 md:gap-4">
               {isClient && isAuthenticated && user ? (
@@ -446,7 +427,6 @@ export function Navbar() {
                   )}
                   <ThemeToggleButton />
 
-                  {/* Menu Desktop */}
                   <div className="hidden md:block">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -479,7 +459,6 @@ export function Navbar() {
                             <p className="text-sm font-medium leading-none">
                               {getDisplayName()}
                             </p>
-                            {/* PERBAIKAN: Tambahkan optional chaining (?) */}
                             <p className="text-xs leading-none text-muted-foreground">
                               {user?.email}
                             </p>
@@ -556,14 +535,12 @@ export function Navbar() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  {/* Menu Mobile */}
                   <div className="md:hidden">
                     <MobileDrawer />
                   </div>
                 </>
               ) : isClient ? (
                 <>
-                  {/* PERBAIKAN: Tambahkan className sebagai props */}
                   <ThemeToggleButton className="hidden md:block" />
                   <Button
                     variant="ghost"

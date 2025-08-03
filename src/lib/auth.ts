@@ -1,10 +1,8 @@
-// lib/auth.ts
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import prisma from './prisma'; // Pastikan path ini benar
-import { successResponse, errorResponse } from './api-response'; // Pastikan path ini benar
+import prisma from './prisma'; 
+import { successResponse, errorResponse } from './api-response'; 
 
-// Interface untuk data yang didekode dari token JWT
 interface DecodedToken {
   userId: string;
   role: string;
@@ -12,9 +10,7 @@ interface DecodedToken {
   exp: number;
 }
 
-// Kunci rahasia untuk JWT
-// DI PRODUKSI, JANGAN GUNAKAN NILAI DEFAULT INI!
-// Pastikan process.env.JWT_SECRET telah diatur di file .env Anda.
+
 const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_please_change_this_in_production_for_security';
 
 /**
@@ -40,22 +36,19 @@ export function generateToken(userId: string, role: string): string {
  */
 export async function authenticateAndAuthorize(
   request: NextRequest,
-  requiredRoles: string[] = [] // Default-nya array kosong, artinya hanya butuh autentikasi
+  requiredRoles: string[] = [] 
 ): Promise<{ user: DecodedToken | null; response?: NextResponse }> {
   let token: string | undefined;
 
-  // 1. Coba ambil token dari header Authorization (lebih umum untuk API)
   const authHeader = request.headers.get('authorization');
   if (authHeader && authHeader.startsWith('Bearer ')) {
     token = authHeader.split(' ')[1];
   }
 
-  // 2. Jika tidak ada di header, coba ambil dari cookie (umum untuk sesi web)
   if (!token) {
     token = request.cookies.get('token')?.value;
   }
 
-  // Jika token tidak ditemukan sama sekali
   if (!token) {
     return { response: errorResponse('Unauthorized: Authentication token missing', 401), user: null };
   }
@@ -66,14 +59,12 @@ export async function authenticateAndAuthorize(
       throw new Error('JWT_SECRET is not configured properly.');
     }
     
-    // Verifikasi token JWT
     const decoded = jwt.verify(token, JWT_SECRET) as DecodedToken;
 
-    // Verifikasi ulang user dan role dari database untuk keamanan tambahan
-    // Ini mencegah kasus jika role di token sudah kadaluarsa atau user dihapus/role diubah di DB
+  
     const userDb = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      select: { role: true, id: true }, // Ambil role dan ID untuk verifikasi
+      select: { role: true, id: true }, 
     });
 
     if (!userDb) {
@@ -81,23 +72,19 @@ export async function authenticateAndAuthorize(
       return { response: errorResponse('Unauthorized: User not found in database', 401), user: null };
     }
 
-    // Pastikan role di token cocok dengan role di database
-    // Ini penting jika role user diubah setelah token diterbitkan
+   
     if (userDb.role !== decoded.role) {
       console.warn(`Auth Error: Role mismatch for user ${decoded.userId}. Token: ${decoded.role}, DB: ${userDb.role}.`);
       return { response: errorResponse('Unauthorized: User role changed, please re-login', 401), user: null };
     }
 
-    // Periksa apakah peran pengguna memenuhi persyaratan (requiredRoles)
     if (requiredRoles.length > 0 && !requiredRoles.includes(userDb.role)) {
       console.warn(`Auth Error: User ${userDb.id} with role ${userDb.role} attempted to access restricted resource. Required: ${requiredRoles.join(', ')}`);
       return { response: errorResponse('Forbidden: Insufficient role permissions', 403), user: null };
     }
 
-    // Jika semua lolos, kembalikan data pengguna yang didekode
     return { user: decoded };
   } catch (error: any) {
-    // Tangani error verifikasi JWT (misal: token kadaluarsa, token tidak valid)
     if (error.name === 'TokenExpiredError') {
       console.warn('Auth Error: Token expired.');
       return { response: errorResponse('Unauthorized: Token expired', 401), user: null };
@@ -121,11 +108,11 @@ export async function authenticateAndAuthorize(
 export function setAuthCookie(token: string, successData: any, statusCode: number = 200): NextResponse {
   const response = successResponse(successData, statusCode);
   response.cookies.set('token', token, {
-    httpOnly: true, // Tidak bisa diakses oleh JavaScript di browser
-    secure: process.env.NODE_ENV === 'production', // Hanya kirim via HTTPS di produksi
-    sameSite: 'strict', // Melindungi dari CSRF
-    maxAge: 60 * 60 * 24, // 1 hari (sama dengan expiresIn token)
-    path: '/', // Tersedia di seluruh aplikasi
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict', 
+    maxAge: 60 * 60 * 24, 
+    path: '/', 
   });
   return response;
 }

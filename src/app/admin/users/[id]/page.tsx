@@ -8,10 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { AdminUserDetail } from "@/types/admin_user_detail";
 import { Mail, Phone, Home, ShoppingCart, DollarSign } from "lucide-react";
-import { DataTable } from "@/components/umkm/ProductDataTable"; // Pastikan path ini sesuai
-import { getUserOrderColumns } from "@/components/admin/UserOrderDetailColumns"; // Pastikan path ini sesuai
+import { DataTable } from "@/components/umkm/ProductDataTable"; 
+import { getUserOrderColumns } from "@/components/admin/UserOrderDetailColumns"; 
 
-// --- HELPER FUNCTIONS ---
 function formatDate(dateString: string) {
     return new Date(dateString).toLocaleString("id-ID", { dateStyle: 'long', timeStyle: 'short' });
 }
@@ -19,7 +18,6 @@ function formatRupiah(amount: number) {
     return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(amount);
 }
 
-// --- SKELETON COMPONENT ---
 function UserDetailSkeleton() {
     return (
         <div className="space-y-6 animate-pulse">
@@ -39,7 +37,6 @@ function UserDetailSkeleton() {
     );
 }
 
-// --- MAIN COMPONENT ---
 export default function UserDetailPage() {
     const params = useParams();
     const { token } = useAuthStore();
@@ -71,7 +68,6 @@ export default function UserDetailPage() {
     if (isLoading) return <UserDetailSkeleton />;
     if (!user) return <div className="p-8 text-center">Pengguna tidak ditemukan.</div>;
 
-    // Inisialisasi kolom untuk DataTable
     const orderColumns = getUserOrderColumns();
 
     return (
@@ -81,7 +77,6 @@ export default function UserDetailPage() {
                 <p className="text-muted-foreground">Detail profil dan aktivitas pengguna.</p>
             </div>
 
-            {/* --- KARTU STATISTIK BARU --- */}
             <div className="grid gap-4 md:grid-cols-2">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -111,7 +106,6 @@ export default function UserDetailPage() {
                 <Card className="md:col-span-2">
                     <CardHeader><CardTitle>Riwayat Pesanan</CardTitle></CardHeader>
                     <CardContent>
-                        {/* --- PENGGUNAAN DATATABLE BARU --- */}
                         <DataTable columns={orderColumns} data={user.orders} />
                     </CardContent>
                 </Card>

@@ -45,7 +45,6 @@ import {
   Tooltip,
 } from "recharts";
 
-// --- HELPER FUNCTIONS ---
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleString("id-ID", {
     dateStyle: "long",
@@ -60,7 +59,6 @@ function formatRupiah(amount: number) {
   }).format(amount);
 }
 
-// --- SKELETON COMPONENT ---
 function UmkmDetailSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
@@ -84,7 +82,6 @@ function UmkmDetailSkeleton() {
   );
 }
 
-// --- MAIN COMPONENT ---
 export default function UmkmPartnerDetailPage() {
   const params = useParams();
   const { token } = useAuthStore();

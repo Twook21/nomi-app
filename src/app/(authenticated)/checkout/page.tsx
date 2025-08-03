@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback } from "react"; // Tambahkan useCallback
+import { useEffect, useState, useMemo, useCallback } from "react"; 
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
-import { useAuth } from "@/hooks/use-auth"; // Import useAuth hook
+import { useAuth } from "@/hooks/use-auth"; 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -22,10 +22,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Skeleton } from "@/components/ui/skeleton";
-import Link from "next/link"; // Import Link for login button
+import Link from "next/link"; 
 import { ShoppingCart } from "lucide-react";
 
-// Skema Zod yang sudah diperbaiki
 const checkoutSchema = z.object({
   shippingAddress: z
     .string()
@@ -43,14 +42,13 @@ function formatRupiah(amount: number) {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  // Gunakan useAuth hook untuk status otentikasi terpadu
+  
   const {
     isAuthenticated,
     isLoading: authLoading,
     authMethod,
     user,
-  } = useAuth(); // Ambil user dari useAuth
-  // Ambil token dan logout dari useAuthStore
+  } = useAuth(); 
   const { token, logout } = useAuthStore();
 
   const [cart, setCart] = useState<Cart | null>(null);
@@ -59,14 +57,12 @@ export default function CheckoutPage() {
   const form = useForm<z.infer<typeof checkoutSchema>>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
-      shippingAddress: user?.address || "", // Gunakan user dari useAuth
+      shippingAddress: user?.address || "", 
       paymentMethod: "Cash on Pickup",
     },
   });
 
-  // Fungsi untuk memuat data keranjang dan mengisi form
   const fetchData = useCallback(async () => {
-    // Hanya fetch jika sudah terautentikasi dan tidak sedang dalam proses auth loading
     if (!isAuthenticated) {
       setIsLoading(false);
       return;
@@ -115,7 +111,6 @@ export default function CheckoutPage() {
       }
 
       setCart(cartResult);
-      // Set default value untuk shippingAddress dari user profile atau cart yang ada
       form.setValue(
         "shippingAddress",
         user?.address || cartResult.shippingAddress || ""
@@ -131,10 +126,9 @@ export default function CheckoutPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated, authMethod, token, user, router, form, logout]); // Tambahkan semua dependencies
+  }, [isAuthenticated, authMethod, token, user, router, form, logout]); 
 
   useEffect(() => {
-    // Panggil fetchData hanya jika isAuthenticated sudah diketahui dan tidak sedang authLoading
     if (!authLoading) {
       if (!isAuthenticated) {
         router.replace("/auth/login");
@@ -144,11 +138,9 @@ export default function CheckoutPage() {
     }
   }, [authLoading, isAuthenticated, router, fetchData]);
 
-  // Menghitung total harga di sisi klien
   const totalPrice = useMemo(() => {
     if (!cart || !cart.cartItems) return 0;
     return cart.cartItems.reduce((total, item) => {
-      // Pastikan item.product.discountedPrice adalah number sebelum perkalian
       const price =
         typeof item.product.discountedPrice === "number"
           ? item.product.discountedPrice
@@ -158,7 +150,6 @@ export default function CheckoutPage() {
   }, [cart]);
 
   const onSubmit = async (data: z.infer<typeof checkoutSchema>) => {
-    // Simpan ID notifikasi loading
     const loadingToastId = toast.loading("Memproses pesanan Anda...");
 
     try {
@@ -179,7 +170,6 @@ export default function CheckoutPage() {
 
       const result = await response.json();
       if (!response.ok) {
-        // Hapus toast loading dan tampilkan toast error
         toast.dismiss(loadingToastId);
         if (response.status === 401) {
           toast.error("Sesi Anda berakhir. Silakan login kembali.");
@@ -190,15 +180,13 @@ export default function CheckoutPage() {
         throw new Error(result.message || "Gagal membuat pesanan.");
       }
 
-      // Hapus toast loading dan tampilkan toast success
       toast.dismiss(loadingToastId);
       toast.success("Pesanan berhasil dibuat! 🎉", {
         description: "Terima kasih telah berbelanja.",
       });
 
-      router.push("/profile/orders"); // Redirect ke halaman riwayat pesanan
+      router.push("/profile/orders"); 
     } catch (error) {
-      // Hapus toast loading dan tampilkan toast error
       toast.dismiss(loadingToastId);
       toast.error("Gagal membuat pesanan.", {
         description:
@@ -207,7 +195,6 @@ export default function CheckoutPage() {
     }
   };
 
-  // Tampilkan loading skeleton jika sedang loading auth atau data
   if (authLoading || isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
@@ -226,7 +213,6 @@ export default function CheckoutPage() {
     );
   }
 
-  // Tampilkan pesan jika tidak terautentikasi (setelah loading selesai)
   if (!isAuthenticated) {
     return (
       <div className="container mx-auto py-8 px-4">
@@ -245,9 +231,7 @@ export default function CheckoutPage() {
     );
   }
 
-  // Jika keranjang kosong setelah loading, redirect ke halaman keranjang
   if (!cart || cart.cartItems.length === 0) {
-    // Ini akan di-handle oleh fetchData yang me-redirect, jadi ini hanya fallback UI
     return (
       <div className="container mx-auto text-center py-20">
         <ShoppingCart className="mx-auto h-24 w-24 text-muted-foreground" />

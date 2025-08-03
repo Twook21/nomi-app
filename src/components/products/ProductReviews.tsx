@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react"; // --- PERBAIKAN: Import useState ---
+import React, { useState } from "react";
 import type { Review } from "@/types/product";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button"; // --- PERBAIKAN: Import Button ---
+import { Button } from "@/components/ui/button"; 
 
 interface ProductReviewsProps {
   reviews: Review[];
@@ -34,7 +34,6 @@ const StarRating = ({ rating }: { rating: number }) => (
 );
 
 export function ProductReviews({ reviews }: ProductReviewsProps) {
-  // --- PERBAIKAN: Tambahkan state untuk mengelola jumlah ulasan yang terlihat ---
   const [visibleReviews, setVisibleReviews] = useState(3);
 
   if (reviews.length === 0) {
@@ -66,7 +65,6 @@ export function ProductReviews({ reviews }: ProductReviewsProps) {
       <CardContent className="p-4 md:p-6 pt-0">
         <Separator className="my-4" />
         <div className="divide-y divide-border">
-          {/* --- PERBAIKAN: Gunakan slice() untuk membatasi ulasan yang di-render --- */}
           {reviews.slice(0, visibleReviews).map((review) => (
             <div key={review.id} className="py-4">
               <div className="flex items-center gap-3">
@@ -90,7 +88,6 @@ export function ProductReviews({ reviews }: ProductReviewsProps) {
             </div>
           ))}
         </div>
-        {/* --- PERBAIKAN: Tampilkan tombol "Lihat Semua Ulasan" jika ada lebih banyak ulasan --- */}
         {hasMoreReviews && (
           <div className="flex justify-center mt-4">
             <Button

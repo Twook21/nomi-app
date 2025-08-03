@@ -47,14 +47,13 @@ model VerificationToken {
 
 model User {
   id String @id @default(uuid()) @map("user_id")
-  username String? @unique @db.VarChar(50)  // Optional untuk OAuth
+  username String? @unique @db.VarChar(50)  
   email String @unique @db.VarChar(100)
-  passwordHash String? @map("password_hash") @db.VarChar(255)  // Optional untuk OAuth
+  passwordHash String? @map("password_hash") @db.VarChar(255)  
   phoneNumber String? @map("phone_number") @db.VarChar(20)
   address String? @db.Text
   role String @default("customer") @db.VarChar(20)
   
-  // Tambahkan field untuk OAuth
   name String? @db.VarChar(100)
   image String? @db.Text
   emailVerified DateTime? @map("email_verified")
@@ -62,13 +61,11 @@ model User {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   
-  // Relasi yang sudah ada
   umkmOwner UMKMOwner?
   orders Order[] @relation("CustomerOrders")
   reviews Review[]
   shoppingCart ShoppingCart?
   
-  // Tambahkan relasi NextAuth
   accounts Account[]
   sessions Session[]
 }
@@ -110,7 +107,7 @@ model Product {
   originalPrice   Decimal       @map("original_price") @db.Decimal(10, 2)
   discountedPrice Decimal       @map("discounted_price") @db.Decimal(10, 2)
   stock           Int
-  expirationDate  DateTime      @map("expiration_date") @db.Date // Changed to DateTime and @db.Date for type consistency
+  expirationDate  DateTime      @map("expiration_date") @db.Date 
   imageUrl        String?       @map("image_url") @db.Text
   isAvailable     Boolean       @default(true) @map("is_available")
   createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)

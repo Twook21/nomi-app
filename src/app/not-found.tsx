@@ -26,7 +26,6 @@ const EmptyPlateIllustration = () => (
 export default function NotFound() {
   return (
     <main className="bg-white dark:bg-[var(--background)] min-h-screen flex items-center justify-center p-4 text-center overflow-hidden">
-      {/* Elemen dekoratif di latar belakang */}
       <div className="absolute -top-20 -left-20 w-60 h-60 bg-nimo-yellow/20 dark:bg-nimo-yellow/10 rounded-full filter blur-3xl opacity-50"></div>
       <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-nimo-yellow/20 dark:bg-nimo-yellow/10 rounded-full filter blur-3xl opacity-50"></div>
 
