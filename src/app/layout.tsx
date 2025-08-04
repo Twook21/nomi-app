@@ -7,9 +7,9 @@ import { NextAuthSessionProvider } from "@/components/providers/session-provider
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NOMI - Temukan Resep Terbaikmu",
+  title: "NOMI - Selamatkan Makanan Favoritmu",
   description:
-    "Aplikasi pencari resep NOMI untuk membantu kamu memasak setiap hari.",
+    "Aplikasi anti food waste NOMI yang sangat w2w antara pemilik usaha dan konsumen.",
 };
 
 export default function RootLayout({
